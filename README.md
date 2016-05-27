@@ -51,6 +51,7 @@ Some verbs don't require nouns, and flags can go before or after the verb-noun-a
 `tag`
 `unstar`
 `untag`
+`update`
 `version`
 
 ### Nouns [Aliases]
@@ -86,6 +87,8 @@ Some verbs don't require nouns, and flags can go before or after the verb-noun-a
 `tag <repository> <tag>...` *Tag repository `repository` using tags `tag`*
 
 `untag <repository> <tag>...` *Untag repository `repository` using `tag` or leave blank for all tags*
+
+`update [--service <service>]...` *Update `service` or leave blank for all services*
 
 `version` *Show program version*
 
