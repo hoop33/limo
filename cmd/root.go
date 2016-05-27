@@ -10,23 +10,15 @@ import (
 
 var cfgFile string
 
-// RootCmd represents the base command when called without any subcommands
+// RootCmd is the root command for limo
 var RootCmd = &cobra.Command{
 	Use:   "limo",
-	Short: "A brief description of your application",
-	Long: `A longer description that spans multiple lines and likely contains
-examples and usage of using your application. For example:
-
-Cobra is a CLI library for Go that empowers applications.
-This application is a tool to generate the needed files
-to quickly create a Cobra application.`,
-	// Uncomment the following line if your bare application
-	// has an action associated with it:
-	//	Run: func(cmd *cobra.Command, args []string) { },
+	Short: "A CLI for managing starred repositories",
+	Long: `limo allows you to manage your starred repositories on GitHub, GitLab, and Bitbucket.
+You can tag, display, and search your starred repositories.`,
 }
 
-// Execute adds all child commands to the root command sets flags appropriately.
-// This is called by main.main(). It only needs to happen once to the rootCmd.
+// Execute adds all child commands to the root command and sets flags appropriately.
 func Execute() {
 	if err := RootCmd.Execute(); err != nil {
 		fmt.Println(err)
