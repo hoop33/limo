@@ -52,6 +52,24 @@
 			"notests": true
 		},
 		{
+			"importpath": "github.com/google/go-github/github",
+			"repository": "https://github.com/google/go-github",
+			"vcs": "git",
+			"revision": "7ec4e45f77474b3a7b7d9b7ef233a0cc8339ddf3",
+			"branch": "master",
+			"path": "/github",
+			"notests": true
+		},
+		{
+			"importpath": "github.com/google/go-querystring/query",
+			"repository": "https://github.com/google/go-querystring",
+			"vcs": "git",
+			"revision": "9235644dd9e52eeae6fa48efd539fdc351a0af53",
+			"branch": "master",
+			"path": "/query",
+			"notests": true
+		},
+		{
 			"importpath": "github.com/hashicorp/hcl",
 			"repository": "https://github.com/hashicorp/hcl",
 			"vcs": "git",
