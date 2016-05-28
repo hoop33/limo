@@ -23,5 +23,5 @@ func ForName(name string) Output {
 	if output, ok := outputs[name]; ok {
 		return output
 	}
-	return Text{}
+	return Color{}
 }
