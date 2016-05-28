@@ -96,4 +96,4 @@ Some verbs don't require nouns, and flags can go before or after the verb-noun-a
 
 Copyright &copy; 2016 Rob Warner
 
-Licensed under the [MIT License](http://hoop33.mit-license.org/)
+Licensed under the [MIT License](https://hoop33.mit-license.org/)
