@@ -17,9 +17,10 @@ lint:
 	golint --set_exit_status .
 	golint --set_exit_status ./cmd
 	golint --set_exit_status ./config
+	golint --set_exit_status ./output
 
 test:
-	go test . ./cmd ./config
+	go test . ./cmd ./config ./output
 
 clean:
 	rm -rf dist/*

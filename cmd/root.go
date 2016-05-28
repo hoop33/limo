@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 
+	"github.com/hoop33/limo/output"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 )
@@ -37,6 +38,8 @@ func init() {
 	// Cobra also supports local flags, which will only run
 	// when this action is called directly.
 	RootCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
+
+	RootCmd.PersistentFlags().StringP("output", "o", "text", "output type")
 }
 
 // initConfig reads in config file and ENV variables if set.
@@ -53,4 +56,8 @@ func initConfig() {
 	if err := viper.ReadInConfig(); err == nil {
 		fmt.Println("Using config file:", viper.ConfigFileUsed())
 	}
+}
+
+func getOutput() output.Output {
+	return output.ForName(RootCmd.PersistentFlags().Lookup("output").Value.String())
 }
