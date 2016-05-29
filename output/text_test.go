@@ -8,5 +8,5 @@ import (
 )
 
 func TestTextDoesRegisterItself(t *testing.T) {
-	assert.Equal(t, "output.Text", reflect.TypeOf(ForName("text")).String())
+	assert.Equal(t, "*output.Text", reflect.TypeOf(ForName("text")).String())
 }

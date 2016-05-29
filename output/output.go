@@ -9,6 +9,7 @@ import (
 type Output interface {
 	Info(string)
 	Error(string)
+	Fatal(string)
 }
 
 var outputs = make(map[string]Output)
@@ -23,5 +24,5 @@ func ForName(name string) Output {
 	if output, ok := outputs[name]; ok {
 		return output
 	}
-	return Color{}
+	return outputs["text"]
 }

@@ -8,5 +8,5 @@ import (
 )
 
 func TestColorDoesRegisterItself(t *testing.T) {
-	assert.Equal(t, "output.Color", reflect.TypeOf(ForName("color")).String())
+	assert.Equal(t, "*output.Color", reflect.TypeOf(ForName("color")).String())
 }

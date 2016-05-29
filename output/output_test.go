@@ -7,6 +7,6 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestForNameReturnsColorWhenNameNotFound(t *testing.T) {
-	assert.Equal(t, "output.Color", reflect.TypeOf(ForName("foo")).String())
+func TestForNameReturnsTextWhenNameNotFound(t *testing.T) {
+	assert.Equal(t, "*output.Text", reflect.TypeOf(ForName("foo")).String())
 }
