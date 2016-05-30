@@ -36,6 +36,14 @@
 			"notests": true
 		},
 		{
+			"importpath": "github.com/dgiagio/getpass",
+			"repository": "https://github.com/dgiagio/getpass",
+			"vcs": "git",
+			"revision": "ee9b272d814714e1cc78ab8dd59b521730333b12",
+			"branch": "master",
+			"notests": true
+		},
+		{
 			"importpath": "github.com/fatih/color",
 			"repository": "https://github.com/fatih/color",
 			"vcs": "git",
@@ -74,6 +82,14 @@
 			"repository": "https://github.com/hashicorp/hcl",
 			"vcs": "git",
 			"revision": "9a905a34e6280ce905da1a32344b25e81011197a",
+			"branch": "master",
+			"notests": true
+		},
+		{
+			"importpath": "github.com/hoop33/entrevista",
+			"repository": "https://github.com/hoop33/entrevista",
+			"vcs": "git",
+			"revision": "5311266fc3714154c5a4b2fbe71e19e3d638c55f",
 			"branch": "master",
 			"notests": true
 		},
