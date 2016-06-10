@@ -11,7 +11,7 @@ linux:
 windows:
 	GOOS=windows go build -o ./dist/windows/limo.exe
 
-check: lint test
+check: lint errcheck test
 
 lint:
 	golint --set_exit_status .
@@ -21,6 +21,11 @@ lint:
 
 test:
 	go test . ./cmd ./config ./output
+
+errcheck:
+	errcheck ./cmd
+	errcheck ./config
+	errcheck ./output
 
 clean:
 	rm -rf dist/*
