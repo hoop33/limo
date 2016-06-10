@@ -4,12 +4,13 @@ import (
 	"fmt"
 	"os"
 
+	"github.com/hoop33/limo/config"
 	"github.com/hoop33/limo/output"
+	"github.com/hoop33/limo/service"
 	"github.com/spf13/cobra"
-	"github.com/spf13/viper"
 )
 
-var cfgFile string
+var configuration *config.Config
 
 // RootCmd is the root command for limo
 var RootCmd = &cobra.Command{
@@ -28,36 +29,26 @@ func Execute() {
 }
 
 func init() {
-	cobra.OnInitialize(initConfig)
-
-	// Here you will define your flags and configuration settings.
-	// Cobra supports Persistent Flags, which, if defined here,
-	// will be global for your application.
-
-	RootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.limo.yaml)")
-	// Cobra also supports local flags, which will only run
-	// when this action is called directly.
-	RootCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
-
 	RootCmd.PersistentFlags().StringP("output", "o", "color", "output type")
+	RootCmd.PersistentFlags().StringP("service", "s", "github", "service")
+
+	//cobra.OnInitialize(initConfig)
 }
 
-// initConfig reads in config file and ENV variables if set.
-func initConfig() {
-	if cfgFile != "" { // enable ability to specify config file via flag
-		viper.SetConfigFile(cfgFile)
+func getConfiguration() (*config.Config, error) {
+	if configuration == nil {
+		var err error
+		if configuration, err = config.ReadConfig(); err != nil {
+			return nil, err
+		}
 	}
-
-	viper.SetConfigName(".limo") // name of config file (without extension)
-	viper.AddConfigPath("$HOME") // adding home directory as first search path
-	viper.AutomaticEnv()         // read in environment variables that match
-
-	// If a config file is found, read it in.
-	if err := viper.ReadInConfig(); err == nil {
-		fmt.Println("Using config file:", viper.ConfigFileUsed())
-	}
+	return configuration, nil
 }
 
 func getOutput() output.Output {
 	return output.ForName(RootCmd.PersistentFlags().Lookup("output").Value.String())
+}
+
+func getService() service.Service {
+	return service.ForName(RootCmd.PersistentFlags().Lookup("service").Value.String())
 }
