@@ -37,6 +37,7 @@ func TestCanSetDatabasePath(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
+	rmdirConfig()
 	assert.True(t, strings.IndexAny(string(contents), "foo") >= 0)
 }
 
