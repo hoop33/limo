@@ -3,6 +3,7 @@ package config
 import (
 	"fmt"
 	"io/ioutil"
+	"log"
 	"os"
 	"path"
 
@@ -83,8 +84,7 @@ func configFilePath() string {
 func init() {
 	home, err := homedir.Dir()
 	if err != nil {
-		// TODO Die
-
+		log.Fatal("Can't find home directory for configuration")
 	} else {
 		configDirectoryPath = path.Join(home, ".config", ProgramName)
 	}
