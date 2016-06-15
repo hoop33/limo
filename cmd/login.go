@@ -8,6 +8,7 @@ var LoginCmd = &cobra.Command{
 	Short: "Log in to [service]",
 	Long:  "Log in to the service specified by [--service] (default: github)",
 	Run: func(cmd *cobra.Command, args []string) {
+		// Get the specified service and log in
 		service := getService()
 		token, err := service.Login()
 		if err != nil {
