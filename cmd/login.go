@@ -1,6 +1,9 @@
 package cmd
 
-import "github.com/spf13/cobra"
+import (
+	"github.com/hoop33/limo/service"
+	"github.com/spf13/cobra"
+)
 
 // LoginCmd lets you log in
 var LoginCmd = &cobra.Command{
@@ -9,8 +12,12 @@ var LoginCmd = &cobra.Command{
 	Long:  "Log in to the service specified by [--service] (default: github)",
 	Run: func(cmd *cobra.Command, args []string) {
 		// Get the specified service and log in
-		service := getService()
-		token, err := service.Login()
+		svc, err := getService()
+		if err != nil {
+			getOutput().Fatal(err.Error())
+		}
+
+		token, err := svc.Login()
 		if err != nil {
 			getOutput().Fatal(err.Error())
 		}
@@ -21,7 +28,7 @@ var LoginCmd = &cobra.Command{
 			getOutput().Fatal(err.Error())
 		}
 
-		config.GetService("github").Token = token
+		config.GetService(service.Name(svc)).Token = token
 		err = config.WriteConfig()
 		if err != nil {
 			getOutput().Fatal(err.Error())

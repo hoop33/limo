@@ -49,6 +49,6 @@ func getOutput() output.Output {
 	return output.ForName(RootCmd.PersistentFlags().Lookup("output").Value.String())
 }
 
-func getService() service.Service {
+func getService() (service.Service, error) {
 	return service.ForName(RootCmd.PersistentFlags().Lookup("service").Value.String())
 }

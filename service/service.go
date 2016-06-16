@@ -17,16 +17,21 @@ type Service interface {
 var services = make(map[string]Service)
 
 func registerService(service Service) {
-	parts := strings.Split(reflect.TypeOf(service).String(), ".")
-	services[strings.ToLower(parts[len(parts)-1])] = service
+	services[Name(service)] = service
 }
 
-// ForName returns the service for a given name
-func ForName(name string) Service {
+// Name returns the name of a service
+func Name(service Service) string {
+	parts := strings.Split(reflect.TypeOf(service).String(), ".")
+	return strings.ToLower(parts[len(parts)-1])
+}
+
+// ForName returns the service for a given name, or an error if it doesn't exist
+func ForName(name string) (Service, error) {
 	if service, ok := services[strings.ToLower(name)]; ok {
-		return service
+		return service, nil
 	}
-	return services["github"]
+	return &NotFound{}, fmt.Errorf("Service '%s' not found", name)
 }
 
 func createInterview() *entrevista.Interview {
