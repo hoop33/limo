@@ -24,5 +24,6 @@ func ForName(name string) Output {
 	if output, ok := outputs[name]; ok {
 		return output
 	}
+	// We always want an output, so default to text
 	return outputs["text"]
 }
