@@ -7,11 +7,13 @@ import (
 
 	"github.com/fatih/color"
 	"github.com/hoop33/entrevista"
+	"github.com/hoop33/limo/model"
 )
 
 // Service represents a service
 type Service interface {
 	Login() (string, error)
+	GetStars(starChan chan<- *model.StarResult, token string, user string)
 }
 
 var services = make(map[string]Service)
