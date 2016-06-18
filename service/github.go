@@ -45,14 +45,14 @@ func (g *Github) GetStars(starChan chan<- *model.StarResult, token string, user 
 				Page: currentPage,
 			},
 		})
-		// If we got an error, put that on the channel
+		// If we got an error, put it on the channel
 		if err != nil {
 			starChan <- &model.StarResult{
 				Error: err,
 				Star:  nil,
 			}
 		} else {
-			// We got a response, so set last page
+			// Set last page only if we didn't get an error
 			lastPage = response.LastPage
 
 			// Create a Star for each repository and put it on the channel
@@ -63,6 +63,7 @@ func (g *Github) GetStars(starChan chan<- *model.StarResult, token string, user 
 				}
 			}
 		}
+		// Go to the next page
 		currentPage++
 	}
 	close(starChan)
