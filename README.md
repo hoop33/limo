@@ -46,6 +46,7 @@ Flag | Description
 `list [ls]`
 `login`
 `open`
+`prune`
 `rename [mv]`
 `search`
 `show`
@@ -58,31 +59,28 @@ Flag | Description
 
 ### Nouns [Aliases]
 
-`repositories [repos]`
-`repository [repo]`
-`star`
-`stars`
-`tag`
-`tags`
+`star`, `stars`
+`tag`, `tags`
 `trending`
 
 ### Commands
 
 Command | Description
 --- | ---
-`add repository <URL> [tag]...` | Star repository at `URL` and optionally add tags
+`add star <URL> [tag]...` | Star repository at `URL` and optionally add tags
 `add tag <tag>` | Add tag `tag`
-`delete repository <URL/name>` | Unstar repository at `URL` or `name`
+`delete star <URL/name>` | Unstar repository at `URL` or `name`
 `delete tag <tag>` | Delete tag `tag`
 `help [command]` | Show help for `command` or leave blank for all commands
-`list repositories [--tag <tag>]... [--language <language>]... [--service <service>]... [--user <user>] [--output <output>]` | List repositories
+`list stars [--tag <tag>]... [--language <language>]... [--service <service>]... [--user <user>] [--output <output>]` | List starred repositories
 `list tags [--output <output>]` | List tags
 `list trending [--language <language>]... [--service <service>]... [--output output]` | List trending repositories
 `login [--service <service>]` | Logs in to a service (default: github)
+`prune [--dryrun]` | Prunes unstarred items from your local database
 `rename <tag> <new>` | Rename tag `tag` to `new`
 `show <URL/name> [--output <output>]` | Show repository details
-`tag <repository> <tag>...` | Tag repository `repository` using tags `tag`
-`untag <repository> <tag>...` | Untag repository `repository` using `tag` or leave blank for all tags
+`tag <star> <tag>...` | Tag starred repository `star` using tags `tag`
+`untag <star> <tag>...` | Untag starred repository `star` using `tag` or leave blank for all tags
 `update [--service <service>]` | Update `service` or leave blank for all services
 `version` | Show program version
 
