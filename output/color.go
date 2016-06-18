@@ -1,6 +1,7 @@
 package output
 
 import (
+	"fmt"
 	"os"
 
 	"github.com/fatih/color"
@@ -24,6 +25,11 @@ func (c *Color) Error(s string) {
 func (c *Color) Fatal(s string) {
 	c.Error(s)
 	os.Exit(1)
+}
+
+// Tick displays evidence that the program is working
+func (c *Color) Tick() {
+	fmt.Print(color.CyanString("."))
 }
 
 func init() {

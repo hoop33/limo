@@ -10,6 +10,7 @@ type Output interface {
 	Info(string)
 	Error(string)
 	Fatal(string)
+	Tick()
 }
 
 var outputs = make(map[string]Output)

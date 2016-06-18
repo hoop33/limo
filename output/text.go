@@ -25,6 +25,11 @@ func (t *Text) Fatal(s string) {
 	os.Exit(1)
 }
 
+// Tick displays evidence that the program is working
+func (t *Text) Tick() {
+	fmt.Print(".")
+}
+
 func init() {
 	registerOutput(&Text{})
 }
