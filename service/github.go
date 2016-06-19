@@ -36,8 +36,8 @@ func (g *Github) GetStars(starChan chan<- *model.StarResult, token string, user 
 	client := getClient(token)
 
 	// The first response will give us the correct value for the last page
-	currentPage := 0
-	lastPage := 0
+	currentPage := 1
+	lastPage := 1
 
 	for currentPage <= lastPage {
 		repos, response, err := client.Activity.ListStarred(user, &github.ActivityListStarredOptions{
