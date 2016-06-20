@@ -19,15 +19,17 @@ lint:
 	golint --set_exit_status .
 	golint --set_exit_status ./cmd
 	golint --set_exit_status ./config
+	golint --set_exit_status ./model
 	golint --set_exit_status ./output
 	golint --set_exit_status ./service
 
 test:
-	go test . ./cmd ./config ./output ./service
+	go test . ./cmd ./config ./model ./output ./service
 
 errcheck:
 	errcheck ./cmd
 	errcheck ./config
+	errcheck ./model
 	errcheck ./output
 	errcheck ./service
 
