@@ -2,6 +2,7 @@ package model
 
 import "github.com/jinzhu/gorm"
 
+// Service represents a hosting service like Github
 type Service struct {
 	gorm.Model
 	Name  string
