@@ -9,7 +9,6 @@ import (
 
 type Star struct {
 	gorm.Model
-	ServiceID   uint
 	RemoteID    string
 	Name        *string
 	FullName    *string
@@ -18,6 +17,7 @@ type Star struct {
 	URL         *string
 	Language    *string
 	Stargazers  int
+	ServiceID   uint
 }
 
 type StarResult struct {
@@ -39,23 +39,27 @@ func NewStarFromGithub(star github.Repository) *Star {
 	}
 }
 
-// CreateOrUpdateStar creates or updates a star
+// StarCopy copies values from src to dest
+func StarCopy(src *Star, dest *Star) {
+	dest.Name = src.Name
+	dest.FullName = src.FullName
+	dest.Description = src.Description
+	dest.Homepage = src.Homepage
+	dest.URL = src.URL
+	dest.Language = src.Language
+	dest.Stargazers = src.Stargazers
+}
+
+// CreateOrUpdateStar creates or updates a star and returns true if the star was created (vs updated)
 func CreateOrUpdateStar(db *gorm.DB, star *Star, service *Service) (bool, error) {
 	// Get existing by remote ID and service ID
-	var old Star
-	if db.Where("remote_id = ? AND service_id = ?", star.RemoteID, service.ID).First(&old).RecordNotFound() {
+	var existing Star
+	if db.Where("remote_id = ? AND service_id = ?", star.RemoteID, service.ID).First(&existing).RecordNotFound() {
 		star.ServiceID = service.ID
-		if err := db.Create(star).Error; err != nil {
-			return false, err
-		} else {
-			return true, nil
-		}
+		err := db.Create(star).Error
+		return err == nil, err
 	} else {
-		star.ID = old.ID
-		if err := db.Update(star).Error; err != nil {
-			return false, err
-		} else {
-			return true, nil
-		}
+		StarCopy(star, &existing)
+		return false, db.Save(&existing).Error
 	}
 }
