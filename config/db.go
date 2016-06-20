@@ -8,12 +8,13 @@ import (
 )
 
 // InitDB initializes the database at the specified path
-func InitDB(filepath string) (*gorm.DB, error) {
+func InitDB(filepath string, verbose bool) (*gorm.DB, error) {
 	db, err := gorm.Open("sqlite3", filepath)
 	if err != nil {
 		return nil, err
 	}
 
+	db.LogMode(verbose)
 	db.AutoMigrate(&model.Service{}, &model.Star{})
 
 	return db, nil

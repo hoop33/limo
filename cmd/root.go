@@ -29,10 +29,10 @@ func Execute() {
 }
 
 func init() {
-	RootCmd.PersistentFlags().StringP("output", "o", "color", "output type")
-	RootCmd.PersistentFlags().StringP("service", "s", "github", "service")
-
-	//cobra.OnInitialize(initConfig)
+	flags := RootCmd.PersistentFlags()
+	flags.StringP("output", "o", "color", "output type")
+	flags.StringP("service", "s", "github", "service")
+	flags.BoolP("verbose", "v", false, "verbose output")
 }
 
 func getConfiguration() (*config.Config, error) {
@@ -51,4 +51,9 @@ func getOutput() output.Output {
 
 func getService() (service.Service, error) {
 	return service.ForName(RootCmd.PersistentFlags().Lookup("service").Value.String())
+}
+
+func getVerbose() bool {
+	// There must be a better way to do this
+	return "true" == RootCmd.PersistentFlags().Lookup("verbose").Value.String()
 }

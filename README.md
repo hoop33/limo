@@ -37,6 +37,7 @@ Flag | Description
 `-s, --service <github/gitlab/bitbucket>` | The service
 `-t, --tag <name>` | The tag name
 `-u, --user <user>` | The user
+`-v, --verbose` | Turn on verbose output
 
 ### Verbs [Aliases]
 
