@@ -1,3 +1,5 @@
+default: check
+
 all: check build
 
 build: osx linux windows
