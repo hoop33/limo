@@ -1,7 +1,6 @@
-package config
+package model
 
 import (
-	"github.com/hoop33/limo/model"
 	"github.com/jinzhu/gorm"
 	// Use the sqlite dialect
 	_ "github.com/jinzhu/gorm/dialects/sqlite"
@@ -15,7 +14,7 @@ func InitDB(filepath string, verbose bool) (*gorm.DB, error) {
 	}
 
 	db.LogMode(verbose)
-	db.AutoMigrate(&model.Service{}, &model.Star{}, &model.Tag{})
+	db.AutoMigrate(&Service{}, &Star{}, &Tag{})
 
 	return db, nil
 }

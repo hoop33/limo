@@ -3,7 +3,6 @@ package cmd
 import (
 	"fmt"
 
-	"github.com/hoop33/limo/config"
 	"github.com/hoop33/limo/model"
 	"github.com/hoop33/limo/service"
 	"github.com/spf13/cobra"
@@ -22,7 +21,7 @@ var UpdateCmd = &cobra.Command{
 		}
 
 		// Get the database
-		db, err := config.InitDB(cfg.DatabasePath, options.verbose)
+		db, err := model.InitDB(cfg.DatabasePath, options.verbose)
 		if err != nil {
 			getOutput().Fatal(err.Error())
 		}

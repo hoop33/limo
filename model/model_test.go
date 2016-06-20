@@ -5,8 +5,6 @@ import (
 	"os"
 
 	"github.com/jinzhu/gorm"
-	// Use the sqlite dialect
-	_ "github.com/jinzhu/gorm/dialects/sqlite"
 )
 
 var dbPath = "./model-test"
@@ -18,11 +16,10 @@ func mkDB() {
 		panic(err)
 	}
 
-	db, err = gorm.Open("sqlite3", fmt.Sprintf("%s/test.db", dbPath))
+	db, err = InitDB(fmt.Sprintf("%s/test.db", dbPath), false)
 	if err != nil {
 		panic(err)
 	}
-	db.AutoMigrate(&Service{}, &Star{}, &Tag{})
 }
 
 func rmDB() {
