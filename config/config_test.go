@@ -42,15 +42,13 @@ func TestCanSetDatabasePath(t *testing.T) {
 }
 
 func mkdirConfig() {
-	err := os.MkdirAll(configDirectoryPath, 0700)
-	if err != nil {
+	if err := os.MkdirAll(configDirectoryPath, 0700); err != nil {
 		panic(err)
 	}
 }
 
 func rmdirConfig() {
-	err := os.RemoveAll(configDirectoryPath)
-	if err != nil {
+	if err := os.RemoveAll(configDirectoryPath); err != nil {
 		panic(err)
 	}
 }
