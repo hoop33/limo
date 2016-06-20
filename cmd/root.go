@@ -11,6 +11,11 @@ import (
 )
 
 var configuration *config.Config
+var options struct {
+	verbose bool
+	output  string
+	service string
+}
 
 // RootCmd is the root command for limo
 var RootCmd = &cobra.Command{
@@ -30,9 +35,9 @@ func Execute() {
 
 func init() {
 	flags := RootCmd.PersistentFlags()
-	flags.StringP("output", "o", "color", "output type")
-	flags.StringP("service", "s", "github", "service")
-	flags.BoolP("verbose", "v", false, "verbose output")
+	flags.StringVarP(&options.output, "output", "o", "color", "output type")
+	flags.StringVarP(&options.service, "service", "s", "github", "service")
+	flags.BoolVarP(&options.verbose, "verbose", "v", false, "verbose output")
 }
 
 func getConfiguration() (*config.Config, error) {
@@ -46,14 +51,9 @@ func getConfiguration() (*config.Config, error) {
 }
 
 func getOutput() output.Output {
-	return output.ForName(RootCmd.PersistentFlags().Lookup("output").Value.String())
+	return output.ForName(options.output)
 }
 
 func getService() (service.Service, error) {
-	return service.ForName(RootCmd.PersistentFlags().Lookup("service").Value.String())
-}
-
-func getVerbose() bool {
-	// There must be a better way to do this
-	return "true" == RootCmd.PersistentFlags().Lookup("verbose").Value.String()
+	return service.ForName(options.service)
 }
