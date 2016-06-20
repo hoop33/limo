@@ -15,7 +15,7 @@ func InitDB(filepath string, verbose bool) (*gorm.DB, error) {
 	}
 
 	db.LogMode(verbose)
-	db.AutoMigrate(&model.Service{}, &model.Star{})
+	db.AutoMigrate(&model.Service{}, &model.Star{}, &model.Tag{})
 
 	return db, nil
 }

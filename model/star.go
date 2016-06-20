@@ -7,6 +7,7 @@ import (
 	"github.com/jinzhu/gorm"
 )
 
+// Star represents a starred repository
 type Star struct {
 	gorm.Model
 	RemoteID    string
@@ -18,8 +19,10 @@ type Star struct {
 	Language    *string
 	Stargazers  int
 	ServiceID   uint
+	Tags        []Tag `gorm:"many2many:star_tags;"`
 }
 
+// StarResult wraps a star and an error
 type StarResult struct {
 	Star  *Star
 	Error error
@@ -58,8 +61,7 @@ func CreateOrUpdateStar(db *gorm.DB, star *Star, service *Service) (bool, error)
 		star.ServiceID = service.ID
 		err := db.Create(star).Error
 		return err == nil, err
-	} else {
-		StarCopy(star, &existing)
-		return false, db.Save(&existing).Error
 	}
+	StarCopy(star, &existing)
+	return false, db.Save(&existing).Error
 }
