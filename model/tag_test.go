@@ -7,7 +7,7 @@ import (
 )
 
 func TestFindOrCreateTagByNameShouldCreateTag(t *testing.T) {
-	tag, err := FindOrCreateTagByName(db, "my-tag")
+	tag, _, err := FindOrCreateTagByName(db, "my-tag")
 	assert.Nil(t, err)
 	assert.NotNil(t, tag)
 	assert.Equal(t, "my-tag", tag.Name)
