@@ -138,7 +138,7 @@ Command | Description
 `list tags [--output <output>]` | List tags
 `list trending [--language <language>]... [--service <service>]... [--output output]` | List trending repositories
 `login [--service <service>]` | Logs in to a service (default: github)
-`open <star>` | Opens the home page of a star in your default browser
+`open <star>` | Opens the URL of a star in your default browser
 `prune [--dryrun]` | Prunes unstarred items from your local database
 `rename <tag> <new>` | Rename tag `tag` to `new`
 `show <URL/name> [--output <output>]` | Show repository details
