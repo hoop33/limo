@@ -3,6 +3,8 @@ package output
 import (
 	"reflect"
 	"strings"
+
+	"github.com/hoop33/limo/model"
 )
 
 // Output represents an output option
@@ -10,6 +12,8 @@ type Output interface {
 	Info(string)
 	Error(string)
 	Fatal(string)
+	StarLine(*model.Star)
+	Star(*model.Star)
 	Tick()
 }
 
