@@ -21,3 +21,7 @@ func TestListCmdHasLong(t *testing.T) {
 func TestListCmdHasRun(t *testing.T) {
 	assert.NotEmpty(t, ListCmd.Run)
 }
+
+func TestListCmdHasAliasLs(t *testing.T) {
+	assert.Equal(t, "ls", ListCmd.Aliases[0])
+}
