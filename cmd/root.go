@@ -12,9 +12,11 @@ import (
 
 var configuration *config.Config
 var options struct {
-	verbose bool
-	output  string
-	service string
+	language string
+	output   string
+	service  string
+	tag      string
+	verbose  bool
 }
 
 // RootCmd is the root command for limo
@@ -35,8 +37,10 @@ func Execute() {
 
 func init() {
 	flags := RootCmd.PersistentFlags()
+	flags.StringVarP(&options.language, "language", "l", "", "language")
 	flags.StringVarP(&options.output, "output", "o", "color", "output type")
 	flags.StringVarP(&options.service, "service", "s", "github", "service")
+	flags.StringVarP(&options.tag, "tag", "t", "", "tag")
 	flags.BoolVarP(&options.verbose, "verbose", "v", false, "verbose output")
 }
 
