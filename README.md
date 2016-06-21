@@ -73,6 +73,7 @@ Command | Description
 `delete star <URL/name>` | Unstar repository at `URL` or `name`
 `delete tag <tag>` | Delete tag `tag`
 `help [command]` | Show help for `command` or leave blank for all commands
+`list languages` | List languages
 `list stars [--tag <tag>]... [--language <language>]... [--service <service>]... [--user <user>] [--output <output>]` | List starred repositories
 `list tags [--output <output>]` | List tags
 `list trending [--language <language>]... [--service <service>]... [--output output]` | List trending repositories
