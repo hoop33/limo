@@ -6,10 +6,11 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestGetOrCreateServiceShouldCreateService(t *testing.T) {
-	service, err := GetOrCreateService(db, "lebron-james")
+func TestFindOrCreateServiceByNameShouldCreateService(t *testing.T) {
+	service, created, err := FindOrCreateServiceByName(db, "lebron-james")
 	assert.Nil(t, err)
 	assert.NotNil(t, service)
+	assert.True(t, created)
 	assert.Equal(t, "lebron-james", service.Name)
 
 	var check Service
@@ -17,15 +18,17 @@ func TestGetOrCreateServiceShouldCreateService(t *testing.T) {
 	assert.Equal(t, "lebron-james", check.Name)
 }
 
-func TestGetOrCreateServiceShouldNotCreateDuplicateNames(t *testing.T) {
-	service, err := GetOrCreateService(db, "foo")
+func TestFindOrCreateServiceByNameShouldNotCreateDuplicateNames(t *testing.T) {
+	service, created, err := FindOrCreateServiceByName(db, "foo")
 	assert.Nil(t, err)
 	assert.NotNil(t, service)
+	assert.True(t, created)
 	assert.Equal(t, "foo", service.Name)
 
-	service, err = GetOrCreateService(db, "foo")
+	service, created, err = FindOrCreateServiceByName(db, "foo")
 	assert.Nil(t, err)
 	assert.NotNil(t, service)
+	assert.False(t, created)
 	assert.Equal(t, "foo", service.Name)
 
 	var services []Service

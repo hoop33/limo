@@ -9,16 +9,13 @@ type Service struct {
 	Stars []Star
 }
 
-// GetOrCreateService returns a service with the specified name, creating if necessary
-func GetOrCreateService(db *gorm.DB, name string) (*Service, error) {
+// FindOrCreateServiceByName returns a service with the specified name, creating if necessary
+func FindOrCreateServiceByName(db *gorm.DB, name string) (*Service, bool, error) {
 	var service Service
 	if db.Where("name = ?", name).First(&service).RecordNotFound() {
-		service = Service{
-			Name: name,
-		}
-		if err := db.Create(&service).Error; err != nil {
-			return nil, err
-		}
+		service.Name = name
+		err := db.Create(&service).Error
+		return &service, true, err
 	}
-	return &service, nil
+	return &service, false, nil
 }

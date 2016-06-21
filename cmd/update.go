@@ -34,7 +34,7 @@ var UpdateCmd = &cobra.Command{
 
 		// Get the database record for the specified service
 		serviceName := service.Name(svc)
-		dbSvc, err := model.GetOrCreateService(db, serviceName)
+		dbSvc, _, err := model.FindOrCreateServiceByName(db, serviceName)
 		if err != nil {
 			getOutput().Fatal(err.Error())
 		}
