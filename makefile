@@ -2,6 +2,9 @@ packages = . ./cmd ./config ./model ./output ./service
 
 default: check
 
+install:
+	go build && go install
+
 all: check build
 
 build: osx linux windows
