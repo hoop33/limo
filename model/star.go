@@ -129,3 +129,9 @@ func FindLanguages(db *gorm.DB) ([]string, error) {
 	db.Table("stars").Order("language").Pluck("distinct(language)", &languages)
 	return languages, db.Error
 }
+
+// AddTag adds a tag to a star
+func (star *Star) AddTag(db *gorm.DB, tag *Tag) error {
+	star.Tags = append(star.Tags, *tag)
+	return db.Save(star).Error
+}

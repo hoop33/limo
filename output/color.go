@@ -38,17 +38,51 @@ func (c *Color) StarLine(star *model.Star) {
 		c.Error(err.Error())
 	}
 
-	if star.Language != nil {
-		_, err := buffer.WriteString(color.YellowString(fmt.Sprintf(" (%s)", *star.Language)))
+	if star.Stargazers > 0 {
+		_, err = buffer.WriteString(color.YellowString(fmt.Sprintf(" (★ : %d)", star.Stargazers)))
 		if err != nil {
 			c.Error(err.Error())
 		}
 	}
+
+	if star.Language != nil {
+		_, err = buffer.WriteString(color.YellowString(fmt.Sprintf(" (%s)", *star.Language)))
+		if err != nil {
+			c.Error(err.Error())
+		}
+	}
+
 	fmt.Println(buffer.String())
 }
 
 // Star displays a star
 func (c *Color) Star(star *model.Star) {
+	c.StarLine(star)
+
+	if len(star.Tags) > 0 {
+		var buffer bytes.Buffer
+		leader := ""
+		for _, tag := range star.Tags {
+			_, err := buffer.WriteString(color.MagentaString(fmt.Sprintf("%s%s", leader, tag.Name)))
+			if err != nil {
+				c.Error(err.Error())
+			}
+			leader = ", "
+		}
+		fmt.Println(buffer.String())
+	}
+
+	if star.Description != nil && *star.Description != "" {
+		color.White(*star.Description)
+	}
+
+	if star.Homepage != nil && *star.Homepage != "" {
+		color.Red(fmt.Sprintf("Home page: %s", *star.Homepage))
+	}
+
+	if star.URL != nil {
+		color.Red(fmt.Sprintf("URL: %s", *star.URL))
+	}
 }
 
 // Tick displays evidence that the program is working
