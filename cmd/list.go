@@ -16,9 +16,10 @@ var listers = map[string]func(){
 
 // ListCmd lists stars, tags, or trending
 var ListCmd = &cobra.Command{
-	Use:   "list <languages|stars|tags|trending>",
-	Short: "List languages, stars, trending, or tags",
-	Long:  "List languages, stars, trending, or tags that match your specified criteria",
+	Use:     "list <languages|stars|tags|trending>",
+	Aliases: []string{"ls"},
+	Short:   "List languages, stars, trending, or tags",
+	Long:    "List languages, stars, trending, or tags that match your specified criteria",
 	Run: func(cmd *cobra.Command, args []string) {
 		var target string
 		if len(args) == 0 {
