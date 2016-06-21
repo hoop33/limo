@@ -13,6 +13,13 @@ type Tag struct {
 	Stars []Star `gorm:"many2many:star_tags;"`
 }
 
+// FindTags finds all tags
+func FindTags(db *gorm.DB) ([]Tag, error) {
+	var tags []Tag
+	db.Order("name").Find(&tags)
+	return tags, db.Error
+}
+
 // FindOrCreateTagByName gets a tag by name, creating if it doesn't exist
 func FindOrCreateTagByName(db *gorm.DB, name string) (*Tag, bool, error) {
 	var tag Tag

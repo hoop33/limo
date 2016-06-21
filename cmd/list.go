@@ -82,7 +82,21 @@ func listStars() {
 }
 
 func listTags() {
-	getOutput().Info("Listing tags")
+	output := getOutput()
+
+	db, err := getDatabase()
+	if err != nil {
+		output.Fatal(err.Error())
+	}
+
+	tags, err := model.FindTags(db)
+	if err != nil {
+		output.Error(err.Error())
+	} else {
+		for _, tag := range tags {
+			output.Info(tag.Name)
+		}
+	}
 }
 
 func listTrending() {
