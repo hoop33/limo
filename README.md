@@ -141,7 +141,7 @@ Command | Description
 `open <star>` | Opens the URL of a star in your default browser
 `prune [--dryrun]` | Prunes unstarred items from your local database
 `rename <tag> <new>` | Rename tag `tag` to `new`
-`show <URL/name> [--output <output>]` | Show repository details
+`show <star> [--output <output>]` | Show repository details
 `tag <star> <tag>...` | Tag starred repository `star` using tags `tag`
 `untag <star> <tag>...` | Untag starred repository `star` using `tag` or leave blank for all tags
 `update [--service <service>]` | Update `service` or leave blank for all services
