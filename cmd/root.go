@@ -79,3 +79,19 @@ func getOutput() output.Output {
 func getService() (service.Service, error) {
 	return service.ForName(options.service)
 }
+
+func checkOneStar(name string, stars []model.Star) {
+	output := getOutput()
+
+	if len(stars) == 0 {
+		output.Fatal(fmt.Sprintf("No stars match '%s'", name))
+	}
+
+	if len(stars) > 1 {
+		output.Error(fmt.Sprintf("Star '%s' ambiguous:\n", name))
+		for _, star := range stars {
+			output.StarLine(&star)
+		}
+		output.Fatal("Narrow your search")
+	}
+}

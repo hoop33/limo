@@ -30,17 +30,7 @@ var OpenCmd = &cobra.Command{
 			output.Fatal(err.Error())
 		}
 
-		if len(stars) == 0 {
-			output.Fatal(fmt.Sprintf("No stars match '%s'", args[0]))
-		}
-
-		if len(stars) > 1 {
-			output.Error(fmt.Sprintf("Star '%s' ambiguous:\n", args[0]))
-			for _, star := range stars {
-				output.StarLine(&star)
-			}
-			output.Fatal("Narrow your search")
-		}
+		checkOneStar(args[0], stars)
 
 		if stars[0].URL == nil || *stars[0].URL == "" {
 			output.Fatal("No URL for star")
