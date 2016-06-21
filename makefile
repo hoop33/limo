@@ -27,7 +27,7 @@ lint:
 	golint --set_exit_status ./service
 
 test:
-	go test . ./cmd ./config ./model ./output ./service
+	go test -cover . ./cmd ./config ./model ./output ./service
 
 errcheck:
 	errcheck ./cmd
