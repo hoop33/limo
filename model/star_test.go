@@ -56,3 +56,54 @@ func TestNewStarFromGithubShouldHandleOnlyID(t *testing.T) {
 	assert.NotNil(t, star)
 	assert.Equal(t, "33", star.RemoteID)
 }
+
+func TestFuzzyFindStarsWithNameShouldFuzzyFind(t *testing.T) {
+	fullName := "Apple/Baker"
+	name := "Charlie"
+
+	star := Star{
+		FullName: &fullName,
+		Name:     &name,
+	}
+	assert.Nil(t, db.Create(&star).Error)
+
+	stars, err := FuzzyFindStarsWithName(db, "Apple/Baker")
+	assert.Nil(t, err)
+	assert.Equal(t, 1, len(stars))
+	assert.Equal(t, fullName, *stars[0].FullName)
+	assert.Equal(t, name, *stars[0].Name)
+
+	stars, err = FuzzyFindStarsWithName(db, "Charlie")
+	assert.Nil(t, err)
+	assert.Equal(t, 1, len(stars))
+	assert.Equal(t, fullName, *stars[0].FullName)
+	assert.Equal(t, name, *stars[0].Name)
+
+	stars, err = FuzzyFindStarsWithName(db, "apple/baker")
+	assert.Nil(t, err)
+	assert.Equal(t, 1, len(stars))
+	assert.Equal(t, fullName, *stars[0].FullName)
+	assert.Equal(t, name, *stars[0].Name)
+
+	stars, err = FuzzyFindStarsWithName(db, "charlie")
+	assert.Nil(t, err)
+	assert.Equal(t, 1, len(stars))
+	assert.Equal(t, fullName, *stars[0].FullName)
+	assert.Equal(t, name, *stars[0].Name)
+
+	stars, err = FuzzyFindStarsWithName(db, "apple")
+	assert.Nil(t, err)
+	assert.Equal(t, 1, len(stars))
+	assert.Equal(t, fullName, *stars[0].FullName)
+	assert.Equal(t, name, *stars[0].Name)
+
+	stars, err = FuzzyFindStarsWithName(db, "harl")
+	assert.Nil(t, err)
+	assert.Equal(t, 1, len(stars))
+	assert.Equal(t, fullName, *stars[0].FullName)
+	assert.Equal(t, name, *stars[0].Name)
+
+	stars, err = FuzzyFindStarsWithName(db, "boogers")
+	assert.Nil(t, err)
+	assert.Equal(t, 0, len(stars))
+}
