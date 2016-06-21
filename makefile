@@ -13,7 +13,10 @@ linux:
 windows:
 	GOOS=windows go build -o ./dist/windows/limo.exe
 
-check: lint errcheck test
+check: vet lint errcheck test
+
+vet:
+	go vet . ./cmd ./config ./model ./output ./service
 
 lint:
 	golint --set_exit_status .
