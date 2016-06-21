@@ -590,6 +590,14 @@
 			"notests": true
 		},
 		{
+			"importpath": "github.com/skratchdot/open-golang",
+			"repository": "https://github.com/skratchdot/open-golang",
+			"vcs": "git",
+			"revision": "75fb7ed4208cf72d323d7d02fd1a5964a7a9073c",
+			"branch": "master",
+			"notests": true
+		},
+		{
 			"importpath": "github.com/spf13/cast",
 			"repository": "https://github.com/spf13/cast",
 			"vcs": "git",
