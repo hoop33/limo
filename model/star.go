@@ -1,6 +1,7 @@
 package model
 
 import (
+	"errors"
 	"fmt"
 	"strconv"
 	"strings"
@@ -31,7 +32,18 @@ type StarResult struct {
 }
 
 // NewStarFromGithub creates a Star from a Github star
-func NewStarFromGithub(star github.Repository) *Star {
+func NewStarFromGithub(star github.Repository) (*Star, error) {
+	// Require the GitHub ID
+	if star.ID == nil {
+		return nil, errors.New("ID from GitHub is required")
+	}
+
+	// Set stargazers count to 0 if nil
+	stargazersCount := 0
+	if star.StargazersCount != nil {
+		stargazersCount = *star.StargazersCount
+	}
+
 	return &Star{
 		RemoteID:    strconv.Itoa(*star.ID),
 		Name:        star.Name,
@@ -40,8 +52,8 @@ func NewStarFromGithub(star github.Repository) *Star {
 		Homepage:    star.Homepage,
 		URL:         star.CloneURL,
 		Language:    star.Language,
-		Stargazers:  *star.StargazersCount,
-	}
+		Stargazers:  stargazersCount,
+	}, nil
 }
 
 // StarCopy copies values from src to dest

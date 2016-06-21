@@ -57,9 +57,10 @@ func (g *Github) GetStars(starChan chan<- *model.StarResult, token string, user 
 
 			// Create a Star for each repository and put it on the channel
 			for _, repo := range repos {
+				star, err := model.NewStarFromGithub(*repo.Repository)
 				starChan <- &model.StarResult{
-					Error: nil,
-					Star:  model.NewStarFromGithub(*repo.Repository),
+					Error: err,
+					Star:  star,
 				}
 			}
 		}
