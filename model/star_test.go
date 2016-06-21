@@ -2,6 +2,7 @@ package model
 
 import (
 	"testing"
+	"time"
 
 	"github.com/google/go-github/github"
 	"github.com/stretchr/testify/assert"
@@ -17,6 +18,10 @@ func TestNewStarFromGithubShouldCopyFields(t *testing.T) {
 	language := "hoosier"
 	stargazersCount := 10000
 
+	timestamp := github.Timestamp{
+		time.Now(),
+	}
+
 	github := github.Repository{
 		ID:              &id,
 		Name:            &name,
@@ -28,7 +33,7 @@ func TestNewStarFromGithubShouldCopyFields(t *testing.T) {
 		StargazersCount: &stargazersCount,
 	}
 
-	star, err := NewStarFromGithub(github)
+	star, err := NewStarFromGithub(&timestamp, github)
 	assert.Nil(t, err)
 	assert.Equal(t, "33", star.RemoteID)
 	assert.Equal(t, name, *star.Name)
@@ -41,7 +46,7 @@ func TestNewStarFromGithubShouldCopyFields(t *testing.T) {
 }
 
 func TestNewStarFromGithubShouldHandleEmpty(t *testing.T) {
-	star, err := NewStarFromGithub(github.Repository{})
+	star, err := NewStarFromGithub(&github.Timestamp{}, github.Repository{})
 	assert.NotNil(t, err)
 	assert.Equal(t, "ID from GitHub is required", err.Error())
 	assert.Nil(t, star)
@@ -49,7 +54,7 @@ func TestNewStarFromGithubShouldHandleEmpty(t *testing.T) {
 
 func TestNewStarFromGithubShouldHandleOnlyID(t *testing.T) {
 	id := 33
-	star, err := NewStarFromGithub(github.Repository{
+	star, err := NewStarFromGithub(&github.Timestamp{}, github.Repository{
 		ID: &id,
 	})
 	assert.Nil(t, err)

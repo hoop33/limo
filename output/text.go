@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"fmt"
 	"os"
+	"time"
 
 	"github.com/hoop33/limo/model"
 )
@@ -81,6 +82,8 @@ func (t *Text) Star(star *model.Star) {
 	if star.URL != nil {
 		fmt.Println(fmt.Sprintf("URL: %s", *star.URL))
 	}
+
+	fmt.Println(fmt.Sprintf("Starred at %s", star.StarredAt.Format(time.UnixDate)))
 }
 
 // Tick displays evidence that the program is working

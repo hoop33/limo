@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"fmt"
 	"os"
+	"time"
 
 	"github.com/fatih/color"
 	"github.com/hoop33/limo/model"
@@ -83,6 +84,8 @@ func (c *Color) Star(star *model.Star) {
 	if star.URL != nil {
 		color.Red(fmt.Sprintf("URL: %s", *star.URL))
 	}
+
+	color.Green(fmt.Sprintf("Starred at %s", star.StarredAt.Format(time.UnixDate)))
 }
 
 // Tick displays evidence that the program is working

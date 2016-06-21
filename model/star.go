@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"strconv"
 	"strings"
+	"time"
 
 	"github.com/google/go-github/github"
 	"github.com/jinzhu/gorm"
@@ -21,6 +22,7 @@ type Star struct {
 	URL         *string
 	Language    *string
 	Stargazers  int
+	StarredAt   time.Time
 	ServiceID   uint
 	Tags        []Tag `gorm:"many2many:star_tags;"`
 }
@@ -32,7 +34,7 @@ type StarResult struct {
 }
 
 // NewStarFromGithub creates a Star from a Github star
-func NewStarFromGithub(star github.Repository) (*Star, error) {
+func NewStarFromGithub(timestamp *github.Timestamp, star github.Repository) (*Star, error) {
 	// Require the GitHub ID
 	if star.ID == nil {
 		return nil, errors.New("ID from GitHub is required")
@@ -44,6 +46,11 @@ func NewStarFromGithub(star github.Repository) (*Star, error) {
 		stargazersCount = *star.StargazersCount
 	}
 
+	starredAt := time.Now()
+	if timestamp != nil {
+		starredAt = timestamp.Time
+	}
+
 	return &Star{
 		RemoteID:    strconv.Itoa(*star.ID),
 		Name:        star.Name,
@@ -53,6 +60,7 @@ func NewStarFromGithub(star github.Repository) (*Star, error) {
 		URL:         star.CloneURL,
 		Language:    star.Language,
 		Stargazers:  stargazersCount,
+		StarredAt:   starredAt,
 	}, nil
 }
 
@@ -65,6 +73,7 @@ func StarCopy(src *Star, dest *Star) {
 	dest.URL = src.URL
 	dest.Language = src.Language
 	dest.Stargazers = src.Stargazers
+	dest.StarredAt = src.StarredAt
 }
 
 // CreateOrUpdateStar creates or updates a star and returns true if the star was created (vs updated)
