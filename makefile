@@ -1,3 +1,5 @@
+packages = . ./cmd ./config ./model ./output ./service
+
 default: check
 
 all: check build
@@ -16,25 +18,16 @@ windows:
 check: vet lint errcheck test
 
 vet:
-	go vet . ./cmd ./config ./model ./output ./service
+	go vet $(packages)
 
 lint:
-	golint --set_exit_status .
-	golint --set_exit_status ./cmd
-	golint --set_exit_status ./config
-	golint --set_exit_status ./model
-	golint --set_exit_status ./output
-	golint --set_exit_status ./service
+	$(foreach package,$(packages),golint --set_exit_status $(package);)
 
 test:
-	go test -cover . ./cmd ./config ./model ./output ./service
+	go test -cover $(packages)
 
 errcheck:
-	errcheck ./cmd
-	errcheck ./config
-	errcheck ./model
-	errcheck ./output
-	errcheck ./service
+	errcheck $(packages)
 
 clean:
 	rm -rf dist/*
