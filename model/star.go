@@ -65,3 +65,20 @@ func CreateOrUpdateStar(db *gorm.DB, star *Star, service *Service) (bool, error)
 	StarCopy(star, &existing)
 	return false, db.Save(&existing).Error
 }
+
+// FindStarsWithLanguageAndTag finds stars with the specified language and tag
+func FindStarsWithLanguageAndTag(db *gorm.DB, language string, tag string) ([]Star, error) {
+	var stars []Star
+
+	if language != "" && tag != "" {
+		db.Where("language = ? AND tag = ?", language, tag).Order("full_name").Find(&stars)
+	} else if language != "" {
+		db.Where("language = ?", language).Order("full_name").Find(&stars)
+	} else if tag != "" {
+		db.Where("tag = ?", tag).Order("full_name").Find(&stars)
+	} else {
+		db.Order("full_name").Find(&stars)
+	}
+
+	return stars, db.Error
+}
