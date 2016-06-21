@@ -1,6 +1,69 @@
 # Limo
 
-> A CLI for managing starred repositories
+> A CLI for managing starred Git repositories
+
+## Status
+
+Limo is currently pre-alpha. Not a lot is working yet -- it's very much under development.
+
+What you can currently do:
+
+```sh
+$ limo login
+Enter your GitHub API token:
+$ limo update
+..............................................................................................................................................................................................................................................................................................................................................................................................................................................................................
+Created: 0; Updated: 462; Errors: 0
+$ limo list languages
+AppleScript
+C
+C++
+CSS
+Clojure
+CoffeeScript
+Emacs Lisp
+Go
+HTML
+Haskell
+Java
+JavaScript
+Makefile
+Objective-C
+PHP
+Perl
+Python
+Ruby
+Rust
+Scala
+Shell
+Swift
+TypeScript
+VimL
+$ limo list stars -l viml
+Shougo/dein.vim (VimL)
+Shougo/neosnippet-snippets (VimL)
+Yggdroot/indentLine (VimL)
+chxuan/vimplus (VimL)
+diepm/vim-rest-console (VimL)
+flazz/vim-colorschemes (VimL)
+itchyny/vim-cursorword (VimL)
+jaxbot/github-issues.vim (VimL)
+jaxbot/semantic-highlight.vim (VimL)
+junegunn/vim-plug (VimL)
+koron/minimap-vim (VimL)
+mattn/emmet-vim (VimL)
+mhinz/vim-galore (VimL)
+morhetz/gruvbox (VimL)
+neovim/neovim (VimL)
+nicwest/QQ.vim (VimL)
+rust-lang/rust.vim (VimL)
+ryanoasis/vim-devicons (VimL)
+samuelsimoes/vim-jsx-utils (VimL)
+tpope/tpope (VimL)
+tpope/vim-rails (VimL)
+xmementoit/vim-ide (VimL)
+xolox/vim-colorscheme-switcher (VimL)
+```
 
 ## Installation
 
@@ -42,18 +105,15 @@ Flag | Description
 ### Verbs [Aliases]
 
 `add`
-`configure [config]`
 `delete [rm]`
+`help`
 `list [ls]`
 `login`
 `open`
 `prune`
 `rename [mv]`
-`search`
 `show`
-`star`
 `tag`
-`unstar`
 `untag`
 `update`
 `version`
@@ -78,6 +138,7 @@ Command | Description
 `list tags [--output <output>]` | List tags
 `list trending [--language <language>]... [--service <service>]... [--output output]` | List trending repositories
 `login [--service <service>]` | Logs in to a service (default: github)
+`open <star>` | Opens the home page of a star in your default browser
 `prune [--dryrun]` | Prunes unstarred items from your local database
 `rename <tag> <new>` | Rename tag `tag` to `new`
 `show <URL/name> [--output <output>]` | Show repository details
@@ -85,6 +146,11 @@ Command | Description
 `untag <star> <tag>...` | Untag starred repository `star` using `tag` or leave blank for all tags
 `update [--service <service>]` | Update `service` or leave blank for all services
 `version` | Show program version
+
+## FAQ
+
+* Why the name "limo"?
+	* If you know anything about Hollywood, you know that limos carry . . . stars.
 
 ## License
 
