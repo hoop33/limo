@@ -152,6 +152,10 @@ Command | Description
 * Why the name "limo"?
 	* If you know anything about Hollywood, you know that limos carry . . . stars.
 
+## Contributing
+
+Contributions are welcome! I've included a makefile that runs tests/lint/etc. to make sure code is clean, so please run `make check` before opening a pull request.
+
 ## License
 
 Copyright &copy; 2016 Rob Warner
