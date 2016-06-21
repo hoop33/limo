@@ -1,18 +1,10 @@
 package model
 
 import (
-	"os"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
 )
-
-func TestMain(m *testing.M) {
-	mkDB()
-	run := m.Run()
-	//rmDB()
-	os.Exit(run)
-}
 
 func TestFindOrCreateTagByNameShouldCreateTag(t *testing.T) {
 	tag, err := FindOrCreateTagByName(db, "my-tag")

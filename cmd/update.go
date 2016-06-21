@@ -21,7 +21,7 @@ var UpdateCmd = &cobra.Command{
 		}
 
 		// Get the database
-		db, err := model.InitDB(cfg.DatabasePath, options.verbose)
+		db, err := getDatabase()
 		if err != nil {
 			getOutput().Fatal(err.Error())
 		}

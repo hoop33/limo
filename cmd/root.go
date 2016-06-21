@@ -5,12 +5,16 @@ import (
 	"os"
 
 	"github.com/hoop33/limo/config"
+	"github.com/hoop33/limo/model"
 	"github.com/hoop33/limo/output"
 	"github.com/hoop33/limo/service"
+	"github.com/jinzhu/gorm"
 	"github.com/spf13/cobra"
 )
 
 var configuration *config.Config
+var db *gorm.DB
+
 var options struct {
 	language string
 	output   string
@@ -52,6 +56,20 @@ func getConfiguration() (*config.Config, error) {
 		}
 	}
 	return configuration, nil
+}
+
+func getDatabase() (*gorm.DB, error) {
+	if db == nil {
+		cfg, err := getConfiguration()
+		if err != nil {
+			return nil, err
+		}
+		db, err = model.InitDB(cfg.DatabasePath, options.verbose)
+		if err != nil {
+			return nil, err
+		}
+	}
+	return db, nil
 }
 
 func getOutput() output.Output {

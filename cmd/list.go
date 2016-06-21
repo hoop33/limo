@@ -36,28 +36,46 @@ var ListCmd = &cobra.Command{
 }
 
 func listLanguages() {
-	getOutput().Info("Listing languages")
+	output := getOutput()
+
+	db, err := getDatabase()
+	if err != nil {
+		output.Fatal(err.Error())
+	}
+
+	languages, err := model.FindLanguages(db)
+	if err != nil {
+		output.Fatal(err.Error())
+	}
+
+	for _, language := range languages {
+		if language != "" {
+			output.Info(language)
+		}
+	}
 }
 
 func listStars() {
-	// Get configuration
-	cfg, err := getConfiguration()
+	output := getOutput()
+
+	db, err := getDatabase()
 	if err != nil {
-		getOutput().Fatal(err.Error())
+		output.Fatal(err.Error())
 	}
 
-	// Get the database
-	db, err := model.InitDB(cfg.DatabasePath, options.verbose)
-	if err != nil {
-		getOutput().Fatal(err.Error())
+	var stars []model.Star
+
+	if options.language != "" {
+		stars, err = model.FindStarsWithLanguage(db, options.language)
+	} else {
+		stars, err = model.FindStars(db)
 	}
 
-	stars, err := model.FindStarsWithLanguageAndTag(db, options.language, options.tag)
 	if err != nil {
-		getOutput().Error(err.Error())
+		output.Error(err.Error())
 	} else if stars != nil {
 		for _, star := range stars {
-			getOutput().StarLine(&star)
+			output.StarLine(&star)
 		}
 	}
 }

@@ -2,6 +2,7 @@ package model
 
 import (
 	"strconv"
+	"strings"
 
 	"github.com/google/go-github/github"
 	"github.com/jinzhu/gorm"
@@ -66,19 +67,23 @@ func CreateOrUpdateStar(db *gorm.DB, star *Star, service *Service) (bool, error)
 	return false, db.Save(&existing).Error
 }
 
-// FindStarsWithLanguageAndTag finds stars with the specified language and tag
-func FindStarsWithLanguageAndTag(db *gorm.DB, language string, tag string) ([]Star, error) {
+// FindStars finds all stars
+func FindStars(db *gorm.DB) ([]Star, error) {
 	var stars []Star
-
-	if language != "" && tag != "" {
-		db.Where("language = ? AND tag = ?", language, tag).Order("full_name").Find(&stars)
-	} else if language != "" {
-		db.Where("language = ?", language).Order("full_name").Find(&stars)
-	} else if tag != "" {
-		db.Where("tag = ?", tag).Order("full_name").Find(&stars)
-	} else {
-		db.Order("full_name").Find(&stars)
-	}
-
+	db.Order("full_name").Find(&stars)
 	return stars, db.Error
+}
+
+// FindStarsWithLanguage finds stars with the specified language
+func FindStarsWithLanguage(db *gorm.DB, language string) ([]Star, error) {
+	var stars []Star
+	db.Where("lower(language) = ?", strings.ToLower(language)).Order("full_name").Find(&stars)
+	return stars, db.Error
+}
+
+// FindLanguages finds all languages
+func FindLanguages(db *gorm.DB) ([]string, error) {
+	var languages []string
+	db.Table("stars").Order("language").Pluck("distinct(language)", &languages)
+	return languages, db.Error
 }
