@@ -1,9 +1,8 @@
 # Limo
 
-[![Join the chat at https://gitter.im/hoop33/limo](https://badges.gitter.im/hoop33/limo.svg)](https://gitter.im/hoop33/limo?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
-
 > A CLI for managing starred Git repositories
 
+[![Join the chat at https://gitter.im/hoop33/limo](https://badges.gitter.im/hoop33/limo.svg)](https://gitter.im/hoop33/limo?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](http://opensource.org/licenses/MIT)
 [![Issues](https://img.shields.io/github/issues/hoop33/limo.svg)](https://github.com/hoop33/limo/issues)
 
