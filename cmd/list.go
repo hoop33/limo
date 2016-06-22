@@ -68,6 +68,16 @@ func listStars() {
 
 	if options.language != "" {
 		stars, err = model.FindStarsByLanguage(db, options.language)
+	} else if options.tag != "" {
+		tag, _, err := model.FindOrCreateTagByName(db, options.tag)
+		if err != nil {
+			output.Fatal(err.Error())
+		}
+		err = tag.LoadStars(db)
+		if err != nil {
+			output.Fatal(err.Error())
+		}
+		stars, err = tag.Stars, nil
 	} else {
 		stars, err = model.FindStars(db)
 	}

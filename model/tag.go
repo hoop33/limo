@@ -30,3 +30,8 @@ func FindOrCreateTagByName(db *gorm.DB, name string) (*Tag, bool, error) {
 	}
 	return &tag, false, nil
 }
+
+// LoadStars loads the stars for a tag
+func (tag *Tag) LoadStars(db *gorm.DB) error {
+	return db.Model(tag).Association("Stars").Find(&tag.Stars).Error
+}
