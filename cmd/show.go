@@ -28,8 +28,13 @@ var ShowCmd = &cobra.Command{
 		}
 
 		for _, star := range stars {
-			output.Star(&star)
-			output.Info("")
+			err = star.LoadTags(db)
+			if err != nil {
+				output.Error(err.Error())
+			} else {
+				output.Star(&star)
+				output.Info("")
+			}
 		}
 	},
 }

@@ -112,3 +112,38 @@ func TestFuzzyFindStarsWithNameShouldFuzzyFind(t *testing.T) {
 	assert.Nil(t, err)
 	assert.Equal(t, 0, len(stars))
 }
+
+func TestAddTagShouldAddTag(t *testing.T) {
+	tag, _, err := FindOrCreateTagByName(db, "celtics")
+	assert.Nil(t, err)
+	assert.NotNil(t, tag)
+	assert.Equal(t, "celtics", tag.Name)
+
+	service, _, err := FindOrCreateServiceByName(db, "nba")
+	assert.Nil(t, err)
+	assert.NotNil(t, service)
+	assert.Equal(t, "nba", service.Name)
+
+	name := "Isaiah Thomas" // Not a typo
+	star := &Star{
+		RemoteID: "remoteID",
+		Name:     &name,
+	}
+	_, err = CreateOrUpdateStar(db, star, service)
+	assert.Nil(t, err)
+
+	err = star.AddTag(db, tag)
+	assert.Nil(t, err)
+	assert.Equal(t, 1, len(star.Tags))
+	assert.Equal(t, "celtics", star.Tags[0].Name)
+
+	stars, err := FuzzyFindStarsWithName(db, "Isaiah Thomas")
+	assert.Nil(t, err)
+	assert.Equal(t, 1, len(stars))
+	assert.Equal(t, "Isaiah Thomas", *stars[0].Name)
+
+	err = stars[0].LoadTags(db)
+	assert.Nil(t, err)
+	assert.Equal(t, 1, len(stars[0].Tags))
+	assert.Equal(t, "celtics", stars[0].Tags[0].Name)
+}

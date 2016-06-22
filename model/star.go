@@ -144,3 +144,8 @@ func (star *Star) AddTag(db *gorm.DB, tag *Tag) error {
 	star.Tags = append(star.Tags, *tag)
 	return db.Save(star).Error
 }
+
+// LoadTags loads the tags for a star
+func (star *Star) LoadTags(db *gorm.DB) error {
+	return db.Model(star).Association("Tags").Find(&star.Tags).Error
+}
