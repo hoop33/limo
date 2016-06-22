@@ -95,6 +95,15 @@ vim
 web
 ```
 
+### List Stars for a Specific Tag
+
+```sh
+$ limo list stars -t vim
+vim/vim (★ : 4979) (C)
+tybenz/vimdeck (★ : 946) (Ruby)
+jaxbot/github-issues.vim (★ : 344) (VimL)
+```
+
 ## Installation
 
 If you have a working Go installation, you can:
@@ -103,7 +112,7 @@ If you have a working Go installation, you can:
 $ go get -u github.com/hoop33/limo
 ```
 
-You can also download the proper binary for your system and put it in a directory in your path.
+Binaries for the various platforms not yet available.
 
 ## Usage
 
