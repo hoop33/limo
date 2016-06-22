@@ -2,6 +2,8 @@
 
 > A CLI for managing starred Git repositories
 
+[![License](https://img.shields.io/badge/license-MIT-blue.svg)](http://opensource.org/licenses/MIT)
+
 ## Status
 
 Limo is currently under development, and some things may change. Not all of it is implemented yet. Here's some of what you can do:
