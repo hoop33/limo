@@ -1,6 +1,7 @@
 package model
 
 import (
+	"fmt"
 	"strings"
 
 	"github.com/jinzhu/gorm"
@@ -20,7 +21,16 @@ func FindTags(db *gorm.DB) ([]Tag, error) {
 	return tags, db.Error
 }
 
-// FindOrCreateTagByName gets a tag by name, creating if it doesn't exist
+// FindTagByName finds a tag by name
+func FindTagByName(db *gorm.DB, name string) (*Tag, error) {
+	var tag Tag
+	if db.Where("lower(name) = ?", strings.ToLower(name)).First(&tag).RecordNotFound() {
+		return nil, db.Error
+	}
+	return &tag, db.Error
+}
+
+// FindOrCreateTagByName finds a tag by name, creating if it doesn't exist
 func FindOrCreateTagByName(db *gorm.DB, name string) (*Tag, bool, error) {
 	var tag Tag
 	if db.Where("lower(name) = ?", strings.ToLower(name)).First(&tag).RecordNotFound() {
@@ -34,4 +44,25 @@ func FindOrCreateTagByName(db *gorm.DB, name string) (*Tag, bool, error) {
 // LoadStars loads the stars for a tag
 func (tag *Tag) LoadStars(db *gorm.DB) error {
 	return db.Model(tag).Association("Stars").Find(&tag.Stars).Error
+}
+
+// Rename renames a tag -- new name must not already exist
+func (tag *Tag) Rename(db *gorm.DB, name string) error {
+	existing, err := FindTagByName(db, name)
+	if err != nil {
+		return err
+	}
+	if existing != nil {
+		return fmt.Errorf("Tag '%s' already exists", existing.Name)
+	}
+	tag.Name = name
+	return db.Save(tag).Error
+}
+
+// Delete deletes a tag and disassociates it from any stars
+func (tag *Tag) Delete(db *gorm.DB) error {
+	if err := db.Model(tag).Association("Stars").Clear().Error; err != nil {
+		return err
+	}
+	return db.Delete(tag).Error
 }
