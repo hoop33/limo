@@ -96,15 +96,15 @@ func FindStars(db *gorm.DB) ([]Star, error) {
 	return stars, db.Error
 }
 
-// FindStarsWithLanguage finds stars with the specified language
-func FindStarsWithLanguage(db *gorm.DB, language string) ([]Star, error) {
+// FindStarsByLanguage finds stars with the specified language
+func FindStarsByLanguage(db *gorm.DB, language string) ([]Star, error) {
 	var stars []Star
 	db.Where("lower(language) = ?", strings.ToLower(language)).Order("full_name").Find(&stars)
 	return stars, db.Error
 }
 
-// FuzzyFindStarsWithName finds stars with approximate matching for full name and name
-func FuzzyFindStarsWithName(db *gorm.DB, name string) ([]Star, error) {
+// FuzzyFindStarsByName finds stars with approximate matching for full name and name
+func FuzzyFindStarsByName(db *gorm.DB, name string) ([]Star, error) {
 	// Try each of these, and as soon as we hit, return
 	// 1. Exact match full name
 	// 2. Exact match name

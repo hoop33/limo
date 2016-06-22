@@ -62,7 +62,7 @@ func TestNewStarFromGithubShouldHandleOnlyID(t *testing.T) {
 	assert.Equal(t, "33", star.RemoteID)
 }
 
-func TestFuzzyFindStarsWithNameShouldFuzzyFind(t *testing.T) {
+func TestFuzzyFindStarsByNameShouldFuzzyFind(t *testing.T) {
 	fullName := "Apple/Baker"
 	name := "Charlie"
 
@@ -72,43 +72,43 @@ func TestFuzzyFindStarsWithNameShouldFuzzyFind(t *testing.T) {
 	}
 	assert.Nil(t, db.Create(&star).Error)
 
-	stars, err := FuzzyFindStarsWithName(db, "Apple/Baker")
+	stars, err := FuzzyFindStarsByName(db, "Apple/Baker")
 	assert.Nil(t, err)
 	assert.Equal(t, 1, len(stars))
 	assert.Equal(t, fullName, *stars[0].FullName)
 	assert.Equal(t, name, *stars[0].Name)
 
-	stars, err = FuzzyFindStarsWithName(db, "Charlie")
+	stars, err = FuzzyFindStarsByName(db, "Charlie")
 	assert.Nil(t, err)
 	assert.Equal(t, 1, len(stars))
 	assert.Equal(t, fullName, *stars[0].FullName)
 	assert.Equal(t, name, *stars[0].Name)
 
-	stars, err = FuzzyFindStarsWithName(db, "apple/baker")
+	stars, err = FuzzyFindStarsByName(db, "apple/baker")
 	assert.Nil(t, err)
 	assert.Equal(t, 1, len(stars))
 	assert.Equal(t, fullName, *stars[0].FullName)
 	assert.Equal(t, name, *stars[0].Name)
 
-	stars, err = FuzzyFindStarsWithName(db, "charlie")
+	stars, err = FuzzyFindStarsByName(db, "charlie")
 	assert.Nil(t, err)
 	assert.Equal(t, 1, len(stars))
 	assert.Equal(t, fullName, *stars[0].FullName)
 	assert.Equal(t, name, *stars[0].Name)
 
-	stars, err = FuzzyFindStarsWithName(db, "apple")
+	stars, err = FuzzyFindStarsByName(db, "apple")
 	assert.Nil(t, err)
 	assert.Equal(t, 1, len(stars))
 	assert.Equal(t, fullName, *stars[0].FullName)
 	assert.Equal(t, name, *stars[0].Name)
 
-	stars, err = FuzzyFindStarsWithName(db, "harl")
+	stars, err = FuzzyFindStarsByName(db, "harl")
 	assert.Nil(t, err)
 	assert.Equal(t, 1, len(stars))
 	assert.Equal(t, fullName, *stars[0].FullName)
 	assert.Equal(t, name, *stars[0].Name)
 
-	stars, err = FuzzyFindStarsWithName(db, "boogers")
+	stars, err = FuzzyFindStarsByName(db, "boogers")
 	assert.Nil(t, err)
 	assert.Equal(t, 0, len(stars))
 }
@@ -137,7 +137,7 @@ func TestAddTagShouldAddTag(t *testing.T) {
 	assert.Equal(t, 1, len(star.Tags))
 	assert.Equal(t, "celtics", star.Tags[0].Name)
 
-	stars, err := FuzzyFindStarsWithName(db, "Isaiah Thomas")
+	stars, err := FuzzyFindStarsByName(db, "Isaiah Thomas")
 	assert.Nil(t, err)
 	assert.Equal(t, 1, len(stars))
 	assert.Equal(t, "Isaiah Thomas", *stars[0].Name)

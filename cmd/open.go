@@ -25,7 +25,7 @@ var OpenCmd = &cobra.Command{
 			output.Fatal(err.Error())
 		}
 
-		stars, err := model.FuzzyFindStarsWithName(db, args[0])
+		stars, err := model.FuzzyFindStarsByName(db, args[0])
 		if err != nil {
 			output.Fatal(err.Error())
 		}

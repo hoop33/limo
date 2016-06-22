@@ -67,14 +67,15 @@ func listStars() {
 	var stars []model.Star
 
 	if options.language != "" {
-		stars, err = model.FindStarsWithLanguage(db, options.language)
+		stars, err = model.FindStarsByLanguage(db, options.language)
 	} else {
 		stars, err = model.FindStars(db)
 	}
 
 	if err != nil {
-		output.Error(err.Error())
-	} else if stars != nil {
+		output.Fatal(err.Error())
+	}
+	if stars != nil {
 		for _, star := range stars {
 			output.StarLine(&star)
 		}
