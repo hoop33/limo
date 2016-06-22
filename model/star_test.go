@@ -19,7 +19,7 @@ func TestNewStarFromGithubShouldCopyFields(t *testing.T) {
 	stargazersCount := 10000
 
 	timestamp := github.Timestamp{
-		time.Now(),
+		Time: time.Now(),
 	}
 
 	github := github.Repository{
