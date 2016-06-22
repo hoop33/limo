@@ -3,6 +3,7 @@ package cmd
 import (
 	"fmt"
 
+	"github.com/hoop33/limo/config"
 	"github.com/hoop33/limo/model"
 	"github.com/hoop33/limo/service"
 	"github.com/spf13/cobra"
@@ -10,9 +11,10 @@ import (
 
 // UpdateCmd lets you log in
 var UpdateCmd = &cobra.Command{
-	Use:   "update [--service service]",
-	Short: "Update [service]",
-	Long:  "Update your database from the service specified by [--service] (default: github)",
+	Use:     "update",
+	Short:   "Update stars from a service",
+	Long:    "Update your local database with your stars from the service specified by [--service] (default: github).",
+	Example: fmt.Sprintf("  %s update", config.ProgramName),
 	Run: func(cmd *cobra.Command, args []string) {
 		// Get configuration
 		cfg, err := getConfiguration()

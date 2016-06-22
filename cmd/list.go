@@ -3,6 +3,7 @@ package cmd
 import (
 	"fmt"
 
+	"github.com/hoop33/limo/config"
 	"github.com/hoop33/limo/model"
 	"github.com/spf13/cobra"
 )
@@ -19,7 +20,8 @@ var ListCmd = &cobra.Command{
 	Use:     "list <languages|stars|tags|trending>",
 	Aliases: []string{"ls"},
 	Short:   "List languages, stars, trending, or tags",
-	Long:    "List languages, stars, trending, or tags that match your specified criteria",
+	Long:    "List languages, stars, trending, or tags that match your specified criteria.",
+	Example: fmt.Sprintf("  %s list languages\n  %s list stars -t vim", config.ProgramName, config.ProgramName),
 	Run: func(cmd *cobra.Command, args []string) {
 		var target string
 		if len(args) == 0 {

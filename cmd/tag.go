@@ -3,15 +3,17 @@ package cmd
 import (
 	"fmt"
 
+	"github.com/hoop33/limo/config"
 	"github.com/hoop33/limo/model"
 	"github.com/spf13/cobra"
 )
 
 // TagCmd tags a star
 var TagCmd = &cobra.Command{
-	Use:   "tag <star> <tag>...",
-	Short: "Tag <star> with <tag>s",
-	Long:  "Tag the specified star with the specified tags, creating tags as necessary",
+	Use:     "tag <star> <tag>...",
+	Short:   "Tag a star",
+	Long:    "Tag the star identified by <star> with the tags specified by <tag>, creating tags as necessary.",
+	Example: fmt.Sprintf("  %s tag limo git cli", config.ProgramName),
 	Run: func(cmd *cobra.Command, args []string) {
 		output := getOutput()
 

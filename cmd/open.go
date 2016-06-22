@@ -3,6 +3,7 @@ package cmd
 import (
 	"fmt"
 
+	"github.com/hoop33/limo/config"
 	"github.com/hoop33/limo/model"
 	"github.com/skratchdot/open-golang/open"
 	"github.com/spf13/cobra"
@@ -10,9 +11,10 @@ import (
 
 // OpenCmd opens a star's URL in your browser
 var OpenCmd = &cobra.Command{
-	Use:   "open <star>",
-	Short: "Open a star's URL",
-	Long:  "Open a star's URL in your default browser",
+	Use:     "open <star>",
+	Short:   "Open a star's URL",
+	Long:    "Open a star's URL in your default browser.",
+	Example: fmt.Sprintf("  %s open limo", config.ProgramName),
 	Run: func(cmd *cobra.Command, args []string) {
 		output := getOutput()
 

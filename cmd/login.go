@@ -1,15 +1,19 @@
 package cmd
 
 import (
+	"fmt"
+
+	"github.com/hoop33/limo/config"
 	"github.com/hoop33/limo/service"
 	"github.com/spf13/cobra"
 )
 
 // LoginCmd lets you log in
 var LoginCmd = &cobra.Command{
-	Use:   "login [--service service]",
-	Short: "Log in to [service]",
-	Long:  "Log in to the service specified by [--service] (default: github)",
+	Use:     "login",
+	Short:   "Log in to a service",
+	Long:    "Log in to the service specified by [--service] (default: github).",
+	Example: fmt.Sprintf("  %s login", config.ProgramName),
 	Run: func(cmd *cobra.Command, args []string) {
 		// Get the specified service and log in
 		svc, err := getService()

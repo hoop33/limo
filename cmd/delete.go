@@ -3,6 +3,7 @@ package cmd
 import (
 	"fmt"
 
+	"github.com/hoop33/limo/config"
 	"github.com/hoop33/limo/model"
 	"github.com/spf13/cobra"
 )
@@ -12,7 +13,8 @@ var DeleteCmd = &cobra.Command{
 	Use:     "delete <tag>",
 	Aliases: []string{"rm"},
 	Short:   "Delete a tag",
-	Long:    "Delete tag <tag>",
+	Long:    "Delete the tag named <tag>.",
+	Example: fmt.Sprintf("  %s delete frameworks", config.ProgramName),
 	Run: func(cmd *cobra.Command, args []string) {
 		output := getOutput()
 
