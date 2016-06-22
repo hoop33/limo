@@ -4,65 +4,95 @@
 
 ## Status
 
-Limo is currently pre-alpha. Not a lot is working yet -- it's very much under development.
+Limo is currently under development, and some things may change. Not all of it is implemented yet. Here's some of what you can do:
 
-What you can currently do:
+### Log In to GitHub
+
+First, create an API key for your GitHub account, and then type:
 
 ```sh
 $ limo login
 Enter your GitHub API token:
+```
+
+### Update Your Local Database from GitHub
+
+```sh
 $ limo update
 ..............................................................................................................................................................................................................................................................................................................................................................................................................................................................................
 Created: 0; Updated: 462; Errors: 0
+```
+
+### List the Languages You Have Stars In
+
+```sh
 $ limo list languages
-AppleScript
-C
-C++
-CSS
-Clojure
-CoffeeScript
-Emacs Lisp
+...
 Go
-HTML
-Haskell
-Java
-JavaScript
-Makefile
-Objective-C
-PHP
-Perl
-Python
-Ruby
-Rust
-Scala
-Shell
-Swift
-TypeScript
+...
 VimL
-$ limo list stars -l viml
-Shougo/dein.vim (VimL)
-Shougo/neosnippet-snippets (VimL)
-Yggdroot/indentLine (VimL)
-chxuan/vimplus (VimL)
-diepm/vim-rest-console (VimL)
-flazz/vim-colorschemes (VimL)
-itchyny/vim-cursorword (VimL)
+```
+
+### List All Your Stars
+
+```sh
+$ limo list stars
+...
 jaxbot/github-issues.vim (VimL)
 jaxbot/semantic-highlight.vim (VimL)
-junegunn/vim-plug (VimL)
-koron/minimap-vim (VimL)
-mattn/emmet-vim (VimL)
-mhinz/vim-galore (VimL)
-morhetz/gruvbox (VimL)
-neovim/neovim (VimL)
-nicwest/QQ.vim (VimL)
-rust-lang/rust.vim (VimL)
-ryanoasis/vim-devicons (VimL)
-samuelsimoes/vim-jsx-utils (VimL)
-tpope/tpope (VimL)
-tpope/vim-rails (VimL)
-xmementoit/vim-ide (VimL)
-xolox/vim-colorscheme-switcher (VimL)
+...
+```
+
+### List Stars for a Specific Language
+
+```sh
+$ limo list stars -l viml
+...
+jaxbot/github-issues.vim (VimL)
+jaxbot/semantic-highlight.vim (VimL)
+...
+```
+
+### Tag a Star
+
+```sh
+$ limo tag jaxbot vim github
+Star 'jaxbot' ambiguous:
+jaxbot/github-issues.vim (★ : 344) (VimL)
+jaxbot/semantic-highlight.vim (★ : 204) (VimL)
+Narrow your search
+```
+
+```sh
+$ limo tag github-issues vim github
+jaxbot/github-issues.vim (★ : 344) (VimL)
+Added tag 'vim'
+Added tag 'github'
+```
+
+### Show Details of a Star
+
+```sh
+$ limo show github-issues
+jaxbot/github-issues.vim (★ : 344) (VimL)
+vim, github
+Github issue lookup in Vim
+Home page: http://jaxbot.me/articles/github-issues-vim-plugin-5-7-2014
+URL: https://github.com/jaxbot/github-issues.vim.git
+Starred at Fri Feb 21 16:02:49 UTC 2014
+```
+
+### List All Your Tags
+
+```sh
+$ limo list tags
+Awesome
+cli
+git
+github
+go
+vim
+web
 ```
 
 ## Installation
@@ -151,6 +181,8 @@ Command | Description
 
 * Why the name "limo"?
 	* If you know anything about Hollywood, you know that limos carry . . . stars.
+* Where is this information stored?
+	* The configuration is stored in `~/.config/limo`. Inside that directory, you'll find `limo.yaml`, which contains your GitHub API Key (so guard it!) and the path to your SQLite database, which defaults to the same directory.
 
 ## Contributing
 
