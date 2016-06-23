@@ -2,12 +2,15 @@ packages = . ./cmd ./config ./model ./output ./service
 
 default: check
 
-install:
-	go build && go install
+install: build
+	go install
 
 all: check build
 
-build: osx linux windows
+build:
+	go build
+
+dist: osx linux windows
 
 osx:
 	GOOS=darwin go build -o ./dist/osx/limo
