@@ -17,26 +17,17 @@ var LoginCmd = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 		// Get the specified service and log in
 		svc, err := getService()
-		if err != nil {
-			getOutput().Fatal(err.Error())
-		}
+		fatalOnError(err)
 
 		token, err := svc.Login()
-		if err != nil {
-			getOutput().Fatal(err.Error())
-		}
+		fatalOnError(err)
 
 		// Update configuration with token
 		config, err := getConfiguration()
-		if err != nil {
-			getOutput().Fatal(err.Error())
-		}
+		fatalOnError(err)
 
 		config.GetService(service.Name(svc)).Token = token
-		err = config.WriteConfig()
-		if err != nil {
-			getOutput().Fatal(err.Error())
-		}
+		fatalOnError(config.WriteConfig())
 	},
 }
 

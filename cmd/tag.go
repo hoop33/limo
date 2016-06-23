@@ -22,14 +22,10 @@ var TagCmd = &cobra.Command{
 		}
 
 		db, err := getDatabase()
-		if err != nil {
-			output.Fatal(err.Error())
-		}
+		fatalOnError(err)
 
 		stars, err := model.FuzzyFindStarsByName(db, args[0])
-		if err != nil {
-			output.Fatal(err.Error())
-		}
+		fatalOnError(err)
 
 		checkOneStar(args[0], stars)
 

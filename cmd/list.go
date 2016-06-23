@@ -42,14 +42,10 @@ func listLanguages() {
 	output := getOutput()
 
 	db, err := getDatabase()
-	if err != nil {
-		output.Fatal(err.Error())
-	}
+	fatalOnError(err)
 
 	languages, err := model.FindLanguages(db)
-	if err != nil {
-		output.Fatal(err.Error())
-	}
+	fatalOnError(err)
 
 	for _, language := range languages {
 		if language != "" {

@@ -23,23 +23,16 @@ var RenameCmd = &cobra.Command{
 		}
 
 		db, err := getDatabase()
-		if err != nil {
-			output.Fatal(err.Error())
-		}
+		fatalOnError(err)
 
 		tag, err := model.FindTagByName(db, args[0])
-		if err != nil {
-			output.Fatal(err.Error())
-		}
+		fatalOnError(err)
 
 		if tag == nil {
 			output.Fatal(fmt.Sprintf("Tag '%s' not found", args[0]))
 		}
 
-		err = tag.Rename(db, args[1])
-		if err != nil {
-			output.Fatal(err.Error())
-		}
+		fatalOnError(tag.Rename(db, args[1]))
 	},
 }
 

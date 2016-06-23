@@ -23,14 +23,10 @@ var OpenCmd = &cobra.Command{
 		}
 
 		db, err := getDatabase()
-		if err != nil {
-			output.Fatal(err.Error())
-		}
+		fatalOnError(err)
 
 		stars, err := model.FuzzyFindStarsByName(db, args[0])
-		if err != nil {
-			output.Fatal(err.Error())
-		}
+		fatalOnError(err)
 
 		checkOneStar(args[0], stars)
 
@@ -39,10 +35,7 @@ var OpenCmd = &cobra.Command{
 		}
 
 		output.Info(fmt.Sprintf("Opening %s...", *stars[0].URL))
-		err = open.Start(*stars[0].URL)
-		if err != nil {
-			output.Fatal(err.Error())
-		}
+		fatalOnError(open.Start(*stars[0].URL))
 	},
 }
 

@@ -40,9 +40,7 @@ func addTag(values []string) {
 	output := getOutput()
 
 	db, err := getDatabase()
-	if err != nil {
-		output.Fatal(err.Error())
-	}
+	fatalOnError(err)
 
 	for _, value := range values {
 		tag, created, err := model.FindOrCreateTagByName(db, value)
