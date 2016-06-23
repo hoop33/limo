@@ -95,3 +95,9 @@ func checkOneStar(name string, stars []model.Star) {
 		output.Fatal("Narrow your search")
 	}
 }
+
+func fatalOnError(err error) {
+	if err != nil {
+		getOutput().Fatal(err.Error())
+	}
+}

@@ -18,28 +18,20 @@ var UpdateCmd = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 		// Get configuration
 		cfg, err := getConfiguration()
-		if err != nil {
-			getOutput().Fatal(err.Error())
-		}
+		fatalOnError(err)
 
 		// Get the database
 		db, err := getDatabase()
-		if err != nil {
-			getOutput().Fatal(err.Error())
-		}
+		fatalOnError(err)
 
 		// Get the specified service
 		svc, err := getService()
-		if err != nil {
-			getOutput().Fatal(err.Error())
-		}
+		fatalOnError(err)
 
 		// Get the database record for the specified service
 		serviceName := service.Name(svc)
 		dbSvc, _, err := model.FindOrCreateServiceByName(db, serviceName)
-		if err != nil {
-			getOutput().Fatal(err.Error())
-		}
+		fatalOnError(err)
 
 		// Create a channel to receive stars, since service can page
 		starChan := make(chan *model.StarResult, 20)
