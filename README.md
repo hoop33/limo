@@ -7,9 +7,19 @@
 [![Issues](https://img.shields.io/github/issues/hoop33/limo.svg)](https://github.com/hoop33/limo/issues)
 [![Join the chat at https://gitter.im/hoop33/limo](https://badges.gitter.im/hoop33/limo.svg)](https://gitter.im/hoop33/limo?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
-## Status
+## Installation
 
-Limo is currently under development, and some things may change. Not all of it is implemented yet. Here's some of what you can do:
+If you have a working Go installation, you can:
+
+```sh
+$ go get -u github.com/hoop33/limo
+```
+
+Binaries for the various platforms not yet available.
+
+## Usage
+
+Limo is currently under development, and some things may change. Not all of it is implemented yet. Right now, GitHub is the only service supported. Here's how to get started:
 
 ### Log In to GitHub
 
@@ -24,8 +34,8 @@ Enter your GitHub API token:
 
 ```sh
 $ limo update
-..............................................................................................................................................................................................................................................................................................................................................................................................................................................................................
-Created: 0; Updated: 462; Errors: 0
+........................................
+Created: 10; Updated: 46; Errors: 0
 ```
 
 ### List the Languages You Have Stars In
@@ -91,11 +101,8 @@ Starred at Fri Feb 21 16:02:49 UTC 2014
 
 ```sh
 $ limo list tags
-Awesome
 cli
 git
-github
-go
 vim
 web
 ```
@@ -109,17 +116,7 @@ tybenz/vimdeck (★ : 946) (Ruby)
 jaxbot/github-issues.vim (★ : 344) (VimL)
 ```
 
-## Installation
-
-If you have a working Go installation, you can:
-
-```sh
-$ go get -u github.com/hoop33/limo
-```
-
-Binaries for the various platforms not yet available.
-
-## Usage
+### All Commands
 
 The Limo commands take the form:
 
@@ -127,10 +124,10 @@ The Limo commands take the form:
 $ limo [flags] <verb> <noun> [arguments...]
 ```
 
-For example, to list your starred repositories for Github in JSON format, you type:
+For example, to list your starred repositories for Github in plaintext format, you type:
 
 ```sh
-$ limo --service github --output json list repositories
+$ limo --service github --output text list stars
 ```
 
 Some verbs don't require nouns, and flags can go before or after the verb-noun-arguments clause.
@@ -200,7 +197,31 @@ Command | Description
 
 ## Contributing
 
-Contributions are welcome! I've included a makefile that runs tests/lint/etc. to make sure code is clean, so please run `make check` before opening a pull request.
+Contributions are welcome! Please open pull requests with code that passes all the checks. See *Building* for more information.
+
+### Building
+
+You must have a working Go development environment to contribute code. I have tested so far only on Go 1.6.2 on OS X. `limo` uses a vendor folder, so requires Go 1.6+ or Go 1.5 with `GO15VENDOREXPERIMENT=1` (though I haven't tested that).
+
+The included makefile performs various checks on the code. To get started, run:
+
+```sh
+$ make get-deps
+```
+
+This will install `golint` and `errcheck`. You should have to do this only once.
+
+Then, you can run:
+
+```sh
+$ make
+```
+
+To run the code checks and tests. To build and install, run:
+
+```sh
+$ make install
+```
 
 ## License
 
