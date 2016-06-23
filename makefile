@@ -37,3 +37,7 @@ errcheck:
 
 clean:
 	rm -rf dist/*
+
+get-deps:
+	go get -u github.com/golang/lint/golint
+	go get -u github.com/kisielk/errcheck
