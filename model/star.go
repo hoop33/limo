@@ -64,18 +64,6 @@ func NewStarFromGithub(timestamp *github.Timestamp, star github.Repository) (*St
 	}, nil
 }
 
-// StarCopy copies values from src to dest
-func StarCopy(src *Star, dest *Star) {
-	dest.Name = src.Name
-	dest.FullName = src.FullName
-	dest.Description = src.Description
-	dest.Homepage = src.Homepage
-	dest.URL = src.URL
-	dest.Language = src.Language
-	dest.Stargazers = src.Stargazers
-	dest.StarredAt = src.StarredAt
-}
-
 // CreateOrUpdateStar creates or updates a star and returns true if the star was created (vs updated)
 func CreateOrUpdateStar(db *gorm.DB, star *Star, service *Service) (bool, error) {
 	// Get existing by remote ID and service ID
@@ -85,8 +73,10 @@ func CreateOrUpdateStar(db *gorm.DB, star *Star, service *Service) (bool, error)
 		err := db.Create(star).Error
 		return err == nil, err
 	}
-	StarCopy(star, &existing)
-	return false, db.Save(&existing).Error
+	star.ID = existing.ID
+	star.ServiceID = service.ID
+	star.CreatedAt = existing.CreatedAt
+	return false, db.Save(star).Error
 }
 
 // FindStars finds all stars
