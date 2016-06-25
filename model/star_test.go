@@ -13,8 +13,8 @@ func TestNewStarFromGithubShouldCopyFields(t *testing.T) {
 	name := "larry-bird"
 	fullName := "celtics/larry-bird"
 	description := "larry legend"
-	homepage := "http ://www.nba.com/celtics/"
-	url := "http ://www.nba.com/pacers/"
+	homepage := "http://www.nba.com/celtics/"
+	url := "http://www.nba.com/pacers/"
 	language := "hoosier"
 	stargazersCount := 10000
 
