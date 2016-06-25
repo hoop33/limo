@@ -147,3 +147,142 @@ func TestAddTagShouldAddTag(t *testing.T) {
 	assert.Equal(t, 1, len(stars[0].Tags))
 	assert.Equal(t, "celtics", stars[0].Tags[0].Name)
 }
+
+func TestHasTagShouldReturnFalseWhenNoTags(t *testing.T) {
+	service, _, err := FindOrCreateServiceByName(db, "nba")
+	assert.Nil(t, err)
+	assert.NotNil(t, service)
+	assert.Equal(t, "nba", service.Name)
+
+	name := "Jaylen Brown"
+	star := &Star{
+		RemoteID: "brown",
+		Name:     &name,
+	}
+	tag, _, err := FindOrCreateTagByName(db, "bucks")
+	assert.Nil(t, err)
+	assert.NotNil(t, tag)
+	assert.Equal(t, "bucks", tag.Name)
+
+	_, err = CreateOrUpdateStar(db, star, service)
+	assert.Nil(t, err)
+
+	err = star.LoadTags(db)
+	assert.Nil(t, err)
+
+	assert.False(t, star.HasTag(tag))
+}
+
+func TestHasTagShouldReturnFalseWhenTagIsNil(t *testing.T) {
+	service, _, err := FindOrCreateServiceByName(db, "nba")
+	assert.Nil(t, err)
+	assert.NotNil(t, service)
+	assert.Equal(t, "nba", service.Name)
+
+	name := "Jaylen Brown"
+	star := &Star{
+		RemoteID: "brown",
+		Name:     &name,
+	}
+	_, err = CreateOrUpdateStar(db, star, service)
+	assert.Nil(t, err)
+
+	err = star.LoadTags(db)
+	assert.Nil(t, err)
+
+	assert.False(t, star.HasTag(nil))
+}
+
+func TestHasTagShouldReturnFalseWhenDoesNotHaveTag(t *testing.T) {
+	service, _, err := FindOrCreateServiceByName(db, "nba")
+	assert.Nil(t, err)
+	assert.NotNil(t, service)
+	assert.Equal(t, "nba", service.Name)
+
+	name := "Jaylen Brown"
+	star := &Star{
+		RemoteID: "brown",
+		Name:     &name,
+	}
+	_, err = CreateOrUpdateStar(db, star, service)
+	assert.Nil(t, err)
+
+	bucks, _, err := FindOrCreateTagByName(db, "bucks")
+	assert.Nil(t, err)
+	assert.NotNil(t, bucks)
+	assert.Equal(t, "bucks", bucks.Name)
+
+	celtics, _, err := FindOrCreateTagByName(db, "celtics")
+	assert.Nil(t, err)
+	assert.NotNil(t, celtics)
+	assert.Equal(t, "celtics", celtics.Name)
+
+	err = star.AddTag(db, celtics)
+	assert.Nil(t, err)
+
+	err = star.LoadTags(db)
+	assert.Nil(t, err)
+
+	assert.False(t, star.HasTag(bucks))
+}
+
+func TestHasTagShouldReturnTrueWhenHasOnlyTag(t *testing.T) {
+	service, _, err := FindOrCreateServiceByName(db, "nba")
+	assert.Nil(t, err)
+	assert.NotNil(t, service)
+	assert.Equal(t, "nba", service.Name)
+
+	name := "Jaylen Brown"
+	star := &Star{
+		RemoteID: "brown",
+		Name:     &name,
+	}
+	_, err = CreateOrUpdateStar(db, star, service)
+	assert.Nil(t, err)
+
+	celtics, _, err := FindOrCreateTagByName(db, "celtics")
+	assert.Nil(t, err)
+	assert.NotNil(t, celtics)
+	assert.Equal(t, "celtics", celtics.Name)
+
+	err = star.AddTag(db, celtics)
+	assert.Nil(t, err)
+
+	err = star.LoadTags(db)
+	assert.Nil(t, err)
+
+	assert.True(t, star.HasTag(celtics))
+}
+
+func TestHasTagShouldReturnTrueWhenHasTag(t *testing.T) {
+	service, _, err := FindOrCreateServiceByName(db, "nba")
+	assert.Nil(t, err)
+	assert.NotNil(t, service)
+	assert.Equal(t, "nba", service.Name)
+
+	name := "Jaylen Brown"
+	star := &Star{
+		RemoteID: "brown",
+		Name:     &name,
+	}
+	_, err = CreateOrUpdateStar(db, star, service)
+	assert.Nil(t, err)
+
+	draft, _, err := FindOrCreateTagByName(db, "2016-draft")
+	assert.Nil(t, err)
+	assert.NotNil(t, draft)
+	assert.Equal(t, "2016-draft", draft.Name)
+
+	celtics, _, err := FindOrCreateTagByName(db, "celtics")
+	assert.Nil(t, err)
+	assert.NotNil(t, celtics)
+	assert.Equal(t, "celtics", celtics.Name)
+
+	err = star.AddTag(db, celtics)
+	assert.Nil(t, err)
+
+	err = star.LoadTags(db)
+	assert.Nil(t, err)
+
+	assert.True(t, star.HasTag(celtics))
+}

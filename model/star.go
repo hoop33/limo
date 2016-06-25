@@ -139,3 +139,25 @@ func (star *Star) AddTag(db *gorm.DB, tag *Tag) error {
 func (star *Star) LoadTags(db *gorm.DB) error {
 	return db.Model(star).Association("Tags").Find(&star.Tags).Error
 }
+
+// RemoveAllTags removes all tags for a star
+func (star *Star) RemoveAllTags(db *gorm.DB) error {
+	return db.Model(star).Association("Tags").Clear().Error
+}
+
+// RemoveTag removes a tag from a star
+func (star *Star) RemoveTag(db *gorm.DB, tag *Tag) error {
+	return db.Model(star).Association("Tags").Delete(tag).Error
+}
+
+// HasTag returns whether a star has a tag. Note that you must call LoadTags first -- no reason to incur a database call each time
+func (star *Star) HasTag(tag *Tag) bool {
+	if len(star.Tags) > 0 {
+		for _, t := range star.Tags {
+			if t.Name == tag.Name {
+				return true
+			}
+		}
+	}
+	return false
+}
