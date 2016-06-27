@@ -162,3 +162,13 @@ func TestDeleteTagShouldDeleteAssociationsToStars(t *testing.T) {
 	assert.Nil(t, err)
 	assert.Equal(t, 0, len(star2.Tags))
 }
+
+func TestLoadStarsShouldReturnErrorWhenTagNotInDatabase(t *testing.T) {
+	tag := &Tag{
+		Name: "not in db",
+	}
+
+	err := tag.LoadStars(db)
+	assert.NotNil(t, err)
+	assert.Equal(t, "Tag '0' not found", err.Error())
+}

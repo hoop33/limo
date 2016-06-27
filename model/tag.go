@@ -43,6 +43,11 @@ func FindOrCreateTagByName(db *gorm.DB, name string) (*Tag, bool, error) {
 
 // LoadStars loads the stars for a tag
 func (tag *Tag) LoadStars(db *gorm.DB) error {
+	// Make sure tag exists in database, or we will panic
+	var existing Tag
+	if db.Where("id = ?", tag.ID).First(&existing).RecordNotFound() {
+		return fmt.Errorf("Tag '%d' not found", tag.ID)
+	}
 	return db.Model(tag).Association("Stars").Find(&tag.Stars).Error
 }
 
