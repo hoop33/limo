@@ -286,3 +286,15 @@ func TestHasTagShouldReturnTrueWhenHasTag(t *testing.T) {
 
 	assert.True(t, star.HasTag(celtics))
 }
+
+func TestLoadTagsShouldReturnErrorWhenStarNotInDatabase(t *testing.T) {
+	name := "not in db"
+	star := &Star{
+		RemoteID: "not in db",
+		Name:     &name,
+	}
+
+	err := star.LoadTags(db)
+	assert.NotNil(t, err)
+	assert.Equal(t, "Star '0' not found", err.Error())
+}

@@ -137,6 +137,11 @@ func (star *Star) AddTag(db *gorm.DB, tag *Tag) error {
 
 // LoadTags loads the tags for a star
 func (star *Star) LoadTags(db *gorm.DB) error {
+	// Make sure star exists in database, or we will panic
+	var existing Star
+	if db.Where("id = ?", star.ID).First(&existing).RecordNotFound() {
+    return fmt.Errorf("Star '%d' not found", star.ID)
+  }
 	return db.Model(star).Association("Tags").Find(&star.Tags).Error
 }
 
