@@ -58,31 +58,30 @@ func listStars() {
 	output := getOutput()
 
 	db, err := getDatabase()
-	if err != nil {
-		output.Fatal(err.Error())
-	}
+	fatalOnError(err)
 
 	var stars []model.Star
 
 	if options.language != "" {
 		stars, err = model.FindStarsByLanguage(db, options.language)
 	} else if options.tag != "" {
-		tag, _, err := model.FindOrCreateTagByName(db, options.tag)
-		if err != nil {
-			output.Fatal(err.Error())
+		tag, err := model.FindTagByName(db, options.tag)
+		fatalOnError(err)
+
+		if tag == nil {
+			output.Fatal(fmt.Sprintf("Tag '%s' not found", options.tag))
 		}
+
 		err = tag.LoadStars(db)
-		if err != nil {
-			output.Fatal(err.Error())
-		}
+		fatalOnError(err)
+
 		stars, err = tag.Stars, nil
 	} else {
 		stars, err = model.FindStars(db)
 	}
 
-	if err != nil {
-		output.Fatal(err.Error())
-	}
+	fatalOnError(err)
+
 	if stars != nil {
 		for _, star := range stars {
 			output.StarLine(&star)
