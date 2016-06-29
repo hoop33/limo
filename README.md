@@ -126,7 +126,7 @@ The Limo commands take the form:
 $ limo [flags] <verb> <noun> [arguments...]
 ```
 
-For example, to list your starred repositories for Github in plaintext format, you type:
+For example, to list your starred repositories for GitHub in plaintext format, you type:
 
 ```sh
 $ limo --service github --output text list stars
