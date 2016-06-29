@@ -75,7 +75,7 @@ func listStars() {
 		err = tag.LoadStars(db)
 		fatalOnError(err)
 
-		stars, err = tag.Stars, nil
+		stars = tag.Stars
 	} else {
 		stars, err = model.FindStars(db)
 	}
