@@ -187,7 +187,7 @@ Command | Description
 `show <star> [--output <output>]` | Show repository details
 `tag <star> <tag>...` | Tag starred repository `star` using tags `tag`
 `untag <star> <tag>...` | Untag starred repository `star` using `tag` or leave blank for all tags
-`update [--service <service>]` | Update `service` or leave blank for all services
+`update [--service <service>] [--user <user>]` | Update `service` or leave blank for all services for user `user` or leave blank for you
 `version` | Show program version
 
 ## Credits
