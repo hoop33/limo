@@ -190,6 +190,21 @@ Command | Description
 `update [--service <service>]` | Update `service` or leave blank for all services
 `version` | Show program version
 
+## Credits
+
+Limo uses the following open source libraries -- thank you!
+
+* [Cobra](https://github.com/spf13/cobra.git)
+* [Color](https://github.com/fatih/color)
+* [GORM](https://github.com/jinzhu/gorm)
+* [go-github](https://github.com/google/go-github)
+* [go-homedir](https://github.com/mitchellh/go-homedir)
+* [Open](https://github.com/skratchdot/open-golang)
+* [Testify](https://github.com/stretchr/testify)
+* [YAML](https://github.com/go-yaml/yaml/tree/v2)
+
+Apologies if I've inadvertently omitted any.
+
 ## FAQ
 
 * Why the name "limo"?
