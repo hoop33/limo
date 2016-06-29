@@ -5,6 +5,7 @@
 [![Build Status](https://travis-ci.org/hoop33/limo.svg?branch=master)](https://travis-ci.org/hoop33/limo)
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](http://opensource.org/licenses/MIT)
 [![Issues](https://img.shields.io/github/issues/hoop33/limo.svg)](https://github.com/hoop33/limo/issues)
+[![codebeat badge](https://codebeat.co/badges/9ab79648-de9b-4585-918c-85c043bf7971)](https://codebeat.co/projects/github-com-hoop33-limo)
 [![Go Report Card](https://goreportcard.com/badge/hoop33/limo)](https://goreportcard.com/report/hoop33/limo)
 [![Join the chat at https://gitter.im/hoop33/limo](https://badges.gitter.im/hoop33/limo.svg)](https://gitter.im/hoop33/limo?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
