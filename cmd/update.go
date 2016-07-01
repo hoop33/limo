@@ -24,6 +24,10 @@ var UpdateCmd = &cobra.Command{
 		db, err := getDatabase()
 		fatalOnError(err)
 
+		// Get the search index
+		index, err := getIndex()
+		fatalOnError(err)
+
 		// Get the specified service
 		svc, err := getService()
 		fatalOnError(err)
@@ -39,28 +43,35 @@ var UpdateCmd = &cobra.Command{
 		// Get the stars for the authenticated user
 		go svc.GetStars(starChan, cfg.GetService(serviceName).Token, "")
 
+		output := getOutput()
+
 		totalCreated, totalUpdated, totalErrors := 0, 0, 0
 
 		for starResult := range starChan {
 			if starResult.Error != nil {
 				totalErrors++
-				getOutput().Error(starResult.Error.Error())
+				output.Error(starResult.Error.Error())
 			} else {
 				created, err := model.CreateOrUpdateStar(db, starResult.Star, dbSvc)
 				if err != nil {
 					totalErrors++
-					getOutput().Error(fmt.Sprintf("Error %s: %s", *starResult.Star.FullName, err.Error()))
+					output.Error(fmt.Sprintf("Error %s: %s", *starResult.Star.FullName, err.Error()))
 				} else {
 					if created {
 						totalCreated++
 					} else {
 						totalUpdated++
 					}
-					getOutput().Tick()
+					err = starResult.Star.Index(index)
+					if err != nil {
+						totalErrors++
+						output.Error(fmt.Sprintf("Error %s: %s", *starResult.Star.FullName, err.Error()))
+					}
+					output.Tick()
 				}
 			}
 		}
-		getOutput().Info(fmt.Sprintf("\nCreated: %d; Updated: %d; Errors: %d", totalCreated, totalUpdated, totalErrors))
+		output.Info(fmt.Sprintf("\nCreated: %d; Updated: %d; Errors: %d", totalCreated, totalUpdated, totalErrors))
 	},
 }
 

@@ -21,6 +21,7 @@ type ServiceConfig struct {
 // Config contains configuration information
 type Config struct {
 	DatabasePath string                    `yaml:"databasePath"`
+	IndexPath    string                    `yaml:"indexPath"`
 	Services     map[string]*ServiceConfig `yaml:"services"`
 }
 
@@ -59,6 +60,11 @@ func ReadConfig() (*Config, error) {
 	// Set default database path
 	if config.DatabasePath == "" {
 		config.DatabasePath = path.Join(configDirectoryPath, fmt.Sprintf("%s.db", ProgramName))
+	}
+
+	// Set default search index path
+	if config.IndexPath == "" {
+		config.IndexPath = path.Join(configDirectoryPath, fmt.Sprintf("%s.idx", ProgramName))
 	}
 	return &config, nil
 }

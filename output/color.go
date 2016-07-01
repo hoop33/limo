@@ -14,6 +14,11 @@ import (
 type Color struct {
 }
 
+// Inline displays text in line
+func (c *Color) Inline(s string) {
+	fmt.Print(color.GreenString(s))
+}
+
 // Info displays information
 func (c *Color) Info(s string) {
 	color.Green(s)

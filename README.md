@@ -119,6 +119,22 @@ tybenz/vimdeck (★ : 946) (Ruby)
 jaxbot/github-issues.vim (★ : 344) (VimL)
 ```
 
+### Perform a Full-text Search on Your Stars
+
+```sh
+$ limo search text editor
+(0.703194) limetext/lime (★ : 12522)
+(0.613690) driusan/de (★ : 115) (Go)
+(0.608085) Cocoanetics/DTRichTextEditor (★ : 257) (Objective-C)
+(0.608085) atom/atom (★ : 28810) (CoffeeScript)
+(0.605340) zyedidia/micro (★ : 1973) (Go)
+(0.602631) vicoapp/vico (★ : 666) (Objective-C)
+(0.597322) xmementoit/vim-ide (★ : 142) (VimL)
+(0.597322) textmate/textmate (★ : 10873) (C++)
+(0.589614) macvim-dev/macvim (★ : 1820) (C)
+(0.294723) yi-editor/yi (★ : 931) (Haskell)
+```
+
 ### All Commands
 
 The Limo commands take the form:
@@ -157,6 +173,7 @@ Flag | Description
 `prune`
 `rename [mv]`
 `show`
+`search [find, q]`
 `tag`
 `untag`
 `update`
@@ -186,6 +203,7 @@ Command | Description
 `prune [--dryrun]` | Prunes unstarred items from your local database
 `rename <tag> <new>` | Rename tag `tag` to `new`
 `show <star> [--output <output>]` | Show repository details
+`search <search string> [--output <output>]` | Search your stars
 `tag <star> <tag>...` | Tag starred repository `star` using tags `tag`
 `untag <star> <tag>...` | Untag starred repository `star` using `tag` or leave blank for all tags
 `update [--service <service>] [--user <user>]` | Update `service` or leave blank for all services for user `user` or leave blank for you
@@ -195,6 +213,7 @@ Command | Description
 
 Limo uses the following open source libraries -- thank you!
 
+* [Bleve](https://github.com/blevesearch/bleve)
 * [Cobra](https://github.com/spf13/cobra.git)
 * [Color](https://github.com/fatih/color)
 * [GORM](https://github.com/jinzhu/gorm)

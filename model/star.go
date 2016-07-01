@@ -7,6 +7,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/blevesearch/bleve"
 	"github.com/google/go-github/github"
 	"github.com/jinzhu/gorm"
 )
@@ -77,6 +78,13 @@ func CreateOrUpdateStar(db *gorm.DB, star *Star, service *Service) (bool, error)
 	star.ServiceID = service.ID
 	star.CreatedAt = existing.CreatedAt
 	return false, db.Save(star).Error
+}
+
+// FindStarByID finds a star by ID
+func FindStarByID(db *gorm.DB, ID int) (Star, error) {
+	var star Star
+	db.First(&star, ID)
+	return star, db.Error
 }
 
 // FindStars finds all stars
@@ -165,4 +173,9 @@ func (star *Star) HasTag(tag *Tag) bool {
 		}
 	}
 	return false
+}
+
+// Index adds the star to the index
+func (star *Star) Index(index bleve.Index) error {
+	return index.Index(fmt.Sprintf("%d", star.ID), star)
 }
