@@ -13,6 +13,11 @@ import (
 type Text struct {
 }
 
+// Inline displays text in line
+func (t *Text) Inline(s string) {
+	fmt.Print(s)
+}
+
 // Info displays information
 func (t *Text) Info(s string) {
 	fmt.Println(s)

@@ -9,6 +9,7 @@ import (
 
 // Output represents an output option
 type Output interface {
+	Inline(string)
 	Info(string)
 	Error(string)
 	Fatal(string)
