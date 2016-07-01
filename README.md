@@ -173,7 +173,7 @@ Flag | Description
 `prune`
 `rename [mv]`
 `show`
-`search [find, q]`
+`search [find, query, q]`
 `tag`
 `untag`
 `update`
