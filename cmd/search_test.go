@@ -21,4 +21,3 @@ func TestSearchCmdHasLong(t *testing.T) {
 func TestSearchCmdHasRun(t *testing.T) {
 	assert.NotEmpty(t, SearchCmd.Run)
 }
-
