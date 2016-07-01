@@ -1,7 +1,7 @@
 package config
 
 // ProgramName is the program name
-var ProgramName = "limo"
+const ProgramName = "limo"
 
 // Version is the semver-compliant program version
-var Version = "0.1.0"
+const Version = "0.2.0"
