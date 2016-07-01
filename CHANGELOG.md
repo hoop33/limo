@@ -4,6 +4,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 ### Added
+- Add spinner for color output
 - Add language to the full-text search
 - Add tags to the full-text search
 

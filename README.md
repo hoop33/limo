@@ -37,7 +37,7 @@ Enter your GitHub API token:
 
 ```sh
 $ limo update
-........................................
+Updating . . . /
 Created: 10; Updated: 46; Errors: 0
 ```
 
@@ -219,6 +219,7 @@ Limo uses the following open source libraries -- thank you!
 * [GORM](https://github.com/jinzhu/gorm)
 * [go-github](https://github.com/google/go-github)
 * [go-homedir](https://github.com/mitchellh/go-homedir)
+* [go-spin](https://github.com/tj/go-spin)
 * [Open](https://github.com/skratchdot/open-golang)
 * [Testify](https://github.com/stretchr/testify)
 * [YAML](https://github.com/go-yaml/yaml/tree/v2)

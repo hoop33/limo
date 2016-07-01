@@ -1216,6 +1216,14 @@
 			"notests": true
 		},
 		{
+			"importpath": "github.com/tj/go-spin",
+			"repository": "https://github.com/tj/go-spin",
+			"vcs": "git",
+			"revision": "866762925be273d8db6a8b816f359ca41d61bcdb",
+			"branch": "master",
+			"notests": true
+		},
+		{
 			"importpath": "github.com/ugorji/go/codec",
 			"repository": "https://github.com/ugorji/go",
 			"vcs": "git",

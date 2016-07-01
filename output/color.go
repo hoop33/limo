@@ -8,7 +8,10 @@ import (
 
 	"github.com/fatih/color"
 	"github.com/hoop33/limo/model"
+	"github.com/tj/go-spin"
 )
+
+var spinner *spin.Spinner
 
 // Color is a color text output
 type Color struct {
@@ -95,7 +98,11 @@ func (c *Color) Star(star *model.Star) {
 
 // Tick displays evidence that the program is working
 func (c *Color) Tick() {
-	fmt.Print(color.CyanString("."))
+	if spinner == nil {
+		spinner = spin.New()
+		spinner.Set(spin.Spin1)
+	}
+	fmt.Print(color.CyanString(fmt.Sprintf("\rUpdating . . . %s ", spinner.Next())))
 }
 
 func init() {
