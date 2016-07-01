@@ -45,6 +45,7 @@ var SearchCmd = &cobra.Command{
 				if err != nil {
 					output.Error(err.Error())
 				} else {
+					output.Inline(fmt.Sprintf("(%f) ", hit.Score))
 					output.StarLine(&star)
 				}
 			}
