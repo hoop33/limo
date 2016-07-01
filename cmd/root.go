@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 
+	"github.com/blevesearch/bleve"
 	"github.com/hoop33/limo/config"
 	"github.com/hoop33/limo/model"
 	"github.com/hoop33/limo/output"
@@ -14,6 +15,7 @@ import (
 
 var configuration *config.Config
 var db *gorm.DB
+var index bleve.Index
 
 var options struct {
 	language string
@@ -70,6 +72,20 @@ func getDatabase() (*gorm.DB, error) {
 		}
 	}
 	return db, nil
+}
+
+func getIndex() (bleve.Index, error) {
+	if index == nil {
+		cfg, err := getConfiguration()
+		if err != nil {
+			return nil, err
+		}
+		index, err = model.InitIndex(cfg.IndexPath)
+		if err != nil {
+			return nil, err
+		}
+	}
+	return index, nil
 }
 
 func getOutput() output.Output {
