@@ -176,6 +176,9 @@ func (star *Star) HasTag(tag *Tag) bool {
 }
 
 // Index adds the star to the index
-func (star *Star) Index(index bleve.Index) error {
+func (star *Star) Index(index bleve.Index, db *gorm.DB) error {
+	if err := star.LoadTags(db); err != nil {
+		return err
+	}
 	return index.Index(fmt.Sprintf("%d", star.ID), star)
 }

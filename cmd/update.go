@@ -62,7 +62,7 @@ var UpdateCmd = &cobra.Command{
 					} else {
 						totalUpdated++
 					}
-					err = starResult.Star.Index(index)
+					err = starResult.Star.Index(index, db)
 					if err != nil {
 						totalErrors++
 						output.Error(fmt.Sprintf("Error %s: %s", *starResult.Star.FullName, err.Error()))

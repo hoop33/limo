@@ -5,6 +5,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ## [Unreleased]
 ### Added
 - Add language to the full-text search
+- Add tags to the full-text search
 
 ## [0.2.0]
 ### Added
