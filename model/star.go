@@ -7,6 +7,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/blevesearch/bleve"
 	"github.com/google/go-github/github"
 	"github.com/jinzhu/gorm"
 )
@@ -172,4 +173,9 @@ func (star *Star) HasTag(tag *Tag) bool {
 		}
 	}
 	return false
+}
+
+// Index adds the star to the index
+func (star *Star) Index(index bleve.Index) error {
+	return index.Index(fmt.Sprintf("%d", star.ID), star)
 }
