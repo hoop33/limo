@@ -79,6 +79,13 @@ func CreateOrUpdateStar(db *gorm.DB, star *Star, service *Service) (bool, error)
 	return false, db.Save(star).Error
 }
 
+// FindStarByID finds a star by ID
+func FindStarByID(db *gorm.DB, ID int) (Star, error) {
+	var star Star
+	db.First(&star, ID)
+	return star, db.Error
+}
+
 // FindStars finds all stars
 func FindStars(db *gorm.DB) ([]Star, error) {
 	var stars []Star
