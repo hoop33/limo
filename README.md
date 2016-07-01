@@ -157,6 +157,7 @@ Flag | Description
 `prune`
 `rename [mv]`
 `show`
+`search [find, q]`
 `tag`
 `untag`
 `update`
@@ -186,6 +187,7 @@ Command | Description
 `prune [--dryrun]` | Prunes unstarred items from your local database
 `rename <tag> <new>` | Rename tag `tag` to `new`
 `show <star> [--output <output>]` | Show repository details
+`search <search string> [--output <output>]` | Search your stars
 `tag <star> <tag>...` | Tag starred repository `star` using tags `tag`
 `untag <star> <tag>...` | Untag starred repository `star` using `tag` or leave blank for all tags
 `update [--service <service>] [--user <user>]` | Update `service` or leave blank for all services for user `user` or leave blank for you
@@ -195,6 +197,7 @@ Command | Description
 
 Limo uses the following open source libraries -- thank you!
 
+* [Bleve](https://github.com/blevesearch/bleve)
 * [Cobra](https://github.com/spf13/cobra.git)
 * [Color](https://github.com/fatih/color)
 * [GORM](https://github.com/jinzhu/gorm)
