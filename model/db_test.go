@@ -1,14 +1,13 @@
 package model
 
 import (
-	"fmt"
 	"os"
 	"testing"
 
 	"github.com/jinzhu/gorm"
 )
 
-var dbPath = "./model-test"
+var dbPath = "./test.db"
 var db *gorm.DB
 
 func TestMain(m *testing.M) {
@@ -20,12 +19,8 @@ func TestMain(m *testing.M) {
 }
 
 func mkDB() {
-	err := os.MkdirAll(dbPath, 0700)
-	if err != nil {
-		panic(err)
-	}
-
-	db, err = InitDB(fmt.Sprintf("%s/test.db", dbPath), false)
+	var err error
+	db, err = InitDB(dbPath, false)
 	if err != nil {
 		panic(err)
 	}
