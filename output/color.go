@@ -93,7 +93,7 @@ func (c *Color) Star(star *model.Star) {
 		color.Red(fmt.Sprintf("URL: %s", *star.URL))
 	}
 
-	color.Green(fmt.Sprintf("Starred at %s", star.StarredAt.Format(time.UnixDate)))
+	color.Green(fmt.Sprintf("Starred on %s", star.StarredAt.Format(time.UnixDate)))
 }
 
 // Tick displays evidence that the program is working

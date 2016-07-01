@@ -88,7 +88,7 @@ func (t *Text) Star(star *model.Star) {
 		fmt.Println(fmt.Sprintf("URL: %s", *star.URL))
 	}
 
-	fmt.Println(fmt.Sprintf("Starred at %s", star.StarredAt.Format(time.UnixDate)))
+	fmt.Println(fmt.Sprintf("Starred on %s", star.StarredAt.Format(time.UnixDate)))
 }
 
 // Tick displays evidence that the program is working

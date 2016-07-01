@@ -72,5 +72,5 @@ func ExampleText_Star() {
 	// A CLI for managing starred Git repositories
 	// Home page: https://github.com/hoop33/limo
 	// URL: https://github.com/hoop33/limo.git
-	// Starred at Tue Jun 21 14:56:05 UTC 2016
+	// Starred on Tue Jun 21 14:56:05 UTC 2016
 }
