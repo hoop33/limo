@@ -14,7 +14,7 @@ import (
 // SearchCmd does a full-text search
 var SearchCmd = &cobra.Command{
 	Use:     "search <search string>",
-	Aliases: []string{"find", "q"},
+	Aliases: []string{"find", "query", "q"},
 	Short:   "Search stars",
 	Long:    "Perform a full-text search on your stars",
 	Example: fmt.Sprintf("  %s search robust", config.ProgramName),
