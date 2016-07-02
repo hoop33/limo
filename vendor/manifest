@@ -552,6 +552,14 @@
 			"notests": true
 		},
 		{
+			"importpath": "github.com/cep21/xdgbasedir",
+			"repository": "https://github.com/cep21/xdgbasedir",
+			"vcs": "git",
+			"revision": "cd6a71c07e4e43eec22cbf1606ff14c327207445",
+			"branch": "master",
+			"notests": true
+		},
+		{
 			"importpath": "github.com/cockroachdb/c-jemalloc",
 			"repository": "https://github.com/cockroachdb/c-jemalloc",
 			"vcs": "git",
