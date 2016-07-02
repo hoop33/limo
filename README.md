@@ -218,10 +218,10 @@ Limo uses the following open source libraries -- thank you!
 * [Color](https://github.com/fatih/color)
 * [GORM](https://github.com/jinzhu/gorm)
 * [go-github](https://github.com/google/go-github)
-* [go-homedir](https://github.com/mitchellh/go-homedir)
 * [go-spin](https://github.com/tj/go-spin)
 * [Open](https://github.com/skratchdot/open-golang)
 * [Testify](https://github.com/stretchr/testify)
+* [xdgbasedir](https://github.com/cep21/xdgbasedir)
 * [YAML](https://github.com/go-yaml/yaml/tree/v2)
 
 Apologies if I've inadvertently omitted any.
