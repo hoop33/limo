@@ -7,7 +7,8 @@ import (
 	"os"
 	"path"
 
-	"github.com/mitchellh/go-homedir"
+	"github.com/cep21/xdgbasedir"
+
 	"gopkg.in/yaml.v2"
 )
 
@@ -88,10 +89,10 @@ func configFilePath() string {
 }
 
 func init() {
-	home, err := homedir.Dir()
+	baseDir, err := xdgbasedir.ConfigHomeDirectory()
 	if err != nil {
-		log.Fatal("Can't find home directory for configuration")
+		log.Fatal("Can't find XDG BaseDirectory")
 	} else {
-		configDirectoryPath = path.Join(home, ".config", ProgramName)
+		configDirectoryPath = path.Join(baseDir, ProgramName)
 	}
 }
