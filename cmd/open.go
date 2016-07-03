@@ -9,6 +9,8 @@ import (
 	"github.com/spf13/cobra"
 )
 
+var homepage = false
+
 // OpenCmd opens a star's URL in your browser
 var OpenCmd = &cobra.Command{
 	Use:     "open <star>",
@@ -30,15 +32,23 @@ var OpenCmd = &cobra.Command{
 
 		checkOneStar(args[0], stars)
 
-		if stars[0].URL == nil || *stars[0].URL == "" {
+		// The page to open
+		var page string
+
+		if homepage && stars[0].Homepage != nil && *stars[0].Homepage != "" {
+			page = *stars[0].Homepage
+		} else if stars[0].URL != nil && *stars[0].URL != "" {
+			page = *stars[0].URL
+		} else {
 			output.Fatal("No URL for star")
 		}
 
-		output.Info(fmt.Sprintf("Opening %s...", *stars[0].URL))
-		fatalOnError(open.Start(*stars[0].URL))
+		output.Info(fmt.Sprintf("Opening %s...", page))
+		fatalOnError(open.Start(page))
 	},
 }
 
 func init() {
+	OpenCmd.Flags().BoolVarP(&homepage, "homepage", "H", false, "open home page instead of URL")
 	RootCmd.AddCommand(OpenCmd)
 }
