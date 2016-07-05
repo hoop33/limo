@@ -3,6 +3,10 @@
 This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
+### Added
+
+### Fixed
+- Fix: show success message when renaming tag
 
 ## [0.3.0]
 ### Added

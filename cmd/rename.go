@@ -33,6 +33,8 @@ var RenameCmd = &cobra.Command{
 		}
 
 		fatalOnError(tag.Rename(db, args[1]))
+
+		output.Info(fmt.Sprintf("Renamed tag '%s' to '%s'", args[0], tag.Name))
 	},
 }
 
