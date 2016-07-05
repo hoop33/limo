@@ -3,6 +3,7 @@ package model
 import (
 	"github.com/blevesearch/bleve"
 	"github.com/blevesearch/bleve/analysis/analyzers/keyword_analyzer"
+	"github.com/blevesearch/bleve/analysis/analyzers/simple_analyzer"
 	"github.com/blevesearch/bleve/analysis/language/en"
 )
 
@@ -21,6 +22,9 @@ func InitIndex(filepath string) (bleve.Index, error) {
 }
 
 func buildIndexMapping() *bleve.IndexMapping {
+	simpleTextFieldMapping := bleve.NewTextFieldMapping()
+	simpleTextFieldMapping.Analyzer = simple_analyzer.Name
+
 	englishTextFieldMapping := bleve.NewTextFieldMapping()
 	englishTextFieldMapping.Analyzer = en.AnalyzerName
 
@@ -28,8 +32,8 @@ func buildIndexMapping() *bleve.IndexMapping {
 	keywordFieldMapping.Analyzer = keyword_analyzer.Name
 
 	starMapping := bleve.NewDocumentMapping()
-	starMapping.AddFieldMappingsAt("Name", englishTextFieldMapping)
-	starMapping.AddFieldMappingsAt("FullName", englishTextFieldMapping)
+	starMapping.AddFieldMappingsAt("Name", simpleTextFieldMapping)
+	starMapping.AddFieldMappingsAt("FullName", simpleTextFieldMapping)
 	starMapping.AddFieldMappingsAt("Description", englishTextFieldMapping)
 	starMapping.AddFieldMappingsAt("Language", keywordFieldMapping)
 	starMapping.AddFieldMappingsAt("Tags.Name", keywordFieldMapping)

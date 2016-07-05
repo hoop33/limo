@@ -4,6 +4,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 ### Added
+- Fix analyzers for Name and Full Name for search
 - Add -H/--homepage flag to open command
 - Add spinner for color output
 - Add language to the full-text search
