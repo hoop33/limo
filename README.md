@@ -235,6 +235,8 @@ Apologies if I've inadvertently omitted any.
 
 ## Contributing
 
+Please note that this project is released with a [Contributor Code of Conduct](http://contributor-covenant.org/). By participating in this project you agree to abide by its terms. See [CODE_OF_CONDUCT](CODE_OF_CONDUCT.md) file.
+
 Contributions are welcome! Please open pull requests with code that passes all the checks. See *Building* for more information.
 
 ### Building
