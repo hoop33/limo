@@ -1,6 +1,7 @@
 package model
 
 import (
+	"errors"
 	"fmt"
 	"strings"
 
@@ -53,13 +54,22 @@ func (tag *Tag) LoadStars(db *gorm.DB) error {
 
 // Rename renames a tag -- new name must not already exist
 func (tag *Tag) Rename(db *gorm.DB, name string) error {
-	existing, err := FindTagByName(db, name)
-	if err != nil {
-		return err
+	// Can't rename to the same name
+	if name == tag.Name {
+		return errors.New("You can't rename to the same name")
 	}
-	if existing != nil {
-		return fmt.Errorf("Tag '%s' already exists", existing.Name)
+
+	// If they're just changing case, allow. Otherwise, block the change
+	if strings.ToLower(name) != strings.ToLower(tag.Name) {
+		existing, err := FindTagByName(db, name)
+		if err != nil {
+			return err
+		}
+		if existing != nil {
+			return fmt.Errorf("Tag '%s' already exists", existing.Name)
+		}
 	}
+
 	tag.Name = name
 	return db.Save(tag).Error
 }

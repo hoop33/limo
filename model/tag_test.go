@@ -93,6 +93,31 @@ func TestRenameTagToExistingNameShouldReturnError(t *testing.T) {
 	assert.Equal(t, "second", second.Name)
 }
 
+func TestRenameTagByChangingCaseShouldRenameTag(t *testing.T) {
+	first, _, err := FindOrCreateTagByName(db, "first")
+	assert.Nil(t, err)
+	assert.NotNil(t, first)
+	assert.Equal(t, "first", first.Name)
+
+	err = first.Rename(db, "First")
+	assert.Nil(t, err)
+	assert.Equal(t, "First", first.Name)
+
+	err = first.Rename(db, "FIRST")
+	assert.Nil(t, err)
+	assert.Equal(t, "FIRST", first.Name)
+}
+
+func TestRenameTagByChangingToSameNameShouldReturnError(t *testing.T) {
+	same, _, err := FindOrCreateTagByName(db, "same")
+	assert.Nil(t, err)
+	assert.NotNil(t, same)
+	assert.Equal(t, "same", same.Name)
+
+	err = same.Rename(db, "same")
+	assert.NotNil(t, err)
+}
+
 func TestDeleteTagShouldDeleteTag(t *testing.T) {
 	tag, created, err := FindOrCreateTagByName(db, "to delete")
 	assert.Nil(t, err)

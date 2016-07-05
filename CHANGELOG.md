@@ -6,6 +6,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ### Added
 
 ### Fixed
+- Fix: allow changing case when renaming tag
 - Fix: show success message when renaming tag
 
 ## [0.3.0]
