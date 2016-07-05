@@ -33,6 +33,8 @@ var DeleteCmd = &cobra.Command{
 		}
 
 		fatalOnError(tag.Delete(db))
+
+		output.Info(fmt.Sprintf("Deleted tag '%s'", tag.Name))
 	},
 }
 
