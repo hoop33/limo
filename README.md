@@ -10,9 +10,25 @@
 [![Go Report Card](https://goreportcard.com/badge/hoop33/limo)](https://goreportcard.com/report/hoop33/limo)
 [![Join the chat at https://gitter.im/hoop33/limo](https://badges.gitter.im/hoop33/limo.svg)](https://gitter.im/hoop33/limo?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
+## Table of Contents
+
+* [Introduction](#introduction)
+* [Installation](#installation)
+* [Usage](#usage)
+* [FAQ](#faq)
+* [Contributing](#contributing)
+* [Credits](#credits)
+* [License](#license)
+
+## Introduction
+
+Both [GitHub](https://github.com) and [GitLab](https://gitlab.com) allow you to "star" repositories, and [Bitbucket](https://bitbucket.org) lets you "watch" them. "Starring" or "watching" lets you keep track of repositories you find interesting, but none of the services provide ways to search or tag your repositories so you can easily find them.
+
+Limo lets you manage your starred repositories from the command line. You can do things like tag them, search them, or list them by language. Think of Limo as the CLI version of [Astral](https://app.astralapp.com/) (also worth looking into).
+
 ## Installation
 
-If you have a working Go installation, you can:
+If you have a working Go installation, type:
 
 ```sh
 $ go get -u github.com/hoop33/limo
@@ -22,7 +38,11 @@ Binaries for the various platforms not yet available.
 
 ## Usage
 
-Limo is currently under development, and some things may change. Not all of it is implemented yet. Right now, GitHub is the only service supported. Here's how to get started:
+Limo is currently under development, and some things may change. Not all of it is implemented yet. Right now, GitHub is the only service supported. 
+
+You can read the full usage documentation at <https://www.gitbook.com/book/hoop33/limo/details>.
+
+Here's how to get started:
 
 ### Log In to GitHub
 
@@ -135,103 +155,17 @@ $ limo search text editor
 (0.294723) yi-editor/yi (★ : 931) (Haskell)
 ```
 
-### All Commands
-
-The Limo commands take the form:
-
-```sh
-$ limo [flags] <verb> <noun> [arguments...]
-```
-
-For example, to list your starred repositories for GitHub in plaintext format, you type:
-
-```sh
-$ limo --service github --output text list stars
-```
-
-Some verbs don't require nouns, and flags can go before or after the verb-noun-arguments clause.
-
-### Flags
-
-Flag | Description
---- | ---
-`-l, --language <language>` | The computer language
-`-o, --output <color/text/csv/json>` | The output format
-`-s, --service <github/gitlab/bitbucket>` | The service
-`-t, --tag <name>` | The tag name
-`-u, --user <user>` | The user
-`-v, --verbose` | Turn on verbose output
-
-### Verbs [Aliases]
-
-`add`
-`delete [rm]`
-`help`
-`list [ls]`
-`login`
-`open`
-`prune`
-`rename [mv]`
-`show`
-`search [find, query, q]`
-`tag`
-`untag`
-`update`
-`version`
-
-### Nouns [Aliases]
-
-`star`, `stars`
-`tag`, `tags`
-`trending`
-
-### Commands
-
-Command | Description
---- | ---
-`add star <URL> [tag]...` | Star repository at `URL` and optionally add tags
-`add tag <tag>` | Add tag `tag`
-`delete star <URL/name>` | Unstar repository at `URL` or `name`
-`delete tag <tag>` | Delete tag `tag`
-`help [command]` | Show help for `command` or leave blank for all commands
-`list languages` | List languages
-`list stars [--tag <tag>]... [--language <language>]... [--service <service>]... [--user <user>] [--output <output>]` | List starred repositories
-`list tags [--output <output>]` | List tags
-`list trending [--language <language>]... [--service <service>]... [--output output]` | List trending repositories
-`login [--service <service>]` | Logs in to a service (default: github)
-`open <star>` | Opens the URL of a star in your default browser
-`prune [--dryrun]` | Prunes unstarred items from your local database
-`rename <tag> <new>` | Rename tag `tag` to `new`
-`show <star> [--output <output>]` | Show repository details
-`search <search string> [--output <output>]` | Search your stars
-`tag <star> <tag>...` | Tag starred repository `star` using tags `tag`
-`untag <star> <tag>...` | Untag starred repository `star` using `tag` or leave blank for all tags
-`update [--service <service>] [--user <user>]` | Update `service` or leave blank for all services for user `user` or leave blank for you
-`version` | Show program version
-
-## Credits
-
-Limo uses the following open source libraries -- thank you!
-
-* [Bleve](https://github.com/blevesearch/bleve)
-* [Cobra](https://github.com/spf13/cobra.git)
-* [Color](https://github.com/fatih/color)
-* [GORM](https://github.com/jinzhu/gorm)
-* [go-github](https://github.com/google/go-github)
-* [go-spin](https://github.com/tj/go-spin)
-* [Open](https://github.com/skratchdot/open-golang)
-* [Testify](https://github.com/stretchr/testify)
-* [xdgbasedir](https://github.com/cep21/xdgbasedir)
-* [YAML](https://github.com/go-yaml/yaml/tree/v2)
-
-Apologies if I've inadvertently omitted any.
+You can read the full usage documentation at <https://www.gitbook.com/book/hoop33/limo/details>.
 
 ## FAQ
 
 * Why the name "limo"?
 	* If you know anything about Hollywood, you know that limos carry . . . stars.
 * Where is this information stored?
-	* The configuration is stored in `~/.config/limo`. Inside that directory, you'll find `limo.yaml`, which contains your GitHub API Key (so guard it!) and the path to your SQLite database, which defaults to the same directory.
+  * The configuration is stored in `~/.config/limo`. Inside that directory, you'll find:
+    * `limo.yaml`: Configuration information
+    * `limo.db`: The SQLite database that stores all your stars and tags
+    * `limo.idx`: The Bleve search index
 
 ## Contributing
 
@@ -262,6 +196,23 @@ To run the code checks and tests. To build and install, run:
 ```sh
 $ make install
 ```
+
+## Credits
+
+Limo uses the following open source libraries -- thank you!
+
+* [Bleve](https://github.com/blevesearch/bleve)
+* [Cobra](https://github.com/spf13/cobra.git)
+* [Color](https://github.com/fatih/color)
+* [GORM](https://github.com/jinzhu/gorm)
+* [go-github](https://github.com/google/go-github)
+* [go-spin](https://github.com/tj/go-spin)
+* [Open](https://github.com/skratchdot/open-golang)
+* [Testify](https://github.com/stretchr/testify)
+* [xdgbasedir](https://github.com/cep21/xdgbasedir)
+* [YAML](https://github.com/go-yaml/yaml/tree/v2)
+
+Apologies if I've inadvertently omitted any.
 
 ## License
 
