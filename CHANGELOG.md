@@ -3,6 +3,8 @@
 This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
+### Added
+- Add GitLab support
 
 ## [0.3.1]
 ### Fixed
