@@ -33,7 +33,7 @@ func (g *Github) Login() (string, error) {
 
 // GetStars returns the stars for the specified user (empty string for authenticated user)
 func (g *Github) GetStars(starChan chan<- *model.StarResult, token string, user string) {
-	client := getClient(token)
+	client := g.getClient(token)
 
 	// The first response will give us the correct value for the last page
 	currentPage := 1
@@ -70,7 +70,7 @@ func (g *Github) GetStars(starChan chan<- *model.StarResult, token string, user 
 	close(starChan)
 }
 
-func getClient(token string) *github.Client {
+func (g *Github) getClient(token string) *github.Client {
 	ts := oauth2.StaticTokenSource(
 		&oauth2.Token{AccessToken: token},
 	)
