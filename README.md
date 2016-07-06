@@ -46,7 +46,7 @@ Here's how to get started:
 
 ### Log In to GitHub and GitLab
 
-First, create an API keys for your GitHub and GitLab accounts on their respective sites, and then type:
+First, create API keys for your GitHub and GitLab accounts on their respective sites, and then type:
 
 ```sh
 $ limo login
