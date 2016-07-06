@@ -38,27 +38,34 @@ Binaries for the various platforms not yet available.
 
 ## Usage
 
-Limo is currently under development, and some things may change. Not all of it is implemented yet. Right now, GitHub is the only service supported. 
+Limo supports both GitHub and GitLab, and Bitbucket support is coming.
 
 You can read the full usage documentation at <https://www.gitbook.com/book/hoop33/limo/details>.
 
 Here's how to get started:
 
-### Log In to GitHub
+### Log In to GitHub and GitLab
 
-First, create an API key for your GitHub account, and then type:
+First, create API keys for your GitHub and GitLab accounts on their respective sites, and then type:
 
 ```sh
 $ limo login
 Enter your GitHub API token:
+
+$ limo login --service gitlab
+Enter your GitLab API token:
 ```
 
-### Update Your Local Database from GitHub
+### Update Your Local Database
 
 ```sh
 $ limo update
 Updating . . . /
 Created: 10; Updated: 46; Errors: 0
+
+$ limo update --service gitlab
+Updating . . . /
+Created: 5; Updated: 23; Errors: 0
 ```
 
 ### List the Languages You Have Stars In

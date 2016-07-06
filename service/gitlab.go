@@ -1,24 +1,22 @@
 package service
 
 import (
-	"golang.org/x/oauth2"
-
-	"github.com/google/go-github/github"
 	"github.com/hoop33/entrevista"
 	"github.com/hoop33/limo/model"
+	"github.com/xanzy/go-gitlab"
 )
 
-// Github represents the Github service
-type Github struct {
+// Gitlab represents the Gitlab service
+type Gitlab struct {
 }
 
-// Login logs in to Github
-func (g *Github) Login() (string, error) {
+// Login logs in to Gitlab
+func (g *Gitlab) Login() (string, error) {
 	interview := createInterview()
 	interview.Questions = []entrevista.Question{
 		{
 			Key:      "token",
-			Text:     "Enter your GitHub API token",
+			Text:     "Enter your GitLab API token",
 			Required: true,
 			Hidden:   true,
 		},
@@ -32,16 +30,15 @@ func (g *Github) Login() (string, error) {
 }
 
 // GetStars returns the stars for the specified user (empty string for authenticated user)
-func (g *Github) GetStars(starChan chan<- *model.StarResult, token string, user string) {
+func (g *Gitlab) GetStars(starChan chan<- *model.StarResult, token string, user string) {
 	client := g.getClient(token)
 
-	// The first response will give us the correct value for the last page
 	currentPage := 1
 	lastPage := 1
 
 	for currentPage <= lastPage {
-		repos, response, err := client.Activity.ListStarred(user, &github.ActivityListStarredOptions{
-			ListOptions: github.ListOptions{
+		projects, response, err := client.Projects.ListStarredProjects(&gitlab.ListProjectsOptions{
+			ListOptions: gitlab.ListOptions{
 				Page: currentPage,
 			},
 		})
@@ -56,8 +53,8 @@ func (g *Github) GetStars(starChan chan<- *model.StarResult, token string, user 
 			lastPage = response.LastPage
 
 			// Create a Star for each repository and put it on the channel
-			for _, repo := range repos {
-				star, err := model.NewStarFromGithub(repo.StarredAt, *repo.Repository)
+			for _, project := range projects {
+				star, err := model.NewStarFromGitlab(*project)
 				starChan <- &model.StarResult{
 					Error: err,
 					Star:  star,
@@ -67,17 +64,14 @@ func (g *Github) GetStars(starChan chan<- *model.StarResult, token string, user 
 		// Go to the next page
 		currentPage++
 	}
+
 	close(starChan)
 }
 
-func (g *Github) getClient(token string) *github.Client {
-	ts := oauth2.StaticTokenSource(
-		&oauth2.Token{AccessToken: token},
-	)
-	tc := oauth2.NewClient(oauth2.NoContext, ts)
-	return github.NewClient(tc)
+func (g *Gitlab) getClient(token string) *gitlab.Client {
+	return gitlab.NewClient(nil, token)
 }
 
 func init() {
-	registerService(&Github{})
+	registerService(&Gitlab{})
 }
