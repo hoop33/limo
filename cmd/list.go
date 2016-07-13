@@ -116,6 +116,6 @@ func listTrending() {
 }
 
 func init() {
-	ListCmd.Flags().BoolVarP(&union, "union", "U", false, "Show stars matching any arguments")
+	ListCmd.Flags().BoolVarP(&union, "union", "u", false, "Show stars matching any arguments")
 	RootCmd.AddCommand(ListCmd)
 }
