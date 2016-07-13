@@ -8,6 +8,9 @@ import (
 	"github.com/spf13/cobra"
 )
 
+var union = false
+var intersection = false
+
 var listers = map[string]func(){
 	"languages": listLanguages,
 	"stars":     listStars,
@@ -61,8 +64,9 @@ func listStars() {
 	fatalOnError(err)
 
 	var stars []model.Star
-
-	if options.language != "" {
+	if options.language != "" && options.tag != "" {
+		stars, err = model.FindStarsByLanguageAndOrTag(db, options.language, options.tag, union)
+	} else if options.language != "" {
 		stars, err = model.FindStarsByLanguage(db, options.language)
 	} else if options.tag != "" {
 		tag, err := model.FindTagByName(db, options.tag)
@@ -112,5 +116,6 @@ func listTrending() {
 }
 
 func init() {
+	ListCmd.Flags().BoolVarP(&union, "union", "U", false, "Show stars matching any arguments")
 	RootCmd.AddCommand(ListCmd)
 }
