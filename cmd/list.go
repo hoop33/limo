@@ -24,7 +24,7 @@ var ListCmd = &cobra.Command{
 	Aliases: []string{"ls"},
 	Short:   "List languages, stars, trending, or tags",
 	Long:    "List languages, stars, trending, or tags that match your specified criteria.",
-	Example: fmt.Sprintf("  %s list languages\n  %s list stars -t vim", config.ProgramName, config.ProgramName),
+	Example: fmt.Sprintf("  %s list languages\n  %s list stars -t vim\n  %s list stars -t cli -l go", config.ProgramName, config.ProgramName, config.ProgramName),
 	Run: func(cmd *cobra.Command, args []string) {
 		var target string
 		if len(args) == 0 {
