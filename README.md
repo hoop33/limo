@@ -220,7 +220,11 @@ Limo uses the following open source libraries -- thank you!
 * [xdgbasedir](https://github.com/cep21/xdgbasedir)
 * [YAML](https://github.com/go-yaml/yaml/tree/v2)
 
-Apologies if I've inadvertently omitted any.
+Also, thanks to contributors!
+
+* [Tyson Warner](https://github.com/nylon22) : List stars by tag and language
+
+Apologies if I've inadvertently omitted any library or any contributor.
 
 ## License
 

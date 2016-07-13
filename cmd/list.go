@@ -8,6 +8,8 @@ import (
 	"github.com/spf13/cobra"
 )
 
+var union = false
+
 var listers = map[string]func(args []string){
 	"languages": listLanguages,
 	"stars":     listStars,
@@ -21,7 +23,7 @@ var ListCmd = &cobra.Command{
 	Aliases: []string{"ls"},
 	Short:   "List languages, stars, tags, or trending",
 	Long:    "List languages, stars, tags, or trending that match your specified criteria.",
-	Example: fmt.Sprintf("  %s list languages\n  %s list stars -t vim", config.ProgramName, config.ProgramName),
+	Example: fmt.Sprintf("  %s list languages\n  %s list stars -t vim\n  %s list stars -t cli -l go", config.ProgramName, config.ProgramName, config.ProgramName),
 	Run: func(cmd *cobra.Command, args []string) {
 		if len(args) == 0 {
 			getOutput().Fatal("You must specify languages, stars, tags, or trending")
@@ -58,8 +60,9 @@ func listStars(args []string) {
 	fatalOnError(err)
 
 	var stars []model.Star
-
-	if options.language != "" {
+	if options.language != "" && options.tag != "" {
+		stars, err = model.FindStarsByLanguageAndOrTag(db, options.language, options.tag, union)
+	} else if options.language != "" {
 		stars, err = model.FindStarsByLanguage(db, options.language)
 	} else if options.tag != "" {
 		tag, err := model.FindTagByName(db, options.tag)
@@ -109,5 +112,6 @@ func listTrending(args []string) {
 }
 
 func init() {
+	ListCmd.Flags().BoolVarP(&union, "union", "u", false, "Show stars matching any arguments")
 	RootCmd.AddCommand(ListCmd)
 }

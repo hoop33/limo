@@ -121,6 +121,18 @@ func FindStars(db *gorm.DB) ([]Star, error) {
 	return stars, db.Error
 }
 
+// FindStarsByLanguageAndOrTag finds stars with the specified language and/or the specified tag
+func FindStarsByLanguageAndOrTag(db *gorm.DB, language string, tagName string, union bool) ([]Star, error) {
+	operator := "AND"
+	if union {
+		operator = "OR"
+	}
+
+	var stars []Star
+	db.Raw("SELECT * FROM STARS S, TAGS T INNER JOIN STAR_TAGS ST ON S.ID = ST.STAR_ID INNER JOIN TAGS ON ST.TAG_ID = T.ID WHERE LOWER(T.NAME) = ? "+operator+" LOWER(S.LANGUAGE) = ? GROUP BY ST.STAR_ID", strings.ToLower(tagName), strings.ToLower(language)).Scan(&stars)
+	return stars, db.Error
+}
+
 // FindStarsByLanguage finds stars with the specified language
 func FindStarsByLanguage(db *gorm.DB, language string) ([]Star, error) {
 	var stars []Star

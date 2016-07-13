@@ -4,6 +4,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 ### Added
+- Add list stars by language and tag
 - Add GitLab support
 
 ## [0.3.1]
