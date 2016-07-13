@@ -8,7 +8,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var listers = map[string]func(){
+var listers = map[string]func(args []string){
 	"languages": listLanguages,
 	"stars":     listStars,
 	"tags":      listTags,
@@ -19,26 +19,23 @@ var listers = map[string]func(){
 var ListCmd = &cobra.Command{
 	Use:     "list <languages|stars|tags|trending>",
 	Aliases: []string{"ls"},
-	Short:   "List languages, stars, trending, or tags",
-	Long:    "List languages, stars, trending, or tags that match your specified criteria.",
+	Short:   "List languages, stars, tags, or trending",
+	Long:    "List languages, stars, tags, or trending that match your specified criteria.",
 	Example: fmt.Sprintf("  %s list languages\n  %s list stars -t vim", config.ProgramName, config.ProgramName),
 	Run: func(cmd *cobra.Command, args []string) {
-		var target string
 		if len(args) == 0 {
-			target = "stars"
-		} else {
-			target = args[0]
+			getOutput().Fatal("You must specify languages, stars, tags, or trending")
 		}
 
-		if fn, ok := listers[target]; ok {
-			fn()
+		if fn, ok := listers[args[0]]; ok {
+			fn(args[1:])
 		} else {
-			getOutput().Fatal(fmt.Sprintf("'%s' not valid", target))
+			getOutput().Fatal(fmt.Sprintf("'%s' not valid", args[0]))
 		}
 	},
 }
 
-func listLanguages() {
+func listLanguages(args []string) {
 	output := getOutput()
 
 	db, err := getDatabase()
@@ -54,7 +51,7 @@ func listLanguages() {
 	}
 }
 
-func listStars() {
+func listStars(args []string) {
 	output := getOutput()
 
 	db, err := getDatabase()
@@ -89,7 +86,7 @@ func listStars() {
 	}
 }
 
-func listTags() {
+func listTags(args []string) {
 	output := getOutput()
 
 	db, err := getDatabase()
@@ -107,7 +104,7 @@ func listTags() {
 	}
 }
 
-func listTrending() {
+func listTrending(args []string) {
 	getOutput().Info("Listing trending")
 }
 
