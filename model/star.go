@@ -121,6 +121,13 @@ func FindStars(db *gorm.DB) ([]Star, error) {
 	return stars, db.Error
 }
 
+// FindUntaggedStars finds stars without any tags
+func FindUntaggedStars(db *gorm.DB) ([]Star, error) {
+    var stars []Star
+    db.Raw("SELECT * FROM STARS S WHERE S.ID NOT IN (SELECT STAR_ID FROM STAR_TAGS)").Scan(&stars)
+    return stars, db.Error
+}
+
 // FindStarsByLanguageAndOrTag finds stars with the specified language and/or the specified tag
 func FindStarsByLanguageAndOrTag(db *gorm.DB, language string, tagName string, union bool) ([]Star, error) {
 	operator := "AND"
