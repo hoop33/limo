@@ -58,7 +58,8 @@ func (tag *Tag) LoadStars(db *gorm.DB, match string) error {
 			INNER JOIN STAR_TAGS ST ON S.ID = ST.STAR_ID
 			WHERE S.DELETED_AT IS NULL
 			AND ST.TAG_ID = ?
-			AND LOWER(S.FULL_NAME) LIKE ?`,
+			AND LOWER(S.FULL_NAME) LIKE ?
+			ORDER BY S.FULL_NAME`,
 			tag.ID,
 			fmt.Sprintf("%%%s%%", strings.ToLower(match))).Scan(&stars)
 		tag.Stars = stars

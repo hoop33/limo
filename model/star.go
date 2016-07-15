@@ -126,6 +126,33 @@ func FindStars(db *gorm.DB, match string) ([]Star, error) {
 	return stars, db.Error
 }
 
+// FindUntaggedStars finds stars without any tags
+func FindUntaggedStars(db *gorm.DB, match string) ([]Star, error) {
+	var stars []Star
+	if match != "" {
+		db.Raw(`
+			SELECT *
+			FROM STARS S
+			WHERE S.DELETED_AT IS NULL
+			AND S.FULL_NAME LIKE ?
+			AND S.ID NOT IN (
+				SELECT STAR_ID
+				FROM STAR_TAGS
+			) ORDER BY S.FULL_NAME`,
+			fmt.Sprintf("%%%s%%", strings.ToLower(match))).Scan(&stars)
+	} else {
+		db.Raw(`
+			SELECT *
+			FROM STARS S
+			WHERE S.DELETED_AT IS NULL
+			AND S.ID NOT IN (
+				SELECT STAR_ID
+				FROM STAR_TAGS
+			) ORDER BY S.FULL_NAME`).Scan(&stars)
+	}
+	return stars, db.Error
+}
+
 // FindStarsByLanguageAndOrTag finds stars with the specified language and/or the specified tag
 func FindStarsByLanguageAndOrTag(db *gorm.DB, match string, language string, tagName string, union bool) ([]Star, error) {
 	operator := "AND"
