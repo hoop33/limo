@@ -30,7 +30,7 @@ var ListCmd = &cobra.Command{
 		}
 
 		if fn, ok := listers[args[0]]; ok {
-			fn(args[1:])
+			fn(args)
 		} else {
 			getOutput().Fatal(fmt.Sprintf("'%s' not valid", args[0]))
 		}
@@ -59,11 +59,16 @@ func listStars(args []string) {
 	db, err := getDatabase()
 	fatalOnError(err)
 
+	match := ""
+	if len(args) > 1 {
+		match = args[1]
+	}
+
 	var stars []model.Star
 	if options.language != "" && options.tag != "" {
-		stars, err = model.FindStarsByLanguageAndOrTag(db, options.language, options.tag, union)
+		stars, err = model.FindStarsByLanguageAndOrTag(db, match, options.language, options.tag, union)
 	} else if options.language != "" {
-		stars, err = model.FindStarsByLanguage(db, options.language)
+		stars, err = model.FindStarsByLanguage(db, match, options.language)
 	} else if options.tag != "" {
 		tag, err := model.FindTagByName(db, options.tag)
 		fatalOnError(err)
@@ -72,12 +77,12 @@ func listStars(args []string) {
 			output.Fatal(fmt.Sprintf("Tag '%s' not found", options.tag))
 		}
 
-		err = tag.LoadStars(db)
+		err = tag.LoadStars(db, match)
 		fatalOnError(err)
 
 		stars = tag.Stars
 	} else {
-		stars, err = model.FindStars(db)
+		stars, err = model.FindStars(db, match)
 	}
 
 	fatalOnError(err)

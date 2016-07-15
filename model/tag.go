@@ -43,11 +43,26 @@ func FindOrCreateTagByName(db *gorm.DB, name string) (*Tag, bool, error) {
 }
 
 // LoadStars loads the stars for a tag
-func (tag *Tag) LoadStars(db *gorm.DB) error {
+func (tag *Tag) LoadStars(db *gorm.DB, match string) error {
 	// Make sure tag exists in database, or we will panic
 	var existing Tag
 	if db.Where("id = ?", tag.ID).First(&existing).RecordNotFound() {
 		return fmt.Errorf("Tag '%d' not found", tag.ID)
+	}
+
+	if match != "" {
+		var stars []Star
+		db.Raw(`
+			SELECT *
+			FROM STARS S
+			INNER JOIN STAR_TAGS ST ON S.ID = ST.STAR_ID
+			WHERE S.DELETED_AT IS NULL
+			AND ST.TAG_ID = ?
+			AND LOWER(S.FULL_NAME) LIKE ?`,
+			tag.ID,
+			fmt.Sprintf("%%%s%%", strings.ToLower(match))).Scan(&stars)
+		tag.Stars = stars
+		return db.Error
 	}
 	return db.Model(tag).Association("Stars").Find(&tag.Stars).Error
 }
