@@ -10,6 +10,7 @@ import (
 
 var union = false
 var intersection = false
+var notTagged = false
 
 var listers = map[string]func(){
 	"languages": listLanguages,
@@ -64,7 +65,9 @@ func listStars() {
 	fatalOnError(err)
 
 	var stars []model.Star
-	if options.language != "" && options.tag != "" {
+	if notTagged {
+		stars, err = model.FindUntaggedStars(db)
+	} else if options.language != "" && options.tag != "" {
 		stars, err = model.FindStarsByLanguageAndOrTag(db, options.language, options.tag, union)
 	} else if options.language != "" {
 		stars, err = model.FindStarsByLanguage(db, options.language)
@@ -117,5 +120,6 @@ func listTrending() {
 
 func init() {
 	ListCmd.Flags().BoolVarP(&union, "union", "u", false, "Show stars matching any arguments")
+	ListCmd.Flags().BoolVarP(&notTagged, "notTagged", "n", false, "Show stars without any tags")
 	RootCmd.AddCommand(ListCmd)
 }
