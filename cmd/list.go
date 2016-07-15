@@ -9,10 +9,9 @@ import (
 )
 
 var union = false
-var intersection = false
 var notTagged = false
 
-var listers = map[string]func(){
+var listers = map[string]func(args []string){
 	"languages": listLanguages,
 	"stars":     listStars,
 	"tags":      listTags,
@@ -23,26 +22,23 @@ var listers = map[string]func(){
 var ListCmd = &cobra.Command{
 	Use:     "list <languages|stars|tags|trending>",
 	Aliases: []string{"ls"},
-	Short:   "List languages, stars, trending, or tags",
-	Long:    "List languages, stars, trending, or tags that match your specified criteria.",
+	Short:   "List languages, stars, tags, or trending",
+	Long:    "List languages, stars, tags, or trending that match your specified criteria.",
 	Example: fmt.Sprintf("  %s list languages\n  %s list stars -t vim\n  %s list stars -t cli -l go", config.ProgramName, config.ProgramName, config.ProgramName),
 	Run: func(cmd *cobra.Command, args []string) {
-		var target string
 		if len(args) == 0 {
-			target = "stars"
-		} else {
-			target = args[0]
+			getOutput().Fatal("You must specify languages, stars, tags, or trending")
 		}
 
-		if fn, ok := listers[target]; ok {
-			fn()
+		if fn, ok := listers[args[0]]; ok {
+			fn(args)
 		} else {
-			getOutput().Fatal(fmt.Sprintf("'%s' not valid", target))
+			getOutput().Fatal(fmt.Sprintf("'%s' not valid", args[0]))
 		}
 	},
 }
 
-func listLanguages() {
+func listLanguages(args []string) {
 	output := getOutput()
 
 	db, err := getDatabase()
@@ -58,19 +54,24 @@ func listLanguages() {
 	}
 }
 
-func listStars() {
+func listStars(args []string) {
 	output := getOutput()
 
 	db, err := getDatabase()
 	fatalOnError(err)
 
+	match := ""
+	if len(args) > 1 {
+		match = args[1]
+	}
+
 	var stars []model.Star
 	if notTagged {
-		stars, err = model.FindUntaggedStars(db)
+		stars, err = model.FindUntaggedStars(db, match)
 	} else if options.language != "" && options.tag != "" {
-		stars, err = model.FindStarsByLanguageAndOrTag(db, options.language, options.tag, union)
+		stars, err = model.FindStarsByLanguageAndOrTag(db, match, options.language, options.tag, union)
 	} else if options.language != "" {
-		stars, err = model.FindStarsByLanguage(db, options.language)
+		stars, err = model.FindStarsByLanguage(db, match, options.language)
 	} else if options.tag != "" {
 		tag, err := model.FindTagByName(db, options.tag)
 		fatalOnError(err)
@@ -79,12 +80,12 @@ func listStars() {
 			output.Fatal(fmt.Sprintf("Tag '%s' not found", options.tag))
 		}
 
-		err = tag.LoadStars(db)
+		err = tag.LoadStars(db, match)
 		fatalOnError(err)
 
 		stars = tag.Stars
 	} else {
-		stars, err = model.FindStars(db)
+		stars, err = model.FindStars(db, match)
 	}
 
 	fatalOnError(err)
@@ -96,7 +97,7 @@ func listStars() {
 	}
 }
 
-func listTags() {
+func listTags(args []string) {
 	output := getOutput()
 
 	db, err := getDatabase()
@@ -114,7 +115,7 @@ func listTags() {
 	}
 }
 
-func listTrending() {
+func listTrending(args []string) {
 	getOutput().Info("Listing trending")
 }
 
