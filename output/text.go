@@ -81,14 +81,14 @@ func (t *Text) Star(star *model.Star) {
 	}
 
 	if star.Homepage != nil && *star.Homepage != "" {
-		fmt.Println(fmt.Sprintf("Home page: %s", *star.Homepage))
+		fmt.Printf("Home page: %s\n", *star.Homepage)
 	}
 
 	if star.URL != nil {
-		fmt.Println(fmt.Sprintf("URL: %s", *star.URL))
+		fmt.Printf("URL: %s\n", *star.URL)
 	}
 
-	fmt.Println(fmt.Sprintf("Starred on %s", star.StarredAt.Format(time.UnixDate)))
+	fmt.Printf("Starred on %s\n", star.StarredAt.Format(time.UnixDate))
 }
 
 // Tick displays evidence that the program is working
