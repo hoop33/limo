@@ -261,3 +261,99 @@ func TestLoadStarsShouldReturnErrorWhenTagNotInDatabase(t *testing.T) {
 	assert.NotNil(t, err)
 	assert.Equal(t, "Tag '0' not found", err.Error())
 }
+
+func TestLoadStarsShouldLoadNoStarsWhenTagHasNoStars(t *testing.T) {
+	clearDB()
+
+	tag, _, err := FindOrCreateTagByName(db, "tag")
+	assert.Nil(t, err)
+	assert.NotNil(t, tag)
+
+	err = tag.LoadStars(db, "")
+	assert.Nil(t, err)
+	assert.Equal(t, 0, len(tag.Stars))
+}
+
+func TestLoadStarsShouldFillStars(t *testing.T) {
+	clearDB()
+
+	tag, _, err := FindOrCreateTagByName(db, "tag")
+	assert.Nil(t, err)
+	assert.NotNil(t, tag)
+
+	service, _, err := FindOrCreateServiceByName(db, "svc")
+	assert.Nil(t, err)
+
+	star1 := &Star{
+		RemoteID:  "1",
+		ServiceID: service.ID,
+	}
+	_, err = CreateOrUpdateStar(db, star1, service)
+	assert.Nil(t, err)
+	err = star1.AddTag(db, tag)
+	assert.Nil(t, err)
+
+	star2 := &Star{
+		RemoteID:  "2",
+		ServiceID: service.ID,
+	}
+	_, err = CreateOrUpdateStar(db, star2, service)
+	assert.Nil(t, err)
+	err = star2.AddTag(db, tag)
+	assert.Nil(t, err)
+
+	assert.Equal(t, 0, len(tag.Stars))
+	err = tag.LoadStars(db, "")
+	assert.Nil(t, err)
+	assert.Equal(t, 2, len(tag.Stars))
+}
+
+func TestLoadStarsShouldFillStarsWithMatch(t *testing.T) {
+	clearDB()
+
+	tag, _, err := FindOrCreateTagByName(db, "tag")
+	assert.Nil(t, err)
+	assert.NotNil(t, tag)
+
+	service, _, err := FindOrCreateServiceByName(db, "svc")
+	assert.Nil(t, err)
+
+	name1 := "Jacksonville Jaguars"
+	star1 := &Star{
+		RemoteID:  "1",
+		ServiceID: service.ID,
+		FullName:  &name1,
+	}
+	_, err = CreateOrUpdateStar(db, star1, service)
+	assert.Nil(t, err)
+	err = star1.AddTag(db, tag)
+	assert.Nil(t, err)
+
+	name2 := "Jacksonville Suns"
+	star2 := &Star{
+		RemoteID:  "2",
+		ServiceID: service.ID,
+		FullName:  &name2,
+	}
+	_, err = CreateOrUpdateStar(db, star2, service)
+	assert.Nil(t, err)
+	err = star2.AddTag(db, tag)
+	assert.Nil(t, err)
+
+	name3 := "Florida Gators"
+	star3 := &Star{
+		RemoteID:  "3",
+		ServiceID: service.ID,
+		FullName:  &name3,
+	}
+	_, err = CreateOrUpdateStar(db, star3, service)
+	assert.Nil(t, err)
+	err = star3.AddTag(db, tag)
+	assert.Nil(t, err)
+	assert.Equal(t, 0, len(tag.Stars))
+	err = tag.LoadStars(db, "jacksonville")
+	assert.Nil(t, err)
+	assert.Equal(t, 2, len(tag.Stars))
+	assert.Equal(t, "Jacksonville Jaguars", *tag.Stars[0].FullName)
+	assert.Equal(t, "Jacksonville Suns", *tag.Stars[1].FullName)
+}
