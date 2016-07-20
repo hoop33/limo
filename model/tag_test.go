@@ -6,7 +6,51 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
+func TestFindTagsShouldBeEmptyWhenNoTags(t *testing.T) {
+	clearDB()
+
+	tags, err := FindTags(db)
+	assert.Nil(t, err)
+	assert.Equal(t, 0, len(tags))
+}
+
+func TestFindTagsShouldFindATag(t *testing.T) {
+	clearDB()
+
+	tag, _, err := FindOrCreateTagByName(db, "solo")
+	assert.Nil(t, err)
+	assert.NotNil(t, tag)
+
+	tags, err := FindTags(db)
+	assert.Nil(t, err)
+	assert.Equal(t, 1, len(tags))
+	assert.Equal(t, "solo", tags[0].Name)
+}
+
+func TestFindTagsShouldSortTagsByName(t *testing.T) {
+	clearDB()
+
+	_, _, err := FindOrCreateTagByName(db, "delta")
+	assert.Nil(t, err)
+	_, _, err = FindOrCreateTagByName(db, "baker")
+	assert.Nil(t, err)
+	_, _, err = FindOrCreateTagByName(db, "apple")
+	assert.Nil(t, err)
+	_, _, err = FindOrCreateTagByName(db, "charlie")
+	assert.Nil(t, err)
+
+	tags, err := FindTags(db)
+	assert.Nil(t, err)
+	assert.Equal(t, 4, len(tags))
+	assert.Equal(t, "apple", tags[0].Name)
+	assert.Equal(t, "baker", tags[1].Name)
+	assert.Equal(t, "charlie", tags[2].Name)
+	assert.Equal(t, "delta", tags[3].Name)
+}
+
 func TestFindOrCreateTagByNameShouldCreateTag(t *testing.T) {
+	clearDB()
+
 	tag, created, err := FindOrCreateTagByName(db, "my-tag")
 	assert.Nil(t, err)
 	assert.NotNil(t, tag)
@@ -19,6 +63,8 @@ func TestFindOrCreateTagByNameShouldCreateTag(t *testing.T) {
 }
 
 func TestFindOrCreateTagShouldNotCreateDuplicateNames(t *testing.T) {
+	clearDB()
+
 	tag, created, err := FindOrCreateTagByName(db, "foo")
 	assert.Nil(t, err)
 	assert.NotNil(t, tag)
@@ -37,12 +83,16 @@ func TestFindOrCreateTagShouldNotCreateDuplicateNames(t *testing.T) {
 }
 
 func TestFindTagByNameShouldReturnNilIfNotExists(t *testing.T) {
+	clearDB()
+
 	tag, err := FindTagByName(db, "this does not exist")
 	assert.Nil(t, err)
 	assert.Nil(t, tag)
 }
 
 func TestFindTagByNameShouldFindTag(t *testing.T) {
+	clearDB()
+
 	tag, created, err := FindOrCreateTagByName(db, "creating a new tag")
 	assert.Nil(t, err)
 	assert.NotNil(t, tag)
@@ -55,6 +105,8 @@ func TestFindTagByNameShouldFindTag(t *testing.T) {
 }
 
 func TestRenameTagShouldRenameTag(t *testing.T) {
+	clearDB()
+
 	tag, created, err := FindOrCreateTagByName(db, "old name")
 	assert.Nil(t, err)
 	assert.NotNil(t, tag)
@@ -68,6 +120,8 @@ func TestRenameTagShouldRenameTag(t *testing.T) {
 }
 
 func TestRenameTagToExistingNameShouldReturnError(t *testing.T) {
+	clearDB()
+
 	first, created, err := FindOrCreateTagByName(db, "first")
 	assert.Nil(t, err)
 	assert.NotNil(t, first)
@@ -94,6 +148,8 @@ func TestRenameTagToExistingNameShouldReturnError(t *testing.T) {
 }
 
 func TestRenameTagByChangingCaseShouldRenameTag(t *testing.T) {
+	clearDB()
+
 	first, _, err := FindOrCreateTagByName(db, "first")
 	assert.Nil(t, err)
 	assert.NotNil(t, first)
@@ -109,6 +165,8 @@ func TestRenameTagByChangingCaseShouldRenameTag(t *testing.T) {
 }
 
 func TestRenameTagByChangingToSameNameShouldReturnError(t *testing.T) {
+	clearDB()
+
 	same, _, err := FindOrCreateTagByName(db, "same")
 	assert.Nil(t, err)
 	assert.NotNil(t, same)
@@ -119,6 +177,8 @@ func TestRenameTagByChangingToSameNameShouldReturnError(t *testing.T) {
 }
 
 func TestDeleteTagShouldDeleteTag(t *testing.T) {
+	clearDB()
+
 	tag, created, err := FindOrCreateTagByName(db, "to delete")
 	assert.Nil(t, err)
 	assert.NotNil(t, tag)
@@ -134,6 +194,8 @@ func TestDeleteTagShouldDeleteTag(t *testing.T) {
 }
 
 func TestDeleteTagShouldDeleteAssociationsToStars(t *testing.T) {
+	clearDB()
+
 	service, _, err := FindOrCreateServiceByName(db, "nfl")
 	assert.Nil(t, err)
 	assert.NotNil(t, service)
@@ -189,6 +251,8 @@ func TestDeleteTagShouldDeleteAssociationsToStars(t *testing.T) {
 }
 
 func TestLoadStarsShouldReturnErrorWhenTagNotInDatabase(t *testing.T) {
+	clearDB()
+
 	tag := &Tag{
 		Name: "not in db",
 	}
