@@ -396,8 +396,33 @@ func TestFindStarByIDShouldReturnStar(t *testing.T) {
 		ServiceID: service.ID,
 	}
 	_, err = CreateOrUpdateStar(db, star, service)
+	assert.Nil(t, err)
 
 	existing, err := FindStarByID(db, star.ID)
 	assert.Nil(t, err)
 	assert.NotNil(t, existing)
+}
+
+func TestCreateOrUpdateStarShouldUpdateStar(t *testing.T) {
+	clearDB()
+
+	service, _, err := FindOrCreateServiceByName(db, "svc")
+	assert.Nil(t, err)
+
+	star := &Star{
+		RemoteID:  "1",
+		ServiceID: service.ID,
+	}
+	_, err = CreateOrUpdateStar(db, star, service)
+	assert.Nil(t, err)
+
+	name := "Updated"
+	star.Name = &name
+	created, err := CreateOrUpdateStar(db, star, service)
+	assert.Nil(t, err)
+	assert.False(t, created)
+
+	updated, err := FindStarByID(db, star.ID)
+	assert.Nil(t, err)
+	assert.Equal(t, "Updated", *updated.Name)
 }
