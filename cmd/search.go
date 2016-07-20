@@ -41,12 +41,12 @@ var SearchCmd = &cobra.Command{
 			if err != nil {
 				output.Error(err.Error())
 			} else {
-				star, err := model.FindStarByID(db, ID)
+				star, err := model.FindStarByID(db, uint(ID))
 				if err != nil {
 					output.Error(err.Error())
 				} else {
 					output.Inline(fmt.Sprintf("(%f) ", hit.Score))
-					output.StarLine(&star)
+					output.StarLine(star)
 				}
 			}
 		}

@@ -108,10 +108,12 @@ func CreateOrUpdateStar(db *gorm.DB, star *Star, service *Service) (bool, error)
 }
 
 // FindStarByID finds a star by ID
-func FindStarByID(db *gorm.DB, ID int) (Star, error) {
+func FindStarByID(db *gorm.DB, ID uint) (*Star, error) {
 	var star Star
-	db.First(&star, ID)
-	return star, db.Error
+	if db.First(&star, ID).RecordNotFound() {
+		return nil, fmt.Errorf("Star '%d' not found", ID)
+	}
+	return &star, db.Error
 }
 
 // FindStars finds all stars

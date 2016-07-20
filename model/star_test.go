@@ -6,9 +6,12 @@ import (
 
 	"github.com/google/go-github/github"
 	"github.com/stretchr/testify/assert"
+	"github.com/xanzy/go-gitlab"
 )
 
 func TestNewStarFromGithubShouldCopyFields(t *testing.T) {
+	clearDB()
+
 	id := 33
 	name := "larry-bird"
 	fullName := "celtics/larry-bird"
@@ -46,6 +49,8 @@ func TestNewStarFromGithubShouldCopyFields(t *testing.T) {
 }
 
 func TestNewStarFromGithubShouldHandleEmpty(t *testing.T) {
+	clearDB()
+
 	star, err := NewStarFromGithub(&github.Timestamp{}, github.Repository{})
 	assert.NotNil(t, err)
 	assert.Equal(t, "ID from GitHub is required", err.Error())
@@ -53,6 +58,8 @@ func TestNewStarFromGithubShouldHandleEmpty(t *testing.T) {
 }
 
 func TestNewStarFromGithubShouldHandleOnlyID(t *testing.T) {
+	clearDB()
+
 	id := 33
 	star, err := NewStarFromGithub(&github.Timestamp{}, github.Repository{
 		ID: &id,
@@ -62,7 +69,63 @@ func TestNewStarFromGithubShouldHandleOnlyID(t *testing.T) {
 	assert.Equal(t, "33", star.RemoteID)
 }
 
+func TestNewStarFromGitlabShouldCopyFields(t *testing.T) {
+	clearDB()
+
+	id := 33
+	name := "larry-bird"
+	fullName := "celtics/larry-bird"
+	description := "larry legend"
+	homepage := "http://www.nba.com/celtics/"
+	url := "http://www.nba.com/pacers/"
+	stargazersCount := 10000
+
+	gitlab := gitlab.Project{
+		ID:                &id,
+		Name:              &name,
+		NameWithNamespace: &fullName,
+		Description:       &description,
+		WebURL:            &homepage,
+		HTTPURLToRepo:     &url,
+		StarCount:         &stargazersCount,
+	}
+
+	star, err := NewStarFromGitlab(gitlab)
+	assert.Nil(t, err)
+	assert.Equal(t, "33", star.RemoteID)
+	assert.Equal(t, name, *star.Name)
+	assert.Equal(t, fullName, *star.FullName)
+	assert.Equal(t, description, *star.Description)
+	assert.Equal(t, homepage, *star.Homepage)
+	assert.Equal(t, url, *star.URL)
+	assert.Equal(t, (*string)(nil), star.Language)
+	assert.Equal(t, stargazersCount, star.Stargazers)
+}
+
+func TestNewStarFromGitlabShouldHandleEmpty(t *testing.T) {
+	clearDB()
+
+	star, err := NewStarFromGitlab(gitlab.Project{})
+	assert.NotNil(t, err)
+	assert.Equal(t, "ID from GitLab is required", err.Error())
+	assert.Nil(t, star)
+}
+
+func TestNewStarFromGitlabShouldHandleOnlyID(t *testing.T) {
+	clearDB()
+
+	id := 33
+	star, err := NewStarFromGitlab(gitlab.Project{
+		ID: &id,
+	})
+	assert.Nil(t, err)
+	assert.NotNil(t, star)
+	assert.Equal(t, "33", star.RemoteID)
+}
+
 func TestFuzzyFindStarsByNameShouldFuzzyFind(t *testing.T) {
+	clearDB()
+
 	fullName := "Apple/Baker"
 	name := "Charlie"
 
@@ -114,6 +177,8 @@ func TestFuzzyFindStarsByNameShouldFuzzyFind(t *testing.T) {
 }
 
 func TestAddTagShouldAddTag(t *testing.T) {
+	clearDB()
+
 	tag, _, err := FindOrCreateTagByName(db, "celtics")
 	assert.Nil(t, err)
 	assert.NotNil(t, tag)
@@ -149,6 +214,8 @@ func TestAddTagShouldAddTag(t *testing.T) {
 }
 
 func TestHasTagShouldReturnFalseWhenNoTags(t *testing.T) {
+	clearDB()
+
 	service, _, err := FindOrCreateServiceByName(db, "nba")
 	assert.Nil(t, err)
 	assert.NotNil(t, service)
@@ -174,6 +241,8 @@ func TestHasTagShouldReturnFalseWhenNoTags(t *testing.T) {
 }
 
 func TestHasTagShouldReturnFalseWhenTagIsNil(t *testing.T) {
+	clearDB()
+
 	service, _, err := FindOrCreateServiceByName(db, "nba")
 	assert.Nil(t, err)
 	assert.NotNil(t, service)
@@ -194,6 +263,8 @@ func TestHasTagShouldReturnFalseWhenTagIsNil(t *testing.T) {
 }
 
 func TestHasTagShouldReturnFalseWhenDoesNotHaveTag(t *testing.T) {
+	clearDB()
+
 	service, _, err := FindOrCreateServiceByName(db, "nba")
 	assert.Nil(t, err)
 	assert.NotNil(t, service)
@@ -227,6 +298,8 @@ func TestHasTagShouldReturnFalseWhenDoesNotHaveTag(t *testing.T) {
 }
 
 func TestHasTagShouldReturnTrueWhenHasOnlyTag(t *testing.T) {
+	clearDB()
+
 	service, _, err := FindOrCreateServiceByName(db, "nba")
 	assert.Nil(t, err)
 	assert.NotNil(t, service)
@@ -255,6 +328,8 @@ func TestHasTagShouldReturnTrueWhenHasOnlyTag(t *testing.T) {
 }
 
 func TestHasTagShouldReturnTrueWhenHasTag(t *testing.T) {
+	clearDB()
+
 	service, _, err := FindOrCreateServiceByName(db, "nba")
 	assert.Nil(t, err)
 	assert.NotNil(t, service)
@@ -288,6 +363,8 @@ func TestHasTagShouldReturnTrueWhenHasTag(t *testing.T) {
 }
 
 func TestLoadTagsShouldReturnErrorWhenStarNotInDatabase(t *testing.T) {
+	clearDB()
+
 	name := "not in db"
 	star := &Star{
 		RemoteID: "not in db",
@@ -297,4 +374,30 @@ func TestLoadTagsShouldReturnErrorWhenStarNotInDatabase(t *testing.T) {
 	err := star.LoadTags(db)
 	assert.NotNil(t, err)
 	assert.Equal(t, "Star '0' not found", err.Error())
+}
+
+func TestFindStarByIDShouldReturnErrorWhenDoesNotExist(t *testing.T) {
+	clearDB()
+
+	star, err := FindStarByID(db, 1)
+	assert.NotNil(t, err)
+	assert.Equal(t, "Star '1' not found", err.Error())
+	assert.Nil(t, star)
+}
+
+func TestFindStarByIDShouldReturnStar(t *testing.T) {
+	clearDB()
+
+	service, _, err := FindOrCreateServiceByName(db, "svc")
+	assert.Nil(t, err)
+
+	star := &Star{
+		RemoteID:  "1",
+		ServiceID: service.ID,
+	}
+	_, err = CreateOrUpdateStar(db, star, service)
+
+	existing, err := FindStarByID(db, star.ID)
+	assert.Nil(t, err)
+	assert.NotNil(t, existing)
 }
