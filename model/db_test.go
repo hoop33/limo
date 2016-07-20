@@ -1,6 +1,7 @@
 package model
 
 import (
+	"fmt"
 	"os"
 	"testing"
 
@@ -23,6 +24,17 @@ func mkDB() {
 	db, err = InitDB(dbPath, false)
 	if err != nil {
 		panic(err)
+	}
+}
+
+func clearDB() {
+	for _, table := range []string{
+		"services",
+		"stars",
+		"tags",
+		"star_tags",
+	} {
+		db.Exec(fmt.Sprintf("delete from %s", table))
 	}
 }
 
