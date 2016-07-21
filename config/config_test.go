@@ -80,6 +80,29 @@ func TestGetServiceReturnsEmptyWhenServiceDoesNotExist(t *testing.T) {
 	assert.Equal(t, "", svcCfg.Token)
 }
 
+func TestReadConfigFileReadsFileWhenExists(t *testing.T) {
+	rmdirConfig()
+
+	config, err := ReadConfig()
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	config.DatabasePath = "foo"
+	err = config.WriteConfig()
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	cfg2, err := ReadConfig()
+	if err != nil {
+		t.Fatal(err)
+	}
+	assert.Equal(t, "foo", cfg2.DatabasePath)
+
+	rmdirConfig()
+}
+
 func mkdirConfig() {
 	if err := os.MkdirAll(configDirectoryPath, 0700); err != nil {
 		panic(err)
