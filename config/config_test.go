@@ -69,6 +69,17 @@ func TestCanSetIndexPath(t *testing.T) {
 	assert.True(t, strings.IndexAny(string(contents), "index-path-foo") >= 0)
 }
 
+func TestGetServiceReturnsEmptyWhenServiceDoesNotExist(t *testing.T) {
+	rmdirConfig()
+	config, err := ReadConfig()
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	svcCfg := config.GetService("foo")
+	assert.Equal(t, "", svcCfg.Token)
+}
+
 func mkdirConfig() {
 	if err := os.MkdirAll(configDirectoryPath, 0700); err != nil {
 		panic(err)
