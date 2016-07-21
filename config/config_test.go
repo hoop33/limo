@@ -7,6 +7,7 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/assert"
+	"fmt"
 )
 
 func init() {
@@ -99,6 +100,26 @@ func TestReadConfigFileReadsFileWhenExists(t *testing.T) {
 		t.Fatal(err)
 	}
 	assert.Equal(t, "foo", cfg2.DatabasePath)
+
+	rmdirConfig()
+}
+
+func TestReadConfigDoesNotPanicForMalformedConfigurationFile(t *testing.T) {
+	rmdirConfig()
+	mkdirConfig()
+
+	contents := "{this is not a yaml file}"
+	err := ioutil.WriteFile(fmt.Sprintf("%s/limo.yaml", configDirectoryPath), []byte(contents), 0700)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	cfg, err := ReadConfig()
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	assert.False(t, cfg.DatabasePath == "")
 
 	rmdirConfig()
 }
