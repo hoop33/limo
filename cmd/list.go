@@ -5,6 +5,7 @@ import (
 
 	"github.com/hoop33/limo/config"
 	"github.com/hoop33/limo/model"
+	"github.com/hoop33/limo/service"
 	"github.com/spf13/cobra"
 )
 
@@ -116,7 +117,29 @@ func listTags(args []string) {
 }
 
 func listTrending(args []string) {
-	getOutput().Info("Listing trending")
+	// Get configuration
+	cfg, err := getConfiguration()
+	fatalOnError(err)
+
+	// Get the specified service
+	svc, err := getService()
+	fatalOnError(err)
+
+	// Create a channel to receive trending, since service can page
+	trendingChan := make(chan *model.StarResult, 20)
+
+	// Get trending for the specified service
+	go svc.GetTrending(trendingChan, cfg.GetService(service.Name(svc)).Token, options.language, options.verbose)
+
+	output := getOutput()
+
+	for starResult := range trendingChan {
+		if starResult.Error != nil {
+			output.Error(starResult.Error.Error())
+		} else {
+			output.StarLine(starResult.Star)
+		}
+	}
 }
 
 func init() {
