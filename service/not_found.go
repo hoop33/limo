@@ -18,3 +18,7 @@ func (nf *NotFound) Login() (string, error) {
 // GetStars is not implemented
 func (nf *NotFound) GetStars(starChan chan<- *model.StarResult, token string, user string) {
 }
+
+// GetTrending is not implemented
+func (nf *NotFound) GetTrending(trendingChan chan<- *model.StarResult, token string, language string, verbose bool) {
+}

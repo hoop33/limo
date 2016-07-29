@@ -1,6 +1,9 @@
 package service
 
 import (
+	"fmt"
+	"time"
+
 	"golang.org/x/oauth2"
 
 	"github.com/google/go-github/github"
@@ -68,6 +71,61 @@ func (g *Github) GetStars(starChan chan<- *model.StarResult, token string, user 
 		currentPage++
 	}
 	close(starChan)
+}
+
+// GetTrending returns the trending repositories
+func (g *Github) GetTrending(trendingChan chan<- *model.StarResult, token string, language string, verbose bool) {
+	client := g.getClient(token)
+
+	// TODO perhaps allow them to specify multiple pages?
+	// Might be overkill -- first page probably plenty
+
+	// TODO Make this more configurable. Sort by stars, forks, default.
+	// Search by number of stars, pushed, created, or whatever.
+	// Lots of possibilities.
+
+	q := g.getDateSearchString()
+
+	if language != "" {
+		q = fmt.Sprintf("language:%s %s", language, q)
+	}
+
+	if verbose {
+		fmt.Println("q =", q)
+	}
+
+	result, _, err := client.Search.Repositories(q, &github.SearchOptions{
+		Sort:  "stars",
+		Order: "desc",
+	})
+
+	// If we got an error, put it on the channel
+	if err != nil {
+		trendingChan <- &model.StarResult{
+			Error: err,
+			Star:  nil,
+		}
+	} else {
+		// Create a Star for each repository and put it on the channel
+		for _, repo := range result.Repositories {
+			star, err := model.NewStarFromGithub(nil, repo)
+			trendingChan <- &model.StarResult{
+				Error: err,
+				Star:  star,
+			}
+		}
+	}
+
+	close(trendingChan)
+}
+
+func (g *Github) getDateSearchString() string {
+	// TODO make this configurable
+	// Default should be in configuration file
+	// and should be able to override from command line
+	// TODO should be able to specify whether "created" or "pushed"
+	date := time.Now().Add(-7 * (24 * time.Hour))
+	return fmt.Sprintf("created:>%s", date.Format("2006-01-02"))
 }
 
 func (g *Github) getClient(token string) *github.Client {

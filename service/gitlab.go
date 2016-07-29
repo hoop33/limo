@@ -68,6 +68,11 @@ func (g *Gitlab) GetStars(starChan chan<- *model.StarResult, token string, user 
 	close(starChan)
 }
 
+// GetTrending returns the trending repositories
+func (g *Gitlab) GetTrending(trendingChan chan<- *model.StarResult, token string, language string, verbose bool) {
+	close(trendingChan)
+}
+
 func (g *Gitlab) getClient(token string) *gitlab.Client {
 	return gitlab.NewClient(nil, token)
 }

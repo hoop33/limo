@@ -14,6 +14,7 @@ import (
 type Service interface {
 	Login() (string, error)
 	GetStars(starChan chan<- *model.StarResult, token string, user string)
+	GetTrending(trendingChan chan<- *model.StarResult, token string, language string, verbose bool)
 }
 
 var services = make(map[string]Service)
