@@ -83,8 +83,8 @@ VimL
 ```sh
 $ limo list stars
 ...
-jaxbot/github-issues.vim (VimL)
-jaxbot/semantic-highlight.vim (VimL)
+jaxbot/github-issues.vim ★ :347 VimL https://github.com/jaxbot/github-issues.vim.git
+jaxbot/semantic-highlight.vim ★ :209 VimL https://github.com/jaxbot/semantic-highlight.vim.git
 ...
 ```
 
@@ -93,8 +93,8 @@ jaxbot/semantic-highlight.vim (VimL)
 ```sh
 $ limo list stars -l viml
 ...
-jaxbot/github-issues.vim (VimL)
-jaxbot/semantic-highlight.vim (VimL)
+jaxbot/github-issues.vim ★ :347 VimL https://github.com/jaxbot/github-issues.vim.git
+jaxbot/semantic-highlight.vim ★ :209 VimL https://github.com/jaxbot/semantic-highlight.vim.git
 ...
 ```
 
@@ -103,14 +103,14 @@ jaxbot/semantic-highlight.vim (VimL)
 ```sh
 $ limo tag jaxbot vim github
 Star 'jaxbot' ambiguous:
-jaxbot/github-issues.vim (★ : 344) (VimL)
-jaxbot/semantic-highlight.vim (★ : 204) (VimL)
+jaxbot/github-issues.vim ★ :347 VimL https://github.com/jaxbot/github-issues.vim.git
+jaxbot/semantic-highlight.vim ★ :209 VimL https://github.com/jaxbot/semantic-highlight.vim.git
 Narrow your search
 ```
 
 ```sh
 $ limo tag github-issues vim github
-jaxbot/github-issues.vim (★ : 344) (VimL)
+jaxbot/github-issues.vim ★ :347 VimL https://github.com/jaxbot/github-issues.vim.git
 Added tag 'vim'
 Added tag 'github'
 ```
@@ -119,12 +119,11 @@ Added tag 'github'
 
 ```sh
 $ limo show github-issues
-jaxbot/github-issues.vim (★ : 344) (VimL)
-vim, github
+jaxbot/github-issues.vim ★ :347 VimL https://github.com/jaxbot/github-issues.vim.git
+github, vim
 Github issue lookup in Vim
 Home page: http://jaxbot.me/articles/github-issues-vim-plugin-5-7-2014
-URL: https://github.com/jaxbot/github-issues.vim.git
-Starred at Fri Feb 21 16:02:49 UTC 2014
+Starred on Fri Feb 21 16:02:49 UTC 2014
 ```
 
 ### List All Your Tags
@@ -141,25 +140,26 @@ web
 
 ```sh
 $ limo list stars -t vim
-vim/vim (★ : 4979) (C)
-tybenz/vimdeck (★ : 946) (Ruby)
-jaxbot/github-issues.vim (★ : 344) (VimL)
+vim/vim ★ :5267 C https://github.com/vim/vim.git
+tybenz/vimdeck ★ :953 Ruby https://github.com/tybenz/vimdeck.git
+jaxbot/github-issues.vim ★ :347 VimL https://github.com/jaxbot/github-issues.vim.git
+vicoapp/vico ★ :666 Objective-C https://github.com/vicoapp/vico.git
 ```
 
 ### Perform a Full-text Search on Your Stars
 
 ```sh
 $ limo search text editor
-(0.703194) limetext/lime (★ : 12522)
-(0.613690) driusan/de (★ : 115) (Go)
-(0.608085) Cocoanetics/DTRichTextEditor (★ : 257) (Objective-C)
-(0.608085) atom/atom (★ : 28810) (CoffeeScript)
-(0.605340) zyedidia/micro (★ : 1973) (Go)
-(0.602631) vicoapp/vico (★ : 666) (Objective-C)
-(0.597322) xmementoit/vim-ide (★ : 142) (VimL)
-(0.597322) textmate/textmate (★ : 10873) (C++)
-(0.589614) macvim-dev/macvim (★ : 1820) (C)
-(0.294723) yi-editor/yi (★ : 931) (Haskell)
+(0.708069) limetext/lime ★ :12588 https://github.com/limetext/lime.git
+(0.617632) zyedidia/micro ★ :2030 Go https://github.com/zyedidia/micro.git
+(0.614035) driusan/de ★ :116 Go https://github.com/driusan/de.git
+(0.611212) martanne/vis ★ :2171 C https://github.com/martanne/vis.git
+(0.608427) Cocoanetics/DTRichTextEditor ★ :259 Objective-C https://github.com/Cocoanetics/DTRichTextEditor.git
+(0.608427) atom/atom ★ :29489 CoffeeScript https://github.com/atom/atom.git
+(0.608427) skx/kilua ★ :80 C++ https://github.com/skx/kilua.git
+(0.600297) antirez/kilo ★ :2672 C https://github.com/antirez/kilo.git
+(0.597658) xmementoit/vim-ide ★ :150 VimL https://github.com/xmementoit/vim-ide.git
+(0.592483) edwardloveall/atom-replacement-icon ★ :133 Shell https://github.com/edwardloveall/atom-replacement-icon.git
 ```
 
 You can read the full usage documentation at <https://www.gitbook.com/book/hoop33/limo/details>.
