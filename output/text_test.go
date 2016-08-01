@@ -39,7 +39,7 @@ func ExampleText_StarLine() {
 		Language:   &language,
 	}
 	text.StarLine(star)
-	// Output: hoop33/limo (*: 1000000) (Go)
+	// Output: hoop33/limo *:1000000 Go
 }
 
 func ExampleText_Star() {
@@ -67,10 +67,9 @@ func ExampleText_Star() {
 	}
 	text.Star(star)
 	// Output:
-	// hoop33/limo (*: 1000000) (Go)
+	// hoop33/limo *:1000000 Go https://github.com/hoop33/limo.git
 	// cli, git
 	// A CLI for managing starred Git repositories
 	// Home page: https://github.com/hoop33/limo
-	// URL: https://github.com/hoop33/limo.git
 	// Starred on Tue Jun 21 14:56:05 UTC 2016
 }

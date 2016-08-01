@@ -47,15 +47,20 @@ func (c *Color) StarLine(star *model.Star) {
 		c.Error(err.Error())
 	}
 
-	if star.Stargazers > 0 {
-		_, err = buffer.WriteString(color.YellowString(fmt.Sprintf(" (★ : %d)", star.Stargazers)))
+	_, err = buffer.WriteString(color.YellowString(fmt.Sprintf(" ★ :%d", star.Stargazers)))
+	if err != nil {
+		c.Error(err.Error())
+	}
+
+	if star.Language != nil {
+		_, err = buffer.WriteString(color.GreenString(fmt.Sprintf(" %s", *star.Language)))
 		if err != nil {
 			c.Error(err.Error())
 		}
 	}
 
-	if star.Language != nil {
-		_, err = buffer.WriteString(color.YellowString(fmt.Sprintf(" (%s)", *star.Language)))
+	if star.URL != nil {
+		_, err = buffer.WriteString(color.RedString(fmt.Sprintf(" %s", *star.URL)))
 		if err != nil {
 			c.Error(err.Error())
 		}
@@ -87,10 +92,6 @@ func (c *Color) Star(star *model.Star) {
 
 	if star.Homepage != nil && *star.Homepage != "" {
 		color.Red(fmt.Sprintf("Home page: %s", *star.Homepage))
-	}
-
-	if star.URL != nil {
-		color.Red(fmt.Sprintf("URL: %s", *star.URL))
 	}
 
 	color.Green(fmt.Sprintf("Starred on %s", star.StarredAt.Format(time.UnixDate)))
