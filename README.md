@@ -36,9 +36,9 @@ $ go get -u github.com/hoop33/limo
 
 You can also download a pre-built binary for your platform and copy it to a location on your path.
 
-* [macOS](https://github.com/hoop33/limo/blob/master/dist/macos/limo)
-* [Linux](https://github.com/hoop33/limo/blob/master/dist/linux/limo)
-* [Windows](https://github.com/hoop33/limo/blob/master/dist/windows/limo.exe)
+* [macOS](https://github.com/hoop33/limo/raw/master/dist/macos/limo)
+* [Linux](https://github.com/hoop33/limo/raw/master/dist/linux/limo)
+* [Windows](https://github.com/hoop33/limo/raw/master/dist/windows/limo.exe)
 
 ## Usage
 
