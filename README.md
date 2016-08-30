@@ -34,7 +34,11 @@ If you have a working Go installation, type:
 $ go get -u github.com/hoop33/limo
 ```
 
-Binaries for the various platforms not yet available.
+You can also download a pre-built binary for your platform and copy it to a location on your path.
+
+* [macOS](https://github.com/hoop33/limo/blob/master/dist/macos/limo)
+* [Linux](https://github.com/hoop33/limo/blob/master/dist/linux/limo)
+* [Windows](https://github.com/hoop33/limo/blob/master/dist/windows/limo.exe)
 
 ## Usage
 

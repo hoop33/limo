@@ -5,6 +5,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ## [Unreleased]
 ### Added
 - Show URL when listing stars
+- Add distribution binaries
 
 ## [0.4.0]
 ### Added
