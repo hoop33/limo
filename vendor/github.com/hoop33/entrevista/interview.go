@@ -9,7 +9,7 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/dgiagio/getpass"
+	"golang.org/x/crypto/ssh/terminal"
 )
 
 type Interview struct {
@@ -73,7 +73,9 @@ func isValid(value interface{}, text string, question *Question) bool {
 
 func readAnswer(question *Question) (string, error) {
 	if question.Hidden {
-		return getpass.GetPassword("")
+		password, err := terminal.ReadPassword(0)
+		fmt.Println()
+		return string(password), err
 	} else {
 		answer, err := bufio.NewReader(os.Stdin).ReadString('\n')
 		if err != nil {

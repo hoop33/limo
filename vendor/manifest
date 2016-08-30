@@ -707,14 +707,6 @@
 			"notests": true
 		},
 		{
-			"importpath": "github.com/dgiagio/getpass",
-			"repository": "https://github.com/dgiagio/getpass",
-			"vcs": "git",
-			"revision": "ee9b272d814714e1cc78ab8dd59b521730333b12",
-			"branch": "master",
-			"notests": true
-		},
-		{
 			"importpath": "github.com/edsrzf/mmap-go",
 			"repository": "https://github.com/edsrzf/mmap-go",
 			"vcs": "git",
@@ -931,7 +923,7 @@
 			"importpath": "github.com/hoop33/entrevista",
 			"repository": "https://github.com/hoop33/entrevista",
 			"vcs": "git",
-			"revision": "5311266fc3714154c5a4b2fbe71e19e3d638c55f",
+			"revision": "d01eab01679f8c019474f817d9aa76977bcf79c9",
 			"branch": "master",
 			"notests": true
 		},
