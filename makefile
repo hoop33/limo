@@ -10,10 +10,10 @@ all: check build
 build:
 	go build
 
-dist: osx linux windows
+dist: macos linux windows
 
-osx:
-	GOOS=darwin go build -o ./dist/osx/limo
+macos:
+	GOOS=darwin go build -o ./dist/macos/limo
 
 linux:
 	GOOS=linux go build -o ./dist/linux/limo
