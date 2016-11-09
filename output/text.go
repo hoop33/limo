@@ -92,6 +92,11 @@ func (t *Text) Star(star *model.Star) {
 	fmt.Printf("Starred on %s\n", star.StarredAt.Format(time.UnixDate))
 }
 
+// Tag displays a tag
+func (t *Text) Tag(tag *model.Tag) {
+	fmt.Printf("%s *:%d\n", tag.Name, tag.StarCount)
+}
+
 // Tick displays evidence that the program is working
 func (t *Text) Tick() {
 	fmt.Print(".")

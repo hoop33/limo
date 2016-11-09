@@ -15,6 +15,7 @@ type Output interface {
 	Fatal(string)
 	StarLine(*model.Star)
 	Star(*model.Star)
+	Tag(*model.Tag)
 	Tick()
 }
 

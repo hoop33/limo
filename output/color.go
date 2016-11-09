@@ -97,6 +97,23 @@ func (c *Color) Star(star *model.Star) {
 	color.Green(fmt.Sprintf("Starred on %s", star.StarredAt.Format(time.UnixDate)))
 }
 
+// Tag displays a tag
+func (c *Color) Tag(tag *model.Tag) {
+	var buffer bytes.Buffer
+
+	_, err := buffer.WriteString(color.BlueString(tag.Name))
+	if err != nil {
+		c.Error(err.Error())
+	}
+
+	_, err = buffer.WriteString(color.YellowString(fmt.Sprintf(" ★ :%d", tag.StarCount)))
+	if err != nil {
+		c.Error(err.Error())
+	}
+
+	fmt.Println(buffer.String())
+}
+
 // Tick displays evidence that the program is working
 func (c *Color) Tick() {
 	if spinner == nil {

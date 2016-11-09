@@ -106,12 +106,12 @@ func listTags(args []string) {
 		output.Fatal(err.Error())
 	}
 
-	tags, err := model.FindTags(db)
+	tags, err := model.FindTagsWithStarCount(db)
 	if err != nil {
 		output.Error(err.Error())
 	} else {
 		for _, tag := range tags {
-			output.Info(tag.Name)
+			output.Tag(&tag)
 		}
 	}
 }

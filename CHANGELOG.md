@@ -6,6 +6,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ### Added
 - Show URL when listing stars
 - Add distribution binaries
+- Add count of stars to tag list
 
 ## [0.4.0]
 ### Added
