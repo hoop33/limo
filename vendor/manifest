@@ -923,7 +923,7 @@
 			"importpath": "github.com/hoop33/entrevista",
 			"repository": "https://github.com/hoop33/entrevista",
 			"vcs": "git",
-			"revision": "d01eab01679f8c019474f817d9aa76977bcf79c9",
+			"revision": "419a1a2be5540cc6d77b54236bea2fdff096c993",
 			"branch": "master",
 			"notests": true
 		},

@@ -7,6 +7,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - Show URL when listing stars
 - Add distribution binaries
 - Add count of stars to tag list
+- Upgrade entrevista for Windows support
 
 ## [0.4.0]
 ### Added

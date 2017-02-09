@@ -6,6 +6,7 @@ import (
 	"regexp"
 )
 
+// Question is a question in an interview
 type Question struct {
 	// The key for the answer map for the answer. Required.
 	Key string
@@ -33,8 +34,10 @@ type Question struct {
 	Hidden bool
 }
 
+// YesNoRegularExpression is a regular expression that accepts Y, y, N, or n
 var YesNoRegularExpression = regexp.MustCompile("^[YyNn]")
 
+// NewQuestion creates a new question
 func NewQuestion(key string, text string) *Question {
 	return &Question{
 		Key:        key,
@@ -43,6 +46,7 @@ func NewQuestion(key string, text string) *Question {
 	}
 }
 
+// NewStringQuestion creates a new question that expects a string response
 func NewStringQuestion(key string, text string, minLength int, maxLength int) *Question {
 	return &Question{
 		Key:            key,
@@ -55,6 +59,7 @@ func NewStringQuestion(key string, text string, minLength int, maxLength int) *Q
 	}
 }
 
+// NewBoolQuestion creates a new question that expects a boolean response
 func NewBoolQuestion(key string, text string) *Question {
 	return &Question{
 		Key:               key,
@@ -66,6 +71,7 @@ func NewBoolQuestion(key string, text string) *Question {
 	}
 }
 
+// NewNumberQuestion creates a new question that expects a number response
 func NewNumberQuestion(key string, text string) *Question {
 	return &Question{
 		Key:            key,
@@ -75,6 +81,7 @@ func NewNumberQuestion(key string, text string) *Question {
 	}
 }
 
+// NewNumberInRangeQuestion creates a new questions that expects a number response in a range
 func NewNumberInRangeQuestion(key string, text string, min int, max int) *Question {
 	return &Question{
 		Text:           text,
