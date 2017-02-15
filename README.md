@@ -186,15 +186,15 @@ Contributions are welcome! Please open pull requests with code that passes all t
 
 ### Building
 
-You must have a working Go development environment to contribute code. I have tested so far only on Go 1.6.2 on OS X. `limo` uses a vendor folder, so requires Go 1.6+ or Go 1.5 with `GO15VENDOREXPERIMENT=1` (though I haven't tested that).
+You must have a working Go development environment to contribute code. `limo` uses vendoring, so requires Go 1.6+ (or Go 1.5 with `GO15VENDOREXPERIMENT=1`, though I haven't tested that).
 
 The included makefile performs various checks on the code. To get started, run:
 
 ```sh
-$ make get-deps
+$ make deps
 ```
 
-This will install `golint` and `errcheck`. You should have to do this only once.
+This will install the necessary dependencies. You should have to do this only once.
 
 Then, you can run:
 

@@ -1,4 +1,6 @@
-packages = . ./cmd ./config ./model ./output ./service
+DIST_DIR ?= ./dist
+PROG_NAME ?= limo
+PACKAGES = $(shell go list ./... | grep -v /vendor/)
 
 default: build
 
@@ -11,35 +13,35 @@ build: check
 dist: macos linux windows
 
 macos:
-	GOOS=darwin go build -o ./dist/macos/limo
+	GOOS=darwin go build -o $(DIST_DIR)/macos/$(PROG_NAME)
 
 linux:
-	GOOS=linux go build -o ./dist/linux/limo
+	GOOS=linux go build -o $(DIST_DIR)/linux/$(PROG_NAME)
 
 windows:
-	GOOS=windows go build -o ./dist/windows/limo.exe
+	GOOS=windows go build -o $(DIST_DIR)/windows/$(PROG_NAME).exe
 
 check: vet lint errcheck interfacer test
 
 vet:
-	go vet $(packages)
+	go vet $(PACKAGES)
 
 lint:
-	$(foreach package,$(packages),golint -set_exit_status $(package);)
+	golint -set_exit_status $(PACKAGES)
 
 errcheck:
-	errcheck $(packages)
+	errcheck $(PACKAGES)
 
 interfacer:
-	interfacer $(packages)
+	interfacer $(PACKAGES)
 
 test:
-	go test -cover $(packages)
+	go test -cover $(PACKAGES)
 
 clean:
 	rm -rf dist/*
 
-get-deps:
+deps:
 	go get -u github.com/FiloSottile/gvt
 	go get -u github.com/golang/lint/golint
 	go get -u github.com/kisielk/errcheck
