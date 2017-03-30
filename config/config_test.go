@@ -6,8 +6,9 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/stretchr/testify/assert"
 	"fmt"
+
+	"github.com/stretchr/testify/assert"
 )
 
 func init() {
@@ -48,7 +49,7 @@ func TestCanSetDatabasePath(t *testing.T) {
 		t.Fatal(err)
 	}
 	rmdirConfig()
-	assert.True(t, strings.IndexAny(string(contents), "database-path-foo") >= 0)
+	assert.True(t, strings.ContainsAny(string(contents), "database-path-foo"))
 }
 
 func TestCanSetIndexPath(t *testing.T) {
@@ -67,7 +68,7 @@ func TestCanSetIndexPath(t *testing.T) {
 		t.Fatal(err)
 	}
 	rmdirConfig()
-	assert.True(t, strings.IndexAny(string(contents), "index-path-foo") >= 0)
+	assert.True(t, strings.ContainsAny(string(contents), "index-path-foo"))
 }
 
 func TestGetServiceReturnsEmptyWhenServiceDoesNotExist(t *testing.T) {
