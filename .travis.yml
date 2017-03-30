@@ -1,11 +1,6 @@
 language: go
 sudo: false
 go:
-  - tip
-before_install:
-  - go get github.com/mattn/goveralls
-  - go get golang.org/x/tools/cmd/cover
+  - master
+install:
   - make deps
-script:
-  - make
-  - $HOME/gopath/bin/goveralls -service=travis-ci
