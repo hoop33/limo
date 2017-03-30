@@ -27,3 +27,6 @@ _testmain.go
 *.prof
 
 limo
+
+# Test coverage
+*.out
