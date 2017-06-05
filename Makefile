@@ -21,7 +21,7 @@ linux:
 windows:
 	GOOS=windows go build -o $(DIST_DIR)/windows/$(PROG_NAME).exe
 
-check: vet lint errcheck interfacer aligncheck structcheck varcheck unconvert gosimple staticcheck unused test
+check: vet lint errcheck interfacer aligncheck structcheck varcheck unconvert gosimple staticcheck unused vendorcheck test
 
 vet:
 	go vet $(PACKAGES)
@@ -56,6 +56,10 @@ staticcheck:
 unused:
 	unused $(PACKAGES)
 
+vendorcheck:
+	vendorcheck $(PACKAGES)
+	vendorcheck -u $(PACKAGES)
+
 test:
 	go test -cover $(PACKAGES)
 
@@ -71,6 +75,7 @@ clean:
 
 deps:
 	go get -u github.com/FiloSottile/gvt
+	go get -u github.com/FiloSottile/vendorcheck
 	go get -u github.com/golang/lint/golint
 	go get -u github.com/kisielk/errcheck
 	go get -u github.com/mdempsky/unconvert
