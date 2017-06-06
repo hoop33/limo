@@ -38,6 +38,38 @@ func (c *Color) Fatal(s string) {
 	os.Exit(1)
 }
 
+// Event displays an event {
+func (c *Color) Event(event *model.Event) {
+	var buffer bytes.Buffer
+
+	_, err := buffer.WriteString(color.YellowString(event.Who))
+	if err != nil {
+		c.Error(err.Error())
+	}
+
+	_, err = buffer.WriteString(color.GreenString(fmt.Sprintf(" %s", event.What)))
+	if err != nil {
+		c.Error(err.Error())
+	}
+
+	_, err = buffer.WriteString(color.BlueString(fmt.Sprintf(" %s", event.Which)))
+	if err != nil {
+		c.Error(err.Error())
+	}
+
+	_, err = buffer.WriteString(color.RedString(fmt.Sprintf(" (%s)", event.URL)))
+	if err != nil {
+		c.Error(err.Error())
+	}
+
+	_, err = buffer.WriteString(color.MagentaString(fmt.Sprintf(" on %s", event.When.Format(time.UnixDate))))
+	if err != nil {
+		c.Error(err.Error())
+	}
+
+	fmt.Println(buffer.String())
+}
+
 // StarLine displays a star in one line
 func (c *Color) StarLine(star *model.Star) {
 	var buffer bytes.Buffer

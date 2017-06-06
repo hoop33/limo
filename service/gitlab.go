@@ -1,6 +1,9 @@
 package service
 
 import (
+	"context"
+	"errors"
+
 	"github.com/hoop33/entrevista"
 	"github.com/hoop33/limo/model"
 	"github.com/xanzy/go-gitlab"
@@ -11,7 +14,7 @@ type Gitlab struct {
 }
 
 // Login logs in to Gitlab
-func (g *Gitlab) Login() (string, error) {
+func (g *Gitlab) Login(ctx context.Context) (string, error) {
 	interview := createInterview()
 	interview.Questions = []entrevista.Question{
 		{
@@ -30,7 +33,7 @@ func (g *Gitlab) Login() (string, error) {
 }
 
 // GetStars returns the stars for the specified user (empty string for authenticated user)
-func (g *Gitlab) GetStars(starChan chan<- *model.StarResult, token string, user string) {
+func (g *Gitlab) GetStars(ctx context.Context, starChan chan<- *model.StarResult, token string, user string) {
 	client := g.getClient(token)
 
 	currentPage := 1
@@ -68,8 +71,17 @@ func (g *Gitlab) GetStars(starChan chan<- *model.StarResult, token string, user 
 	close(starChan)
 }
 
+// GetEvents returns the events for the authenticated user
+func (g *Gitlab) GetEvents(ctx context.Context, eventChan chan<- *model.EventResult, token, user string, page, count int) {
+	eventChan <- &model.EventResult{
+		Error: errors.New("GitLab not yet supported"),
+		Event: nil,
+	}
+	close(eventChan)
+}
+
 // GetTrending returns the trending repositories
-func (g *Gitlab) GetTrending(trendingChan chan<- *model.StarResult, token string, language string, verbose bool) {
+func (g *Gitlab) GetTrending(ctx context.Context, trendingChan chan<- *model.StarResult, token string, language string, verbose bool) {
 	close(trendingChan)
 }
 

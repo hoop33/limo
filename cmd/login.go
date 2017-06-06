@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	"context"
 	"fmt"
 
 	"github.com/hoop33/limo/config"
@@ -15,11 +16,13 @@ var LoginCmd = &cobra.Command{
 	Long:    "Log in to the service specified by [--service] (default: github).",
 	Example: fmt.Sprintf("  %s login", config.ProgramName),
 	Run: func(cmd *cobra.Command, args []string) {
+		ctx := context.Background()
+
 		// Get the specified service and log in
 		svc, err := getService()
 		fatalOnError(err)
 
-		token, err := svc.Login()
+		token, err := svc.Login(ctx)
 		fatalOnError(err)
 
 		// Update configuration with token

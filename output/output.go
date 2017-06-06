@@ -11,6 +11,7 @@ import (
 type Output interface {
 	Inline(string)
 	Info(string)
+	Event(*model.Event)
 	Error(string)
 	Fatal(string)
 	StarLine(*model.Star)

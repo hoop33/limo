@@ -1,6 +1,7 @@
 package service
 
 import (
+	"context"
 	"fmt"
 	"time"
 
@@ -16,7 +17,7 @@ type Github struct {
 }
 
 // Login logs in to Github
-func (g *Github) Login() (string, error) {
+func (g *Github) Login(ctx context.Context) (string, error) {
 	interview := createInterview()
 	interview.Questions = []entrevista.Question{
 		{
@@ -35,7 +36,7 @@ func (g *Github) Login() (string, error) {
 }
 
 // GetStars returns the stars for the specified user (empty string for authenticated user)
-func (g *Github) GetStars(starChan chan<- *model.StarResult, token string, user string) {
+func (g *Github) GetStars(ctx context.Context, starChan chan<- *model.StarResult, token string, user string) {
 	client := g.getClient(token)
 
 	// The first response will give us the correct value for the last page
@@ -43,7 +44,7 @@ func (g *Github) GetStars(starChan chan<- *model.StarResult, token string, user 
 	lastPage := 1
 
 	for currentPage <= lastPage {
-		repos, response, err := client.Activity.ListStarred(user, &github.ActivityListStarredOptions{
+		repos, response, err := client.Activity.ListStarred(ctx, user, &github.ActivityListStarredOptions{
 			ListOptions: github.ListOptions{
 				Page: currentPage,
 			},
@@ -73,8 +74,38 @@ func (g *Github) GetStars(starChan chan<- *model.StarResult, token string, user 
 	close(starChan)
 }
 
+// GetEvents returns the events for the authenticated user
+func (g *Github) GetEvents(ctx context.Context, eventChan chan<- *model.EventResult, token, user string, page, count int) {
+	client := g.getClient(token)
+
+	currentPage := page
+	lastPage := page + count - 1
+
+	for currentPage <= lastPage {
+		events, _, err := client.Activity.ListEventsReceivedByUser(ctx, user, false, &github.ListOptions{
+			Page: currentPage,
+		})
+
+		if err != nil {
+			eventChan <- &model.EventResult{
+				Error: err,
+				Event: nil,
+			}
+		} else {
+			for _, event := range events {
+				eventChan <- &model.EventResult{
+					Error: nil,
+					Event: model.NewEventFromGithub(event),
+				}
+			}
+		}
+		currentPage++
+	}
+	close(eventChan)
+}
+
 // GetTrending returns the trending repositories
-func (g *Github) GetTrending(trendingChan chan<- *model.StarResult, token string, language string, verbose bool) {
+func (g *Github) GetTrending(ctx context.Context, trendingChan chan<- *model.StarResult, token string, language string, verbose bool) {
 	client := g.getClient(token)
 
 	// TODO perhaps allow them to specify multiple pages?
@@ -94,7 +125,7 @@ func (g *Github) GetTrending(trendingChan chan<- *model.StarResult, token string
 		fmt.Println("q =", q)
 	}
 
-	result, _, err := client.Search.Repositories(q, &github.SearchOptions{
+	result, _, err := client.Search.Repositories(ctx, q, &github.SearchOptions{
 		Sort:  "stars",
 		Order: "desc",
 	})

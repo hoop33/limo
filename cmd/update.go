@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	"context"
 	"fmt"
 
 	"github.com/hoop33/limo/config"
@@ -16,6 +17,8 @@ var UpdateCmd = &cobra.Command{
 	Long:    "Update your local database with your stars from the service specified by [--service] (default: github).",
 	Example: fmt.Sprintf("  %s update", config.ProgramName),
 	Run: func(cmd *cobra.Command, args []string) {
+		ctx := context.Background()
+
 		// Get configuration
 		cfg, err := getConfiguration()
 		fatalOnError(err)
@@ -41,7 +44,7 @@ var UpdateCmd = &cobra.Command{
 		starChan := make(chan *model.StarResult, 20)
 
 		// Get the stars for the authenticated user
-		go svc.GetStars(starChan, cfg.GetService(serviceName).Token, "")
+		go svc.GetStars(ctx, starChan, cfg.GetService(serviceName).Token, "")
 
 		output := getOutput()
 

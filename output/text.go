@@ -34,6 +34,11 @@ func (t *Text) Fatal(s string) {
 	os.Exit(1)
 }
 
+// Event displays an event {
+func (t *Text) Event(event *model.Event) {
+	fmt.Printf("%s %s %s (%s) on %s\n", event.Who, event.What, event.Which, event.URL, event.When.Format(time.UnixDate))
+}
+
 // StarLine displays a star in one line
 func (t *Text) StarLine(star *model.Star) {
 	var buffer bytes.Buffer

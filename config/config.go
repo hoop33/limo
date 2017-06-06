@@ -17,6 +17,7 @@ var configDirectoryPath string
 // ServiceConfig contains configuration information for a service
 type ServiceConfig struct {
 	Token string
+	User  string
 }
 
 // Config contains configuration information

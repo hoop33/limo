@@ -853,7 +853,7 @@
 			"importpath": "github.com/google/go-github/github",
 			"repository": "https://github.com/google/go-github",
 			"vcs": "git",
-			"revision": "7ec4e45f77474b3a7b7d9b7ef233a0cc8339ddf3",
+			"revision": "7a51fb928f52a196d5f31daefb8a489453ef54ff",
 			"branch": "master",
 			"path": "/github",
 			"notests": true

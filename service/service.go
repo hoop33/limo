@@ -1,6 +1,7 @@
 package service
 
 import (
+	"context"
 	"fmt"
 	"reflect"
 	"strings"
@@ -12,9 +13,10 @@ import (
 
 // Service represents a service
 type Service interface {
-	Login() (string, error)
-	GetStars(starChan chan<- *model.StarResult, token string, user string)
-	GetTrending(trendingChan chan<- *model.StarResult, token string, language string, verbose bool)
+	Login(ctx context.Context) (string, error)
+	GetStars(ctx context.Context, starChan chan<- *model.StarResult, token, user string)
+	GetTrending(ctx context.Context, trendingChan chan<- *model.StarResult, token, language string, verbose bool)
+	GetEvents(ctx context.Context, eventChan chan<- *model.EventResult, token, user string, page, count int)
 }
 
 var services = make(map[string]Service)

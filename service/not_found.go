@@ -1,6 +1,7 @@
 package service
 
 import (
+	"context"
 	"errors"
 
 	"github.com/hoop33/limo/model"
@@ -11,14 +12,18 @@ type NotFound struct {
 }
 
 // Login is not implemented
-func (nf *NotFound) Login() (string, error) {
+func (nf *NotFound) Login(ctx context.Context) (string, error) {
 	return "", errors.New("Service not found")
 }
 
 // GetStars is not implemented
-func (nf *NotFound) GetStars(starChan chan<- *model.StarResult, token string, user string) {
+func (nf *NotFound) GetStars(ctx context.Context, starChan chan<- *model.StarResult, token string, user string) {
 }
 
 // GetTrending is not implemented
-func (nf *NotFound) GetTrending(trendingChan chan<- *model.StarResult, token string, language string, verbose bool) {
+func (nf *NotFound) GetTrending(ctx context.Context, trendingChan chan<- *model.StarResult, token string, language string, verbose bool) {
+}
+
+// GetEvents is not implemented
+func (nf *NotFound) GetEvents(ctx context.Context, eventChan chan<- *model.EventResult, token, user string, page, count int) {
 }
