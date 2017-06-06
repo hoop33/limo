@@ -4,6 +4,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 ### Added
+- Add List Events
 - Show URL when listing stars
 - Add distribution binaries
 - Add count of stars to tag list

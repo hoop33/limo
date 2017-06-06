@@ -1023,7 +1023,7 @@
 			"importpath": "github.com/mattn/go-sqlite3",
 			"repository": "https://github.com/mattn/go-sqlite3",
 			"vcs": "git",
-			"revision": "b2e464529e88db676302aa63a4ce36711633950e",
+			"revision": "83772a7051f5e30d8e59746a9e43dfa706b72f3b",
 			"branch": "master",
 			"notests": true
 		},
