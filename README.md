@@ -218,6 +218,7 @@ Limo uses the following open source libraries -- thank you!
 * [GORM](https://github.com/jinzhu/gorm)
 * [go-github](https://github.com/google/go-github)
 * [go-gitlab](https://github.com/xanzy/go-gitlab)
+* [go-humanize](https://github.com/dustin/go-humanize)
 * [go-spin](https://github.com/tj/go-spin)
 * [Open](https://github.com/skratchdot/open-golang)
 * [Testify](https://github.com/stretchr/testify)
