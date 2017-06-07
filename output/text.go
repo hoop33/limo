@@ -6,6 +6,7 @@ import (
 	"os"
 	"time"
 
+	humanize "github.com/dustin/go-humanize"
 	"github.com/hoop33/limo/model"
 )
 
@@ -36,7 +37,7 @@ func (t *Text) Fatal(s string) {
 
 // Event displays an event {
 func (t *Text) Event(event *model.Event) {
-	fmt.Printf("%s %s %s (%s) on %s\n", event.Who, event.What, event.Which, event.URL, event.When.Format(time.UnixDate))
+	fmt.Printf("%s %s %s (%s) %s\n", event.Who, event.What, event.Which, event.URL, humanize.Time(event.When))
 }
 
 // StarLine displays a star in one line

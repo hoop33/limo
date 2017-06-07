@@ -6,6 +6,7 @@ import (
 	"os"
 	"time"
 
+	humanize "github.com/dustin/go-humanize"
 	"github.com/fatih/color"
 	"github.com/hoop33/limo/model"
 	"github.com/tj/go-spin"
@@ -62,7 +63,7 @@ func (c *Color) Event(event *model.Event) {
 		c.Error(err.Error())
 	}
 
-	_, err = buffer.WriteString(color.MagentaString(fmt.Sprintf(" on %s", event.When.Format(time.UnixDate))))
+	_, err = buffer.WriteString(color.MagentaString(fmt.Sprintf(" %s", humanize.Time(event.When))))
 	if err != nil {
 		c.Error(err.Error())
 	}
