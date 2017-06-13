@@ -6,16 +6,27 @@ import (
 	"os"
 	"time"
 
+	"github.com/briandowns/spinner"
 	humanize "github.com/dustin/go-humanize"
 	"github.com/fatih/color"
+	"github.com/hoop33/limo/config"
 	"github.com/hoop33/limo/model"
-	"github.com/tj/go-spin"
 )
 
-var spinner *spin.Spinner
+const defaultInterval = 300
+const minInterval = 250
+const defaultColor = "yellow"
+
+var spin *spinner.Spinner
+var cfg *config.OutputConfig
 
 // Color is a color text output
 type Color struct {
+}
+
+// Configure configures the output
+func (c *Color) Configure(oc *config.OutputConfig) {
+	cfg = oc
 }
 
 // Inline displays text in line
@@ -149,11 +160,30 @@ func (c *Color) Tag(tag *model.Tag) {
 
 // Tick displays evidence that the program is working
 func (c *Color) Tick() {
-	if spinner == nil {
-		spinner = spin.New()
-		spinner.Set(spin.Spin1)
+	if spin == nil {
+		index := 0
+		interval := defaultInterval
+		clr := defaultColor
+		if cfg != nil {
+			index = cfg.SpinnerIndex
+			if index < 0 || index > len(spinner.CharSets) {
+				index = 0
+			}
+			interval = cfg.SpinnerInterval
+			if interval < minInterval {
+				interval = minInterval
+			}
+			clr = cfg.SpinnerColor
+			if clr == "" {
+				clr = defaultColor
+			}
+		}
+		spin = spinner.New(spinner.CharSets[index], time.Duration(interval)*time.Millisecond)
+		spin.Suffix = color.CyanString(" Updating")
+		if err := spin.Color(clr); err != nil {
+			c.Error(err.Error())
+		}
 	}
-	fmt.Print(color.CyanString(fmt.Sprintf("\rUpdating . . . %s ", spinner.Next())))
 }
 
 func init() {

@@ -89,7 +89,12 @@ func getIndex() (bleve.Index, error) {
 }
 
 func getOutput() output.Output {
-	return output.ForName(options.output)
+	output := output.ForName(options.output)
+	oc, err := getConfiguration()
+	if err == nil {
+		output.Configure(oc.GetOutput(options.output))
+	}
+	return output
 }
 
 func getService() (service.Service, error) {

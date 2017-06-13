@@ -4,11 +4,13 @@ import (
 	"reflect"
 	"strings"
 
+	"github.com/hoop33/limo/config"
 	"github.com/hoop33/limo/model"
 )
 
 // Output represents an output option
 type Output interface {
+	Configure(*config.OutputConfig)
 	Inline(string)
 	Info(string)
 	Event(*model.Event)

@@ -4,6 +4,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 ### Added
+- Add customizable "update" spinner
 - Add List Events
 - Show URL when listing stars
 - Add distribution binaries

@@ -20,11 +20,19 @@ type ServiceConfig struct {
 	User  string
 }
 
+// OutputConfig sontains configuration information for an output
+type OutputConfig struct {
+	SpinnerIndex    int `yaml:"spinnerIndex"`
+	SpinnerInterval int `yaml:"spinnerInterval"`
+	SpinnerColor    string `yaml:"spinnerColor"`
+}
+
 // Config contains configuration information
 type Config struct {
 	DatabasePath string                    `yaml:"databasePath"`
 	IndexPath    string                    `yaml:"indexPath"`
 	Services     map[string]*ServiceConfig `yaml:"services"`
+	Outputs      map[string]*OutputConfig  `yaml:"outputs"`
 }
 
 // GetService returns the configuration information for a service
@@ -39,6 +47,20 @@ func (config *Config) GetService(name string) *ServiceConfig {
 		config.Services[name] = service
 	}
 	return service
+}
+
+// GetOutput returns the configuration information for an output
+func (config *Config) GetOutput(name string) *OutputConfig {
+	if config.Outputs == nil {
+		config.Outputs = make(map[string]*OutputConfig)
+	}
+
+	output := config.Outputs[name]
+	if output == nil {
+		output = &OutputConfig{}
+		config.Outputs[name] = output
+	}
+	return output
 }
 
 // ReadConfig reads the configuration information

@@ -177,6 +177,15 @@ You can read the full usage documentation at <https://www.gitbook.com/book/hoop3
     * `limo.yaml`: Configuration information
     * `limo.db`: The SQLite database that stores all your stars and tags
     * `limo.idx`: The Bleve search index
+* How do I change the "updating" spinner?
+  * Limo uses <https://github.com/briandowns/spinner> for its "updating" spinner. You can override which spinner is used, what color to make it, and the spin interval in your `limo.yaml` file, like this:
+    ```yaml
+    outputs:
+      color:
+        spinnerIndex: 10
+        spinnerInterval: 300
+        spinnerColor: blue
+    ```
 
 ## Contributing
 
@@ -219,7 +228,7 @@ Limo uses the following open source libraries -- thank you!
 * [go-github](https://github.com/google/go-github)
 * [go-gitlab](https://github.com/xanzy/go-gitlab)
 * [go-humanize](https://github.com/dustin/go-humanize)
-* [go-spin](https://github.com/tj/go-spin)
+* [spinner](https://github.com/briandowns/spinner)
 * [Open](https://github.com/skratchdot/open-golang)
 * [Testify](https://github.com/stretchr/testify)
 * [xdgbasedir](https://github.com/cep21/xdgbasedir)

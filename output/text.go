@@ -7,11 +7,16 @@ import (
 	"time"
 
 	humanize "github.com/dustin/go-humanize"
+	"github.com/hoop33/limo/config"
 	"github.com/hoop33/limo/model"
 )
 
 // Text is a monochrome text output
 type Text struct {
+}
+
+// Configure no-ops
+func (t *Text) Configure(oc *config.OutputConfig) {
 }
 
 // Inline displays text in line

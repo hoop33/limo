@@ -552,6 +552,14 @@
 			"notests": true
 		},
 		{
+			"importpath": "github.com/briandowns/spinner",
+			"repository": "https://github.com/briandowns/spinner",
+			"vcs": "git",
+			"revision": "3eb2ac8139072b2c6e1c84b9d00711ba48dbed38",
+			"branch": "master",
+			"notests": true
+		},
+		{
 			"importpath": "github.com/cep21/xdgbasedir",
 			"repository": "https://github.com/cep21/xdgbasedir",
 			"vcs": "git",
@@ -1220,14 +1228,6 @@
 			"repository": "https://github.com/tecbot/gorocksdb",
 			"vcs": "git",
 			"revision": "59ab8def01399fb7ded1c3bff5e3e4cbd14b6348",
-			"branch": "master",
-			"notests": true
-		},
-		{
-			"importpath": "github.com/tj/go-spin",
-			"repository": "https://github.com/tj/go-spin",
-			"vcs": "git",
-			"revision": "866762925be273d8db6a8b816f359ca41d61bcdb",
 			"branch": "master",
 			"notests": true
 		},
