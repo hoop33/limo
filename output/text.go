@@ -42,7 +42,7 @@ func (t *Text) Fatal(s string) {
 
 // Event displays an event {
 func (t *Text) Event(event *model.Event) {
-	fmt.Printf("%s %s %s (%s) %s\n", event.Who, event.What, event.Which, event.URL, humanize.Time(event.When))
+	fmt.Printf("%s %s %s %s %s\n", event.Who, event.What, event.Which, event.URL, humanize.Time(event.When))
 }
 
 // StarLine displays a star in one line
