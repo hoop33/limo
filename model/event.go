@@ -17,8 +17,11 @@ var eventTypes = map[string]string{
 	"ForkEvent":         "forked",
 	"IssueCommentEvent": "commented on an issue on",
 	"IssuesEvent":       "opened an issue on",
+	"MemberEvent":       "added someone to",
+	"PublicEvent":       "made public",
 	"PullRequestEvent":  "opened a pull request on",
 	"PushEvent":         "pushed to",
+	"ReleaseEvent":      "released",
 	"WatchEvent":        "starred",
 }
 
