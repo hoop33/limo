@@ -70,13 +70,13 @@ func (s *TermPrefixSearcher) SetQueryNorm(qnorm float64) {
 	s.searcher.SetQueryNorm(qnorm)
 }
 
-func (s *TermPrefixSearcher) Next() (*search.DocumentMatch, error) {
-	return s.searcher.Next()
+func (s *TermPrefixSearcher) Next(ctx *search.SearchContext) (*search.DocumentMatch, error) {
+	return s.searcher.Next(ctx)
 
 }
 
-func (s *TermPrefixSearcher) Advance(ID string) (*search.DocumentMatch, error) {
-	return s.searcher.Advance(ID)
+func (s *TermPrefixSearcher) Advance(ctx *search.SearchContext, ID index.IndexInternalID) (*search.DocumentMatch, error) {
+	return s.searcher.Advance(ctx, ID)
 }
 
 func (s *TermPrefixSearcher) Close() error {
@@ -85,4 +85,8 @@ func (s *TermPrefixSearcher) Close() error {
 
 func (s *TermPrefixSearcher) Min() int {
 	return 0
+}
+
+func (s *TermPrefixSearcher) DocumentMatchPoolSize() int {
+	return s.searcher.DocumentMatchPoolSize()
 }

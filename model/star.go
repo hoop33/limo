@@ -68,26 +68,15 @@ func NewStarFromGithub(timestamp *github.Timestamp, star github.Repository) (*St
 
 // NewStarFromGitlab creates a Star from a Gitlab star
 func NewStarFromGitlab(star gitlab.Project) (*Star, error) {
-	// Require the GitLab ID
-	if star.ID == nil {
-		return nil, errors.New("ID from GitLab is required")
-	}
-
-	// Set stargazers count to 0 if nil
-	stargazersCount := 0
-	if star.StarCount != nil {
-		stargazersCount = *star.StarCount
-	}
-
 	return &Star{
-		RemoteID:    strconv.Itoa(*star.ID),
-		Name:        star.Name,
-		FullName:    star.NameWithNamespace,
-		Description: star.Description,
-		Homepage:    star.WebURL,
-		URL:         star.HTTPURLToRepo,
+		RemoteID:    strconv.Itoa(star.ID),
+		Name:        &star.Name,
+		FullName:    &star.NameWithNamespace,
+		Description: &star.Description,
+		Homepage:    &star.WebURL,
+		URL:         &star.HTTPURLToRepo,
 		Language:    nil,
-		Stargazers:  stargazersCount,
+		Stargazers:  star.StarCount,
 		StarredAt:   time.Now(), // OK, so this is a lie, but not in payload
 	}, nil
 }

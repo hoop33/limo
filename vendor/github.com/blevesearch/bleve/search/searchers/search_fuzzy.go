@@ -107,13 +107,13 @@ func (s *FuzzySearcher) SetQueryNorm(qnorm float64) {
 	s.searcher.SetQueryNorm(qnorm)
 }
 
-func (s *FuzzySearcher) Next() (*search.DocumentMatch, error) {
-	return s.searcher.Next()
+func (s *FuzzySearcher) Next(ctx *search.SearchContext) (*search.DocumentMatch, error) {
+	return s.searcher.Next(ctx)
 
 }
 
-func (s *FuzzySearcher) Advance(ID string) (*search.DocumentMatch, error) {
-	return s.searcher.Advance(ID)
+func (s *FuzzySearcher) Advance(ctx *search.SearchContext, ID index.IndexInternalID) (*search.DocumentMatch, error) {
+	return s.searcher.Advance(ctx, ID)
 }
 
 func (s *FuzzySearcher) Close() error {
@@ -122,4 +122,8 @@ func (s *FuzzySearcher) Close() error {
 
 func (s *FuzzySearcher) Min() int {
 	return 0
+}
+
+func (s *FuzzySearcher) DocumentMatchPoolSize() int {
+	return s.searcher.DocumentMatchPoolSize()
 }

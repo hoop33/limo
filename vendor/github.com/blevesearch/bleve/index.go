@@ -176,24 +176,6 @@ type Index interface {
 	FieldDictRange(field string, startTerm []byte, endTerm []byte) (index.FieldDict, error)
 	FieldDictPrefix(field string, termPrefix []byte) (index.FieldDict, error)
 
-	// DumpAll returns a channel receiving all index rows as
-	// UpsideDownCouchRow, in lexicographic byte order. If the enumeration
-	// fails, an error is sent. The channel is closed once the enumeration
-	// completes or an error is encountered. The caller must consume all
-	// channel entries until the channel is closed to ensure the transaction
-	// and other resources associated with the enumeration are released.
-	//
-	// DumpAll exists for debugging and tooling purpose and may change in the
-	// future.
-	DumpAll() chan interface{}
-
-	// DumpDoc works like DumpAll but returns only StoredRows and
-	// TermFrequencyRows related to a document.
-	DumpDoc(id string) chan interface{}
-
-	// DumpFields works like DumpAll but returns only FieldRows.
-	DumpFields() chan interface{}
-
 	Close() error
 
 	Mapping() *IndexMapping
@@ -226,6 +208,15 @@ type Classifier interface {
 // Index/Search operations.
 func New(path string, mapping *IndexMapping) (Index, error) {
 	return newIndexUsing(path, mapping, Config.DefaultIndexType, Config.DefaultKVStore, nil)
+}
+
+// NewMemOnly creates a memory-only index.
+// The contents of the index is NOT persisted,
+// and will be lost once closed.
+// The provided mapping will be used for all
+// Index/Search operations.
+func NewMemOnly(mapping *IndexMapping) (Index, error) {
+	return newIndexUsing("", mapping, Config.DefaultIndexType, Config.DefaultMemKVStore, nil)
 }
 
 // NewUsing creates index at the specified path,

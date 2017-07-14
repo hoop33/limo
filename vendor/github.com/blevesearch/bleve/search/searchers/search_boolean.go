@@ -18,7 +18,6 @@ import (
 )
 
 type BooleanSearcher struct {
-	initialized     bool
 	indexReader     index.IndexReader
 	mustSearcher    search.Searcher
 	shouldSearcher  search.Searcher
@@ -27,9 +26,11 @@ type BooleanSearcher struct {
 	currMust        *search.DocumentMatch
 	currShould      *search.DocumentMatch
 	currMustNot     *search.DocumentMatch
-	currentID       string
+	currentID       index.IndexInternalID
 	min             uint64
 	scorer          *scorers.ConjunctionQueryScorer
+	matches         []*search.DocumentMatch
+	initialized     bool
 }
 
 func NewBooleanSearcher(indexReader index.IndexReader, mustSearcher search.Searcher, shouldSearcher search.Searcher, mustNotSearcher search.Searcher, explain bool) (*BooleanSearcher, error) {
@@ -40,6 +41,7 @@ func NewBooleanSearcher(indexReader index.IndexReader, mustSearcher search.Searc
 		shouldSearcher:  shouldSearcher,
 		mustNotSearcher: mustNotSearcher,
 		scorer:          scorers.NewConjunctionQueryScorer(explain),
+		matches:         make([]*search.DocumentMatch, 2),
 	}
 	rv.computeQueryNorm()
 	return &rv, nil
@@ -66,63 +68,78 @@ func (s *BooleanSearcher) computeQueryNorm() {
 	}
 }
 
-func (s *BooleanSearcher) initSearchers() error {
+func (s *BooleanSearcher) initSearchers(ctx *search.SearchContext) error {
 	var err error
 	// get all searchers pointing at their first match
 	if s.mustSearcher != nil {
-		s.currMust, err = s.mustSearcher.Next()
+		if s.currMust != nil {
+			ctx.DocumentMatchPool.Put(s.currMust)
+		}
+		s.currMust, err = s.mustSearcher.Next(ctx)
 		if err != nil {
 			return err
 		}
 	}
 
 	if s.shouldSearcher != nil {
-		s.currShould, err = s.shouldSearcher.Next()
+		if s.currShould != nil {
+			ctx.DocumentMatchPool.Put(s.currShould)
+		}
+		s.currShould, err = s.shouldSearcher.Next(ctx)
 		if err != nil {
 			return err
 		}
 	}
 
 	if s.mustNotSearcher != nil {
-		s.currMustNot, err = s.mustNotSearcher.Next()
+		if s.currMustNot != nil {
+			ctx.DocumentMatchPool.Put(s.currMustNot)
+		}
+		s.currMustNot, err = s.mustNotSearcher.Next(ctx)
 		if err != nil {
 			return err
 		}
 	}
 
 	if s.mustSearcher != nil && s.currMust != nil {
-		s.currentID = s.currMust.ID
+		s.currentID = s.currMust.IndexInternalID
 	} else if s.mustSearcher == nil && s.currShould != nil {
-		s.currentID = s.currShould.ID
+		s.currentID = s.currShould.IndexInternalID
 	} else {
-		s.currentID = ""
+		s.currentID = nil
 	}
 
 	s.initialized = true
 	return nil
 }
 
-func (s *BooleanSearcher) advanceNextMust() error {
+func (s *BooleanSearcher) advanceNextMust(ctx *search.SearchContext, skipReturn *search.DocumentMatch) error {
 	var err error
 
 	if s.mustSearcher != nil {
-		s.currMust, err = s.mustSearcher.Next()
+		if s.currMust != skipReturn {
+			ctx.DocumentMatchPool.Put(s.currMust)
+		}
+		s.currMust, err = s.mustSearcher.Next(ctx)
 		if err != nil {
 			return err
 		}
-	} else if s.mustSearcher == nil {
-		s.currShould, err = s.shouldSearcher.Next()
+	} else {
+		if s.currShould != skipReturn {
+			ctx.DocumentMatchPool.Put(s.currShould)
+		}
+		s.currShould, err = s.shouldSearcher.Next(ctx)
 		if err != nil {
 			return err
 		}
 	}
 
 	if s.mustSearcher != nil && s.currMust != nil {
-		s.currentID = s.currMust.ID
+		s.currentID = s.currMust.IndexInternalID
 	} else if s.mustSearcher == nil && s.currShould != nil {
-		s.currentID = s.currShould.ID
+		s.currentID = s.currShould.IndexInternalID
 	} else {
-		s.currentID = ""
+		s.currentID = nil
 	}
 	return nil
 }
@@ -148,10 +165,10 @@ func (s *BooleanSearcher) SetQueryNorm(qnorm float64) {
 	}
 }
 
-func (s *BooleanSearcher) Next() (*search.DocumentMatch, error) {
+func (s *BooleanSearcher) Next(ctx *search.SearchContext) (*search.DocumentMatch, error) {
 
 	if !s.initialized {
-		err := s.initSearchers()
+		err := s.initSearchers(ctx)
 		if err != nil {
 			return nil, err
 		}
@@ -160,94 +177,104 @@ func (s *BooleanSearcher) Next() (*search.DocumentMatch, error) {
 	var err error
 	var rv *search.DocumentMatch
 
-	for s.currentID != "" {
-		if s.currMustNot != nil && s.currMustNot.ID < s.currentID {
-			// advance must not searcher to our candidate entry
-			s.currMustNot, err = s.mustNotSearcher.Advance(s.currentID)
-			if err != nil {
-				return nil, err
-			}
-			if s.currMustNot != nil && s.currMustNot.ID == s.currentID {
+	for s.currentID != nil {
+		if s.currMustNot != nil {
+			cmp := s.currMustNot.IndexInternalID.Compare(s.currentID)
+			if cmp < 0 {
+				ctx.DocumentMatchPool.Put(s.currMustNot)
+				// advance must not searcher to our candidate entry
+				s.currMustNot, err = s.mustNotSearcher.Advance(ctx, s.currentID)
+				if err != nil {
+					return nil, err
+				}
+				if s.currMustNot != nil && s.currMustNot.IndexInternalID.Equals(s.currentID) {
+					// the candidate is excluded
+					err = s.advanceNextMust(ctx, nil)
+					if err != nil {
+						return nil, err
+					}
+					continue
+				}
+			} else if cmp == 0 {
 				// the candidate is excluded
-				err = s.advanceNextMust()
+				err = s.advanceNextMust(ctx, nil)
 				if err != nil {
 					return nil, err
 				}
 				continue
 			}
-		} else if s.currMustNot != nil && s.currMustNot.ID == s.currentID {
-			// the candidate is excluded
-			err = s.advanceNextMust()
-			if err != nil {
-				return nil, err
-			}
-			continue
 		}
 
-		if s.currShould != nil && s.currShould.ID < s.currentID {
+		shouldCmpOrNil := 1 // NOTE: shouldCmp will also be 1 when currShould == nil.
+		if s.currShould != nil {
+			shouldCmpOrNil = s.currShould.IndexInternalID.Compare(s.currentID)
+		}
+
+		if shouldCmpOrNil < 0 {
+			ctx.DocumentMatchPool.Put(s.currShould)
 			// advance should searcher to our candidate entry
-			s.currShould, err = s.shouldSearcher.Advance(s.currentID)
+			s.currShould, err = s.shouldSearcher.Advance(ctx, s.currentID)
 			if err != nil {
 				return nil, err
 			}
-			if s.currShould != nil && s.currShould.ID == s.currentID {
+			if s.currShould != nil && s.currShould.IndexInternalID.Equals(s.currentID) {
 				// score bonus matches should
 				var cons []*search.DocumentMatch
 				if s.currMust != nil {
-					cons = []*search.DocumentMatch{
-						s.currMust,
-						s.currShould,
-					}
+					cons = s.matches
+					cons[0] = s.currMust
+					cons[1] = s.currShould
 				} else {
-					cons = []*search.DocumentMatch{
-						s.currShould,
-					}
+					cons = s.matches[0:1]
+					cons[0] = s.currShould
 				}
-				rv = s.scorer.Score(cons)
-				err = s.advanceNextMust()
+				rv = s.scorer.Score(ctx, cons)
+				err = s.advanceNextMust(ctx, rv)
 				if err != nil {
 					return nil, err
 				}
 				break
 			} else if s.shouldSearcher.Min() == 0 {
 				// match is OK anyway
-				rv = s.scorer.Score([]*search.DocumentMatch{s.currMust})
-				err = s.advanceNextMust()
+				cons := s.matches[0:1]
+				cons[0] = s.currMust
+				rv = s.scorer.Score(ctx, cons)
+				err = s.advanceNextMust(ctx, rv)
 				if err != nil {
 					return nil, err
 				}
 				break
 			}
-		} else if s.currShould != nil && s.currShould.ID == s.currentID {
+		} else if shouldCmpOrNil == 0 {
 			// score bonus matches should
 			var cons []*search.DocumentMatch
 			if s.currMust != nil {
-				cons = []*search.DocumentMatch{
-					s.currMust,
-					s.currShould,
-				}
+				cons = s.matches
+				cons[0] = s.currMust
+				cons[1] = s.currShould
 			} else {
-				cons = []*search.DocumentMatch{
-					s.currShould,
-				}
+				cons = s.matches[0:1]
+				cons[0] = s.currShould
 			}
-			rv = s.scorer.Score(cons)
-			err = s.advanceNextMust()
+			rv = s.scorer.Score(ctx, cons)
+			err = s.advanceNextMust(ctx, rv)
 			if err != nil {
 				return nil, err
 			}
 			break
 		} else if s.shouldSearcher == nil || s.shouldSearcher.Min() == 0 {
 			// match is OK anyway
-			rv = s.scorer.Score([]*search.DocumentMatch{s.currMust})
-			err = s.advanceNextMust()
+			cons := s.matches[0:1]
+			cons[0] = s.currMust
+			rv = s.scorer.Score(ctx, cons)
+			err = s.advanceNextMust(ctx, rv)
 			if err != nil {
 				return nil, err
 			}
 			break
 		}
 
-		err = s.advanceNextMust()
+		err = s.advanceNextMust(ctx, nil)
 		if err != nil {
 			return nil, err
 		}
@@ -255,10 +282,10 @@ func (s *BooleanSearcher) Next() (*search.DocumentMatch, error) {
 	return rv, nil
 }
 
-func (s *BooleanSearcher) Advance(ID string) (*search.DocumentMatch, error) {
+func (s *BooleanSearcher) Advance(ctx *search.SearchContext, ID index.IndexInternalID) (*search.DocumentMatch, error) {
 
 	if !s.initialized {
-		err := s.initSearchers()
+		err := s.initSearchers(ctx)
 		if err != nil {
 			return nil, err
 		}
@@ -266,33 +293,42 @@ func (s *BooleanSearcher) Advance(ID string) (*search.DocumentMatch, error) {
 
 	var err error
 	if s.mustSearcher != nil {
-		s.currMust, err = s.mustSearcher.Advance(ID)
+		if s.currMust != nil {
+			ctx.DocumentMatchPool.Put(s.currMust)
+		}
+		s.currMust, err = s.mustSearcher.Advance(ctx, ID)
 		if err != nil {
 			return nil, err
 		}
 	}
 	if s.shouldSearcher != nil {
-		s.currShould, err = s.shouldSearcher.Advance(ID)
+		if s.currShould != nil {
+			ctx.DocumentMatchPool.Put(s.currShould)
+		}
+		s.currShould, err = s.shouldSearcher.Advance(ctx, ID)
 		if err != nil {
 			return nil, err
 		}
 	}
 	if s.mustNotSearcher != nil {
-		s.currMustNot, err = s.mustNotSearcher.Advance(ID)
+		if s.currMustNot != nil {
+			ctx.DocumentMatchPool.Put(s.currMustNot)
+		}
+		s.currMustNot, err = s.mustNotSearcher.Advance(ctx, ID)
 		if err != nil {
 			return nil, err
 		}
 	}
 
 	if s.mustSearcher != nil && s.currMust != nil {
-		s.currentID = s.currMust.ID
+		s.currentID = s.currMust.IndexInternalID
 	} else if s.mustSearcher == nil && s.currShould != nil {
-		s.currentID = s.currShould.ID
+		s.currentID = s.currShould.IndexInternalID
 	} else {
-		s.currentID = ""
+		s.currentID = nil
 	}
 
-	return s.Next()
+	return s.Next(ctx)
 }
 
 func (s *BooleanSearcher) Count() uint64 {
@@ -332,4 +368,18 @@ func (s *BooleanSearcher) Close() error {
 
 func (s *BooleanSearcher) Min() int {
 	return 0
+}
+
+func (s *BooleanSearcher) DocumentMatchPoolSize() int {
+	rv := 3
+	if s.mustSearcher != nil {
+		rv += s.mustSearcher.DocumentMatchPoolSize()
+	}
+	if s.shouldSearcher != nil {
+		rv += s.shouldSearcher.DocumentMatchPoolSize()
+	}
+	if s.mustNotSearcher != nil {
+		rv += s.mustNotSearcher.DocumentMatchPoolSize()
+	}
+	return rv
 }

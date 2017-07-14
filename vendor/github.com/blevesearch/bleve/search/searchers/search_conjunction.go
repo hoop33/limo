@@ -19,14 +19,14 @@ import (
 )
 
 type ConjunctionSearcher struct {
-	initialized bool
 	indexReader index.IndexReader
 	searchers   OrderedSearcherList
-	explain     bool
 	queryNorm   float64
 	currs       []*search.DocumentMatch
-	currentID   string
+	maxIDIdx    int
 	scorer      *scorers.ConjunctionQueryScorer
+	initialized bool
+	explain     bool
 }
 
 func NewConjunctionSearcher(indexReader index.IndexReader, qsearchers []search.Searcher, explain bool) (*ConjunctionSearcher, error) {
@@ -63,24 +63,18 @@ func (s *ConjunctionSearcher) computeQueryNorm() {
 	}
 }
 
-func (s *ConjunctionSearcher) initSearchers() error {
+func (s *ConjunctionSearcher) initSearchers(ctx *search.SearchContext) error {
 	var err error
 	// get all searchers pointing at their first match
 	for i, termSearcher := range s.searchers {
-		s.currs[i], err = termSearcher.Next()
+		if s.currs[i] != nil {
+			ctx.DocumentMatchPool.Put(s.currs[i])
+		}
+		s.currs[i], err = termSearcher.Next(ctx)
 		if err != nil {
 			return err
 		}
 	}
-
-	if len(s.currs) > 0 {
-		if s.currs[0] != nil {
-			s.currentID = s.currs[0].ID
-		} else {
-			s.currentID = ""
-		}
-	}
-
 	s.initialized = true
 	return nil
 }
@@ -99,9 +93,9 @@ func (s *ConjunctionSearcher) SetQueryNorm(qnorm float64) {
 	}
 }
 
-func (s *ConjunctionSearcher) Next() (*search.DocumentMatch, error) {
+func (s *ConjunctionSearcher) Next(ctx *search.SearchContext) (*search.DocumentMatch, error) {
 	if !s.initialized {
-		err := s.initSearchers()
+		err := s.initSearchers(ctx)
 		if err != nil {
 			return nil, err
 		}
@@ -109,68 +103,96 @@ func (s *ConjunctionSearcher) Next() (*search.DocumentMatch, error) {
 	var rv *search.DocumentMatch
 	var err error
 OUTER:
-	for s.currentID != "" {
-		for i, termSearcher := range s.searchers {
-			if s.currs[i] != nil && s.currs[i].ID != s.currentID {
-				if s.currentID < s.currs[i].ID {
-					s.currentID = s.currs[i].ID
-					continue OUTER
+	for s.currs[s.maxIDIdx] != nil {
+		maxID := s.currs[s.maxIDIdx].IndexInternalID
+
+		i := 0
+		for i < len(s.currs) {
+			if s.currs[i] == nil {
+				return nil, nil
+			}
+
+			if i == s.maxIDIdx {
+				i++
+				continue
+			}
+
+			cmp := maxID.Compare(s.currs[i].IndexInternalID)
+			if cmp == 0 {
+				i++
+				continue
+			}
+
+			if cmp < 0 {
+				// maxID < currs[i], so we found a new maxIDIdx
+				s.maxIDIdx = i
+
+				// advance the positions where [0 <= x < i], since we
+				// know they were equal to the former max entry
+				maxID = s.currs[s.maxIDIdx].IndexInternalID
+				for x := 0; x < i; x++ {
+					err = s.advanceChild(ctx, x, maxID)
+					if err != nil {
+						return nil, err
+					}
 				}
-				// this reader doesn't have the currentID, try to advance
-				s.currs[i], err = termSearcher.Advance(s.currentID)
-				if err != nil {
-					return nil, err
-				}
-				if s.currs[i] == nil {
-					s.currentID = ""
-					continue OUTER
-				}
-				if s.currs[i].ID != s.currentID {
-					// we just advanced, so it doesn't match, it must be greater
-					// no need to call next
-					s.currentID = s.currs[i].ID
-					continue OUTER
-				}
-			} else if s.currs[i] == nil {
-				s.currentID = ""
+
 				continue OUTER
 			}
-		}
-		// if we get here, a doc matched all readers, sum the score and add it
-		rv = s.scorer.Score(s.currs)
 
-		// prepare for next entry
-		s.currs[0], err = s.searchers[0].Next()
-		if err != nil {
-			return nil, err
+			// maxID > currs[i], so need to advance searchers[i]
+			err = s.advanceChild(ctx, i, maxID)
+			if err != nil {
+				return nil, err
+			}
+
+			// don't bump i, so that we'll examine the just-advanced
+			// currs[i] again
 		}
-		if s.currs[0] == nil {
-			s.currentID = ""
-		} else {
-			s.currentID = s.currs[0].ID
+
+		// if we get here, a doc matched all readers, so score and add it
+		rv = s.scorer.Score(ctx, s.currs)
+
+		// we know all the searchers are pointing at the same thing
+		// so they all need to be bumped
+		for i, termSearcher := range s.searchers {
+			if s.currs[i] != rv {
+				ctx.DocumentMatchPool.Put(s.currs[i])
+			}
+			s.currs[i], err = termSearcher.Next(ctx)
+			if err != nil {
+				return nil, err
+			}
 		}
+
 		// don't continue now, wait for the next call to Next()
 		break
 	}
 	return rv, nil
 }
 
-func (s *ConjunctionSearcher) Advance(ID string) (*search.DocumentMatch, error) {
+func (s *ConjunctionSearcher) Advance(ctx *search.SearchContext, ID index.IndexInternalID) (*search.DocumentMatch, error) {
 	if !s.initialized {
-		err := s.initSearchers()
+		err := s.initSearchers(ctx)
 		if err != nil {
 			return nil, err
 		}
 	}
-	var err error
-	for i, searcher := range s.searchers {
-		s.currs[i], err = searcher.Advance(ID)
+	for i := range s.searchers {
+		err := s.advanceChild(ctx, i, ID)
 		if err != nil {
 			return nil, err
 		}
 	}
-	s.currentID = ID
-	return s.Next()
+	return s.Next(ctx)
+}
+
+func (s *ConjunctionSearcher) advanceChild(ctx *search.SearchContext, i int, ID index.IndexInternalID) (err error) {
+	if s.currs[i] != nil {
+		ctx.DocumentMatchPool.Put(s.currs[i])
+	}
+	s.currs[i], err = s.searchers[i].Advance(ctx, ID)
+	return err
 }
 
 func (s *ConjunctionSearcher) Count() uint64 {
@@ -194,4 +216,12 @@ func (s *ConjunctionSearcher) Close() error {
 
 func (s *ConjunctionSearcher) Min() int {
 	return 0
+}
+
+func (s *ConjunctionSearcher) DocumentMatchPoolSize() int {
+	rv := len(s.currs)
+	for _, s := range s.searchers {
+		rv += s.DocumentMatchPoolSize()
+	}
+	return rv
 }

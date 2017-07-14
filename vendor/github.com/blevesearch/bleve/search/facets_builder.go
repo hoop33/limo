@@ -18,6 +18,7 @@ import (
 type FacetBuilder interface {
 	Update(index.FieldTerms)
 	Result() *FacetResult
+	Field() string
 }
 
 type FacetsBuilder struct {
@@ -37,12 +38,27 @@ func (fb *FacetsBuilder) Add(name string, facetBuilder FacetBuilder) {
 }
 
 func (fb *FacetsBuilder) Update(docMatch *DocumentMatch) error {
-	fieldTerms, err := fb.indexReader.DocumentFieldTerms(docMatch.ID)
-	if err != nil {
-		return err
+	var fields []string
+	for _, facetBuilder := range fb.facets {
+		fields = append(fields, facetBuilder.Field())
+	}
+
+	if len(fields) > 0 {
+		// find out which fields haven't been loaded yet
+		fieldsToLoad := docMatch.CachedFieldTerms.FieldsNotYetCached(fields)
+		// look them up
+		fieldTerms, err := fb.indexReader.DocumentFieldTerms(docMatch.IndexInternalID, fieldsToLoad)
+		if err != nil {
+			return err
+		}
+		// cache these as well
+		if docMatch.CachedFieldTerms == nil {
+			docMatch.CachedFieldTerms = make(map[string][]string)
+		}
+		docMatch.CachedFieldTerms.Merge(fieldTerms)
 	}
 	for _, facetBuilder := range fb.facets {
-		facetBuilder.Update(fieldTerms)
+		facetBuilder.Update(docMatch.CachedFieldTerms)
 	}
 	return nil
 }

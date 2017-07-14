@@ -7,6 +7,7 @@ import (
 	"os"
 	"os/user"
 	"path"
+	"path/filepath"
 	"strings"
 )
 
@@ -106,18 +107,24 @@ func splitAndReturnUnique(str string, sep string) []string {
 func getInEnvOrJoinWithHome(envName string, directory string) (string, error) {
 	configHome := osGetEnv(envName)
 	if configHome != "" {
-		return configHome, nil
+		// XDG Base Directory Specification states:
+		// "All paths set in these environment variables must be absolute. If an
+		// implementation encounters a relative path in any of these variables
+		// it should consider the path invalid and ignore it."
+		if filepath.IsAbs(configHome) {
+			return configHome, nil
+		}
 	}
 	return joinWithHome(directory)
 }
 
 func joinWithHome(dir string) (string, error) {
-        homeDir := os.Getenv("HOME")
+	homeDir := os.Getenv("HOME")
 
 	if homeDir == "" {
 		usr, err := userCurrent()
 		if err != nil {
-		   return "", err
+			return "", err
 		}
 		homeDir = usr.HomeDir
 	}

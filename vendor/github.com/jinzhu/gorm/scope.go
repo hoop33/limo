@@ -1027,7 +1027,6 @@ func (scope *Scope) createJoinTable(field *StructField) {
 					foreignKeyStruct := field.clone()
 					foreignKeyStruct.IsPrimaryKey = false
 					foreignKeyStruct.TagSettings["IS_JOINTABLE_FOREIGNKEY"] = "true"
-					delete(foreignKeyStruct.TagSettings, "AUTO_INCREMENT")
 					sqlTypes = append(sqlTypes, scope.Quote(relationship.ForeignDBNames[idx])+" "+scope.Dialect().DataTypeOf(foreignKeyStruct))
 					primaryKeys = append(primaryKeys, scope.Quote(relationship.ForeignDBNames[idx]))
 				}
@@ -1038,7 +1037,6 @@ func (scope *Scope) createJoinTable(field *StructField) {
 					foreignKeyStruct := field.clone()
 					foreignKeyStruct.IsPrimaryKey = false
 					foreignKeyStruct.TagSettings["IS_JOINTABLE_FOREIGNKEY"] = "true"
-					delete(foreignKeyStruct.TagSettings, "AUTO_INCREMENT")
 					sqlTypes = append(sqlTypes, scope.Quote(relationship.AssociationForeignDBNames[idx])+" "+scope.Dialect().DataTypeOf(foreignKeyStruct))
 					primaryKeys = append(primaryKeys, scope.Quote(relationship.AssociationForeignDBNames[idx]))
 				}
@@ -1117,7 +1115,8 @@ func (scope *Scope) addIndex(unique bool, indexName string, column ...string) {
 }
 
 func (scope *Scope) addForeignKey(field string, dest string, onDelete string, onUpdate string) {
-	keyName := scope.Dialect().BuildForeignKeyName(scope.TableName(), field, dest)
+	var keyName = fmt.Sprintf("%s_%s_%s_foreign", scope.TableName(), field, dest)
+	keyName = regexp.MustCompile("(_*[^a-zA-Z]+_*|_+)").ReplaceAllString(keyName, "_")
 
 	if scope.Dialect().HasForeignKey(scope.TableName(), keyName) {
 		return
@@ -1157,25 +1156,17 @@ func (scope *Scope) autoIndex() *Scope {
 
 	for _, field := range scope.GetStructFields() {
 		if name, ok := field.TagSettings["INDEX"]; ok {
-			names := strings.Split(name, ",")
-
-			for _, name := range names {
-				if name == "INDEX" || name == "" {
-					name = fmt.Sprintf("idx_%v_%v", scope.TableName(), field.DBName)
-				}
-				indexes[name] = append(indexes[name], field.DBName)
+			if name == "INDEX" {
+				name = fmt.Sprintf("idx_%v_%v", scope.TableName(), field.DBName)
 			}
+			indexes[name] = append(indexes[name], field.DBName)
 		}
 
 		if name, ok := field.TagSettings["UNIQUE_INDEX"]; ok {
-			names := strings.Split(name, ",")
-
-			for _, name := range names {
-				if name == "UNIQUE_INDEX" || name == "" {
-					name = fmt.Sprintf("uix_%v_%v", scope.TableName(), field.DBName)
-				}
-				uniqueIndexes[name] = append(uniqueIndexes[name], field.DBName)
+			if name == "UNIQUE_INDEX" {
+				name = fmt.Sprintf("uix_%v_%v", scope.TableName(), field.DBName)
 			}
+			uniqueIndexes[name] = append(uniqueIndexes[name], field.DBName)
 		}
 	}
 

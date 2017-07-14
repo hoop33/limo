@@ -18,12 +18,14 @@ package gitlab
 
 import (
 	"bytes"
+	"context"
 	"encoding/json"
 	"fmt"
 	"io"
 	"io/ioutil"
 	"net/http"
 	"net/url"
+	"sort"
 	"strconv"
 	"strings"
 
@@ -31,68 +33,112 @@ import (
 )
 
 const (
-	libraryVersion = "0.1"
+	libraryVersion = "0.1.1"
 	defaultBaseURL = "https://gitlab.com/api/v3/"
 	userAgent      = "go-gitlab/" + libraryVersion
 )
 
 // tokenType represents a token type within GitLab.
 //
-// GitLab API docs: http://doc.gitlab.com/ce/api/
+// GitLab API docs: https://docs.gitlab.com/ce/api/
 type tokenType int
 
 // List of available token type
 //
-// GitLab API docs: http://doc.gitlab.com/ce/api/
+// GitLab API docs: https://docs.gitlab.com/ce/api/
 const (
 	privateToken tokenType = iota
 	oAuthToken
 )
 
-// AccessLevel represents a permission level within GitLab.
+// AccessLevelValue represents a permission level within GitLab.
 //
-// GitLab API docs: http://doc.gitlab.com/ce/permissions/permissions.html
-type AccessLevel int
+// GitLab API docs: https://docs.gitlab.com/ce/permissions/permissions.html
+type AccessLevelValue int
 
 // List of available access levels
 //
-// GitLab API docs: http://doc.gitlab.com/ce/permissions/permissions.html
+// GitLab API docs: https://docs.gitlab.com/ce/permissions/permissions.html
 const (
-	GuestPermissions     AccessLevel = 10
-	ReporterPermissions  AccessLevel = 20
-	DeveloperPermissions AccessLevel = 30
-	MasterPermissions    AccessLevel = 40
-	OwnerPermission      AccessLevel = 50
+	GuestPermissions     AccessLevelValue = 10
+	ReporterPermissions  AccessLevelValue = 20
+	DeveloperPermissions AccessLevelValue = 30
+	MasterPermissions    AccessLevelValue = 40
+	OwnerPermission      AccessLevelValue = 50
 )
 
-// NotificationLevel represents a notification level within Gitlab.
-//
-// GitLab API docs: http://doc.gitlab.com/ce/...?
-type NotificationLevel int
+// NotificationLevelValue represents a notification level.
+type NotificationLevelValue int
 
-// List of available notification levels
-//
-// GitLab API docs: http://doc.gitlab.com/ce/...?
+// String implements the fmt.Stringer interface.
+func (l NotificationLevelValue) String() string {
+	return notificationLevelNames[l]
+}
+
+// MarshalJSON implements the json.Marshaler interface.
+func (l NotificationLevelValue) MarshalJSON() ([]byte, error) {
+	return json.Marshal(l.String())
+}
+
+// UnmarshalJSON implements the json.Unmarshaler interface.
+func (l *NotificationLevelValue) UnmarshalJSON(data []byte) error {
+	var raw interface{}
+	if err := json.Unmarshal(data, &raw); err != nil {
+		return err
+	}
+
+	switch raw := raw.(type) {
+	case float64:
+		*l = NotificationLevelValue(raw)
+	case string:
+		*l = notificationLevelTypes[raw]
+	default:
+		return fmt.Errorf("json: cannot unmarshal %T into Go value of type %T", raw, *l)
+	}
+
+	return nil
+}
+
+// List of valid notification levels.
 const (
-	DisabledNotifications NotificationLevel = iota
-	ParticipatingNotifications
-	WatchNotifications
-	GlobalNotifications
-	MentionNotifications
+	DisabledNotificationLevel NotificationLevelValue = iota
+	ParticipatingNotificationLevel
+	WatchNotificationLevel
+	GlobalNotificationLevel
+	MentionNotificationLevel
+	CustomNotificationLevel
 )
 
-// VisibilityLevel represents a visibility level within GitLab.
+var notificationLevelNames = [...]string{
+	"disabled",
+	"participating",
+	"watch",
+	"global",
+	"mention",
+	"custom",
+}
+
+var notificationLevelTypes = map[string]NotificationLevelValue{
+	"disabled":      DisabledNotificationLevel,
+	"participating": ParticipatingNotificationLevel,
+	"watch":         WatchNotificationLevel,
+	"global":        GlobalNotificationLevel,
+	"mention":       MentionNotificationLevel,
+	"custom":        CustomNotificationLevel,
+}
+
+// VisibilityLevelValue represents a visibility level within GitLab.
 //
-// GitLab API docs: http://doc.gitlab.com/ce/...?
-type VisibilityLevel int
+// GitLab API docs: https://docs.gitlab.com/ce/api/
+type VisibilityLevelValue int
 
 // List of available visibility levels
 //
-// GitLab API docs: http://doc.gitlab.com/ce/...?
+// GitLab API docs: https://docs.gitlab.com/ce/api/
 const (
-	PrivateVisibility  VisibilityLevel = 0
-	InternalVisibility VisibilityLevel = 10
-	PublicVisibility   VisibilityLevel = 20
+	PrivateVisibility  VisibilityLevelValue = 0
+	InternalVisibility VisibilityLevelValue = 10
+	PublicVisibility   VisibilityLevelValue = 20
 )
 
 // A Client manages communication with the GitLab API.
@@ -115,25 +161,31 @@ type Client struct {
 	UserAgent string
 
 	// Services used for talking to different parts of the GitLab API.
-	Branches        *BranchesService
-	Commits         *CommitsService
-	DeployKeys      *DeployKeysService
-	Groups          *GroupsService
-	Issues          *IssuesService
-	Labels          *LabelsService
-	MergeRequests   *MergeRequestsService
-	Milestones      *MilestonesService
-	Namespaces      *NamespacesService
-	Notes           *NotesService
-	Projects        *ProjectsService
-	ProjectSnippets *ProjectSnippetsService
-	Repositories    *RepositoriesService
-	RepositoryFiles *RepositoryFilesService
-	Services        *ServicesService
-	Session         *SessionService
-	Settings        *SettingsService
-	SystemHooks     *SystemHooksService
-	Users           *UsersService
+	Branches             *BranchesService
+	BuildVariables       *BuildVariablesService
+	Builds               *BuildsService
+	Commits              *CommitsService
+	DeployKeys           *DeployKeysService
+	Groups               *GroupsService
+	Issues               *IssuesService
+	Labels               *LabelsService
+	MergeRequests        *MergeRequestsService
+	Milestones           *MilestonesService
+	Namespaces           *NamespacesService
+	Notes                *NotesService
+	NotificationSettings *NotificationSettingsService
+	Projects             *ProjectsService
+	ProjectSnippets      *ProjectSnippetsService
+	Pipelines            *PipelinesService
+	Repositories         *RepositoriesService
+	RepositoryFiles      *RepositoryFilesService
+	Services             *ServicesService
+	Session              *SessionService
+	Settings             *SettingsService
+	SystemHooks          *SystemHooksService
+	Tags                 *TagsService
+	TimeStats            *TimeStatsService
+	Users                *UsersService
 }
 
 // ListOptions specifies the optional parameters to various List methods that
@@ -172,6 +224,8 @@ func newClient(httpClient *http.Client, tokenType tokenType, token string) *Clie
 	}
 
 	c.Branches = &BranchesService{client: c}
+	c.BuildVariables = &BuildVariablesService{client: c}
+	c.Builds = &BuildsService{client: c}
 	c.Commits = &CommitsService{client: c}
 	c.DeployKeys = &DeployKeysService{client: c}
 	c.Groups = &GroupsService{client: c}
@@ -179,16 +233,20 @@ func newClient(httpClient *http.Client, tokenType tokenType, token string) *Clie
 	c.Labels = &LabelsService{client: c}
 	c.MergeRequests = &MergeRequestsService{client: c}
 	c.Milestones = &MilestonesService{client: c}
-	c.Notes = &NotesService{client: c}
 	c.Namespaces = &NamespacesService{client: c}
+	c.Notes = &NotesService{client: c}
+	c.NotificationSettings = &NotificationSettingsService{client: c}
 	c.Projects = &ProjectsService{client: c}
 	c.ProjectSnippets = &ProjectSnippetsService{client: c}
+	c.Pipelines = &PipelinesService{client: c}
 	c.Repositories = &RepositoriesService{client: c}
 	c.RepositoryFiles = &RepositoryFilesService{client: c}
 	c.Services = &ServicesService{client: c}
 	c.Session = &SessionService{client: c}
 	c.Settings = &SettingsService{client: c}
 	c.SystemHooks = &SystemHooksService{client: c}
+	c.Tags = &TagsService{client: c}
+	c.TimeStats = &TimeStatsService{client: c}
 	c.Users = &UsersService{client: c}
 
 	return c
@@ -210,11 +268,7 @@ func (c *Client) SetBaseURL(urlStr string) error {
 
 	var err error
 	c.baseURL, err = url.Parse(urlStr)
-	if err != nil {
-		return err
-	}
-
-	return nil
+	return err
 }
 
 // NewRequest creates an API request. A relative URL path can be provided in
@@ -222,16 +276,18 @@ func (c *Client) SetBaseURL(urlStr string) error {
 // Relative URL paths should always be specified without a preceding slash. If
 // specified, the value pointed to by body is JSON encoded and included as the
 // request body.
-func (c *Client) NewRequest(method, path string, opt interface{}) (*http.Request, error) {
+func (c *Client) NewRequest(method, path string, opt interface{}, options []OptionFunc) (*http.Request, error) {
 	u := *c.baseURL
 	// Set the encoded opaque data
 	u.Opaque = c.baseURL.Path + path
 
-	q, err := query.Values(opt)
-	if err != nil {
-		return nil, err
+	if opt != nil {
+		q, err := query.Values(opt)
+		if err != nil {
+			return nil, err
+		}
+		u.RawQuery = q.Encode()
 	}
-	u.RawQuery = q.Encode()
 
 	req := &http.Request{
 		Method:     method,
@@ -241,6 +297,12 @@ func (c *Client) NewRequest(method, path string, opt interface{}) (*http.Request
 		ProtoMinor: 1,
 		Header:     make(http.Header),
 		Host:       u.Host,
+	}
+
+	for _, fn := range options {
+		if err := fn(req); err != nil {
+			return nil, err
+		}
 	}
 
 	if method == "POST" || method == "PUT" {
@@ -350,7 +412,6 @@ func (c *Client) Do(req *http.Request, v interface{}) (*Response, error) {
 	if err != nil {
 		return nil, err
 	}
-
 	defer resp.Body.Close()
 
 	response := newResponse(resp)
@@ -388,61 +449,110 @@ func parseID(id interface{}) (string, error) {
 // An ErrorResponse reports one or more errors caused by an API request.
 //
 // GitLab API docs:
-// http://doc.gitlab.com/ce/api/README.html#data-validation-and-error-reporting
+// https://docs.gitlab.com/ce/api/README.html#data-validation-and-error-reporting
 type ErrorResponse struct {
-	Response *http.Response // HTTP response that caused this error
-	Message  string         `json:"message"` // error message
-	Errors   []Error        `json:"errors"`  // more detail on individual errors
+	Response *http.Response
+	Message  string
 }
 
-func (r *ErrorResponse) Error() string {
-	path, _ := url.QueryUnescape(r.Response.Request.URL.Opaque)
-	ru := fmt.Sprintf("%s://%s%s", r.Response.Request.URL.Scheme, r.Response.Request.URL.Host, path)
-
-	return fmt.Sprintf("%v %s: %d %v %+v",
-		r.Response.Request.Method, ru, r.Response.StatusCode, r.Message, r.Errors)
+func (e *ErrorResponse) Error() string {
+	path, _ := url.QueryUnescape(e.Response.Request.URL.Opaque)
+	u := fmt.Sprintf("%s://%s%s", e.Response.Request.URL.Scheme, e.Response.Request.URL.Host, path)
+	return fmt.Sprintf("%s %s: %d %s", e.Response.Request.Method, u, e.Response.StatusCode, e.Message)
 }
 
-// An Error reports more details on an individual error in an ErrorResponse.
-// These are the possible validation error codes:
-//
-//     missing:
-//         resource does not exist
-//     missing_field:
-//         a required field on a resource has not been set
-//     invalid:
-//         the formatting of a field is invalid
-//     already_exists:
-//         another resource has the same valid as this field
-//
-// GitLab API docs:
-// http://doc.gitlab.com/ce/api/README.html#data-validation-and-error-reporting
-type Error struct {
-	Resource string `json:"resource"` // resource on which the error occurred
-	Field    string `json:"field"`    // field on which the error occurred
-	Code     string `json:"code"`     // validation error code
-}
-
-func (e *Error) Error() string {
-	return fmt.Sprintf("%v error caused by %v field on %v resource",
-		e.Code, e.Field, e.Resource)
-}
-
-// CheckResponse checks the API response for errors, and returns them if
-// present.  A response is considered an error if it has a status code outside
-// the 200 range.  API error responses are expected to have either no response
-// body, or a JSON response body that maps to ErrorResponse.  Any other
-// response body will be silently ignored.
+// CheckResponse checks the API response for errors, and returns them if present.
 func CheckResponse(r *http.Response) error {
-	if c := r.StatusCode; 200 <= c && c <= 299 {
+	switch r.StatusCode {
+	case 200, 201, 304:
 		return nil
 	}
+
 	errorResponse := &ErrorResponse{Response: r}
 	data, err := ioutil.ReadAll(r.Body)
 	if err == nil && data != nil {
-		json.Unmarshal(data, errorResponse)
+		var raw interface{}
+		if err := json.Unmarshal(data, &raw); err != nil {
+			errorResponse.Message = "failed to parse unknown error format"
+		}
+
+		errorResponse.Message = parseError(raw)
 	}
+
 	return errorResponse
+}
+
+// Format:
+// {
+//     "message": {
+//         "<property-name>": [
+//             "<error-message>",
+//             "<error-message>",
+//             ...
+//         ],
+//         "<embed-entity>": {
+//             "<property-name>": [
+//                 "<error-message>",
+//                 "<error-message>",
+//                 ...
+//             ],
+//         }
+//     },
+//     "error": "<error-message>"
+// }
+func parseError(raw interface{}) string {
+	switch raw := raw.(type) {
+	case string:
+		return raw
+
+	case []interface{}:
+		var errs []string
+		for _, v := range raw {
+			errs = append(errs, parseError(v))
+		}
+		return fmt.Sprintf("[%s]", strings.Join(errs, ", "))
+
+	case map[string]interface{}:
+		var errs []string
+		for k, v := range raw {
+			errs = append(errs, fmt.Sprintf("{%s: %s}", k, parseError(v)))
+		}
+		sort.Strings(errs)
+		return fmt.Sprintf("%s", strings.Join(errs, ", "))
+
+	default:
+		return fmt.Sprintf("failed to parse unexpected error type: %T", raw)
+	}
+}
+
+// OptionFunc can be passed to all API requests to make the API call as if you were
+// another user, provided your private token is from an administrator account.
+//
+// GitLab docs: https://docs.gitlab.com/ce/api/README.html#sudo
+type OptionFunc func(*http.Request) error
+
+// WithSudo takes either a username or user ID and sets the SUDO request header
+func WithSudo(uid interface{}) OptionFunc {
+	return func(req *http.Request) error {
+		switch uid := uid.(type) {
+		case int:
+			req.Header.Set("SUDO", strconv.Itoa(uid))
+			return nil
+		case string:
+			req.Header.Set("SUDO", uid)
+			return nil
+		default:
+			return fmt.Errorf("uid must be either a username or user ID")
+		}
+	}
+}
+
+// WithContext runs the request with the provided context
+func WithContext(ctx context.Context) OptionFunc {
+	return func(req *http.Request) error {
+		*req = *req.WithContext(ctx)
+		return nil
+	}
 }
 
 // Bool is a helper routine that allocates a new bool value
@@ -466,6 +576,30 @@ func Int(v int) *int {
 // to store v and returns a pointer to it.
 func String(v string) *string {
 	p := new(string)
+	*p = v
+	return p
+}
+
+// AccessLevel is a helper routine that allocates a new AccessLevelValue
+// to store v and returns a pointer to it.
+func AccessLevel(v AccessLevelValue) *AccessLevelValue {
+	p := new(AccessLevelValue)
+	*p = v
+	return p
+}
+
+// NotificationLevel is a helper routine that allocates a new NotificationLevelValue
+// to store v and returns a pointer to it.
+func NotificationLevel(v NotificationLevelValue) *NotificationLevelValue {
+	p := new(NotificationLevelValue)
+	*p = v
+	return p
+}
+
+// VisibilityLevel is a helper routine that allocates a new VisibilityLevelValue
+// to store v and returns a pointer to it.
+func VisibilityLevel(v VisibilityLevelValue) *VisibilityLevelValue {
+	p := new(VisibilityLevelValue)
 	*p = v
 	return p
 }

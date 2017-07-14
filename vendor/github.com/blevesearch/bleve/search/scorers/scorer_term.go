@@ -83,7 +83,7 @@ func (s *TermQueryScorer) SetQueryNorm(qnorm float64) {
 	}
 }
 
-func (s *TermQueryScorer) Score(termMatch *index.TermFieldDoc) *search.DocumentMatch {
+func (s *TermQueryScorer) Score(ctx *search.SearchContext, termMatch *index.TermFieldDoc) *search.DocumentMatch {
 	var scoreExplanation *search.Explanation
 
 	// need to compute score
@@ -128,10 +128,9 @@ func (s *TermQueryScorer) Score(termMatch *index.TermFieldDoc) *search.DocumentM
 		}
 	}
 
-	rv := search.DocumentMatch{
-		ID:    termMatch.ID,
-		Score: score,
-	}
+	rv := ctx.DocumentMatchPool.Get()
+	rv.IndexInternalID = append(rv.IndexInternalID, termMatch.ID...)
+	rv.Score = score
 	if s.explain {
 		rv.Expl = scoreExplanation
 	}
@@ -172,5 +171,5 @@ func (s *TermQueryScorer) Score(termMatch *index.TermFieldDoc) *search.DocumentM
 
 	}
 
-	return &rv
+	return rv
 }

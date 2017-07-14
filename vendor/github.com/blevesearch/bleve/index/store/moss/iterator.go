@@ -12,72 +12,38 @@
 package moss
 
 import (
-	"bytes"
-
 	"github.com/couchbase/moss"
 )
 
 type Iterator struct {
-	store  *Store
-	ss     moss.Snapshot
-	iter   moss.Iterator
-	prefix []byte
-	start  []byte
-	end    []byte
-	done   bool
-	k      []byte
-	v      []byte
+	store *Store
+	ss    moss.Snapshot
+	iter  moss.Iterator
+	start []byte
+	end   []byte
+	k     []byte
+	v     []byte
+	err   error
 }
 
 func (x *Iterator) Seek(seekToKey []byte) {
-	x.done = true
-	x.k = nil
-	x.v = nil
+	_ = x.iter.SeekTo(seekToKey)
 
-	if bytes.Compare(seekToKey, x.start) < 0 {
-		seekToKey = x.start
-	}
-
-	iter, err := x.ss.StartIterator(seekToKey, x.end, moss.IteratorOptions{})
-	if err != nil {
-		x.store.Logf("bleve moss StartIterator err: %v", err)
-		return
-	}
-
-	err = x.iter.Close()
-	if err != nil {
-		x.store.Logf("bleve moss iterator.Seek err: %v", err)
-		return
-	}
-
-	x.iter = iter
-
-	x.checkDone()
+	x.k, x.v, x.err = x.iter.Current()
 }
 
 func (x *Iterator) Next() {
-	if x.done {
-		return
-	}
+	_ = x.iter.Next()
 
-	x.done = true
-	x.k = nil
-	x.v = nil
-
-	err := x.iter.Next()
-	if err != nil {
-		return
-	}
-
-	x.checkDone()
+	x.k, x.v, x.err = x.iter.Current()
 }
 
 func (x *Iterator) Current() ([]byte, []byte, bool) {
-	return x.k, x.v, !x.done
+	return x.k, x.v, x.err == nil
 }
 
 func (x *Iterator) Key() []byte {
-	if x.done {
+	if x.err != nil {
 		return nil
 	}
 
@@ -85,7 +51,7 @@ func (x *Iterator) Key() []byte {
 }
 
 func (x *Iterator) Value() []byte {
-	if x.done {
+	if x.err != nil {
 		return nil
 	}
 
@@ -93,7 +59,7 @@ func (x *Iterator) Value() []byte {
 }
 
 func (x *Iterator) Valid() bool {
-	return !x.done
+	return x.err == nil
 }
 
 func (x *Iterator) Close() error {
@@ -106,29 +72,13 @@ func (x *Iterator) Close() error {
 		x.iter = nil
 	}
 
-	x.prefix = nil
-	x.done = true
 	x.k = nil
 	x.v = nil
+	x.err = moss.ErrIteratorDone
 
 	return err
 }
 
-func (x *Iterator) checkDone() {
-	x.done = true
-	x.k = nil
-	x.v = nil
-
-	k, v, err := x.iter.Current()
-	if err != nil {
-		return
-	}
-
-	if x.prefix != nil && !bytes.HasPrefix(k, x.prefix) {
-		return
-	}
-
-	x.done = false
-	x.k = k
-	x.v = v
+func (x *Iterator) current() {
+	x.k, x.v, x.err = x.iter.Current()
 }

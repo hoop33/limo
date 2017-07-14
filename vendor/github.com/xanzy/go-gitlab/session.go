@@ -21,14 +21,14 @@ import "time"
 // SessionService handles communication with the session related methods of
 // the GitLab API.
 //
-// GitLab API docs: http://doc.gitlab.com/ce/api/session.html
+// GitLab API docs: https://docs.gitlab.com/ce/api/session.html
 type SessionService struct {
 	client *Client
 }
 
 // Session represents a GitLab session.
 //
-// GitLab API docs: http://doc.gitlab.com/ce/api/session.html#session
+// GitLab API docs: https://docs.gitlab.com/ce/api/session.html#session
 type Session struct {
 	ID               int         `json:"id"`
 	Username         string      `json:"username"`
@@ -36,7 +36,7 @@ type Session struct {
 	Name             string      `json:"name"`
 	PrivateToken     string      `json:"private_token"`
 	Blocked          bool        `json:"blocked"`
-	CreatedAt        time.Time   `json:"created_at"`
+	CreatedAt        *time.Time  `json:"created_at"`
 	Bio              interface{} `json:"bio"`
 	Skype            string      `json:"skype"`
 	Linkedin         string      `json:"linkedin"`
@@ -52,18 +52,18 @@ type Session struct {
 
 // GetSessionOptions represents the available Session() options.
 //
-// GitLab API docs: http://doc.gitlab.com/ce/api/session.html#session
+// GitLab API docs: https://docs.gitlab.com/ce/api/session.html#session
 type GetSessionOptions struct {
-	Login    string `url:"login,omitempty" json:"login,omitempty"`
-	Email    string `url:"email,omitempty" json:"email,omitempty"`
-	Password string `url:"password,omitempty" json:"password,omitempty"`
+	Login    *string `url:"login,omitempty" json:"login,omitempty"`
+	Email    *string `url:"email,omitempty" json:"email,omitempty"`
+	Password *string `url:"password,omitempty" json:"password,omitempty"`
 }
 
 // GetSession logs in to get private token.
 //
-// GitLab API docs: http://doc.gitlab.com/ce/api/session.html#session
-func (s *SessionService) GetSession(opt *GetSessionOptions) (*Session, *Response, error) {
-	req, err := s.client.NewRequest("POST", "session", opt)
+// GitLab API docs: https://docs.gitlab.com/ce/api/session.html#session
+func (s *SessionService) GetSession(opt *GetSessionOptions, options ...OptionFunc) (*Session, *Response, error) {
+	req, err := s.client.NewRequest("POST", "session", opt, options)
 	if err != nil {
 		return nil, nil, err
 	}

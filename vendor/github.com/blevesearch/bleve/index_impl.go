@@ -22,7 +22,6 @@ import (
 	"github.com/blevesearch/bleve/document"
 	"github.com/blevesearch/bleve/index"
 	"github.com/blevesearch/bleve/index/store"
-	"github.com/blevesearch/bleve/index/store/gtreap"
 	"github.com/blevesearch/bleve/index/upside_down"
 	"github.com/blevesearch/bleve/registry"
 	"github.com/blevesearch/bleve/search"
@@ -50,50 +49,6 @@ func indexStorePath(path string) string {
 	return path + string(os.PathSeparator) + storePath
 }
 
-func newMemIndex(indexType string, mapping *IndexMapping) (*indexImpl, error) {
-	rv := indexImpl{
-		path: "",
-		name: "mem",
-		m:    mapping,
-		meta: newIndexMeta(indexType, gtreap.Name, nil),
-	}
-
-	rv.stats = &IndexStat{i: &rv}
-
-	// open the index
-	indexTypeConstructor := registry.IndexTypeConstructorByName(rv.meta.IndexType)
-	if indexTypeConstructor == nil {
-		return nil, ErrorUnknownIndexType
-	}
-
-	var err error
-	rv.i, err = indexTypeConstructor(rv.meta.Storage, nil, Config.analysisQueue)
-	if err != nil {
-		return nil, err
-	}
-	err = rv.i.Open()
-	if err != nil {
-		return nil, err
-	}
-
-	// now persist the mapping
-	mappingBytes, err := json.Marshal(mapping)
-	if err != nil {
-		return nil, err
-	}
-	err = rv.i.SetInternal(mappingInternalKey, mappingBytes)
-	if err != nil {
-		return nil, err
-	}
-
-	// mark the index as open
-	rv.mutex.Lock()
-	defer rv.mutex.Unlock()
-	rv.open = true
-	indexStats.Register(&rv)
-	return &rv, nil
-}
-
 func newIndexUsing(path string, mapping *IndexMapping, indexType string, kvstore string, kvconfig map[string]interface{}) (*indexImpl, error) {
 	// first validate the mapping
 	err := mapping.Validate()
@@ -101,12 +56,12 @@ func newIndexUsing(path string, mapping *IndexMapping, indexType string, kvstore
 		return nil, err
 	}
 
-	if path == "" {
-		return newMemIndex(indexType, mapping)
-	}
-
 	if kvconfig == nil {
 		kvconfig = map[string]interface{}{}
+	}
+
+	if kvstore == "" {
+		return nil, fmt.Errorf("bleve not configured for file based indexing")
 	}
 
 	rv := indexImpl{
@@ -117,13 +72,17 @@ func newIndexUsing(path string, mapping *IndexMapping, indexType string, kvstore
 	}
 	rv.stats = &IndexStat{i: &rv}
 	// at this point there is hope that we can be successful, so save index meta
-	err = rv.meta.Save(path)
-	if err != nil {
-		return nil, err
+	if path != "" {
+		err = rv.meta.Save(path)
+		if err != nil {
+			return nil, err
+		}
+		kvconfig["create_if_missing"] = true
+		kvconfig["error_if_exists"] = true
+		kvconfig["path"] = indexStorePath(path)
+	} else {
+		kvconfig["path"] = ""
 	}
-	kvconfig["create_if_missing"] = true
-	kvconfig["error_if_exists"] = true
-	kvconfig["path"] = indexStorePath(path)
 
 	// open the index
 	indexTypeConstructor := registry.IndexTypeConstructorByName(rv.meta.IndexType)
@@ -351,7 +310,7 @@ func (i *indexImpl) Document(id string) (doc *document.Document, err error) {
 
 // DocCount returns the number of documents in the
 // index.
-func (i *indexImpl) DocCount() (uint64, error) {
+func (i *indexImpl) DocCount() (count uint64, err error) {
 	i.mutex.RLock()
 	defer i.mutex.RUnlock()
 
@@ -359,7 +318,19 @@ func (i *indexImpl) DocCount() (uint64, error) {
 		return 0, ErrorIndexClosed
 	}
 
-	return i.i.DocCount()
+	// open a reader for this search
+	indexReader, err := i.i.Reader()
+	if err != nil {
+		return 0, fmt.Errorf("error opening index reader %v", err)
+	}
+	defer func() {
+		if cerr := indexReader.Close(); err == nil && cerr != nil {
+			err = cerr
+		}
+	}()
+
+	count, err = indexReader.DocCount()
+	return
 }
 
 // Search executes a search request operation.
@@ -380,7 +351,7 @@ func (i *indexImpl) SearchInContext(ctx context.Context, req *SearchRequest) (sr
 		return nil, ErrorIndexClosed
 	}
 
-	collector := collectors.NewTopScorerSkipCollector(req.Size, req.From)
+	collector := collectors.NewTopNCollector(req.Size, req.From, req.Sort)
 
 	// open a reader for this search
 	indexReader, err := i.i.Reader()
@@ -431,7 +402,7 @@ func (i *indexImpl) SearchInContext(ctx context.Context, req *SearchRequest) (sr
 		collector.SetFacetsBuilder(facetsBuilder)
 	}
 
-	err = collector.Collect(ctx, searcher)
+	err = collector.Collect(ctx, searcher, indexReader)
 	if err != nil {
 		return nil, err
 	}
@@ -646,48 +617,6 @@ func (i *indexImpl) FieldDictPrefix(field string, termPrefix []byte) (index.Fiel
 		indexReader: indexReader,
 		fieldDict:   fieldDict,
 	}, nil
-}
-
-// DumpAll writes all index rows to a channel.
-// INTERNAL: do not rely on this function, it is
-// only intended to be used by the debug utilities
-func (i *indexImpl) DumpAll() chan interface{} {
-	i.mutex.RLock()
-	defer i.mutex.RUnlock()
-
-	if !i.open {
-		return nil
-	}
-
-	return i.i.DumpAll()
-}
-
-// DumpFields writes all field rows in the index
-// to a channel.
-// INTERNAL: do not rely on this function, it is
-// only intended to be used by the debug utilities
-func (i *indexImpl) DumpFields() chan interface{} {
-	i.mutex.RLock()
-	defer i.mutex.RUnlock()
-
-	if !i.open {
-		return nil
-	}
-	return i.i.DumpFields()
-}
-
-// DumpDoc writes all rows in the index associated
-// with the specified identifier to a channel.
-// INTERNAL: do not rely on this function, it is
-// only intended to be used by the debug utilities
-func (i *indexImpl) DumpDoc(id string) chan interface{} {
-	i.mutex.RLock()
-	defer i.mutex.RUnlock()
-
-	if !i.open {
-		return nil
-	}
-	return i.i.DumpDoc(id)
 }
 
 func (i *indexImpl) Close() error {

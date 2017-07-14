@@ -81,13 +81,13 @@ func TestNewStarFromGitlabShouldCopyFields(t *testing.T) {
 	stargazersCount := 10000
 
 	gitlab := gitlab.Project{
-		ID:                &id,
-		Name:              &name,
-		NameWithNamespace: &fullName,
-		Description:       &description,
-		WebURL:            &homepage,
-		HTTPURLToRepo:     &url,
-		StarCount:         &stargazersCount,
+		ID:                id,
+		Name:              name,
+		NameWithNamespace: fullName,
+		Description:       description,
+		WebURL:            homepage,
+		HTTPURLToRepo:     url,
+		StarCount:         stargazersCount,
 	}
 
 	star, err := NewStarFromGitlab(gitlab)
@@ -102,21 +102,12 @@ func TestNewStarFromGitlabShouldCopyFields(t *testing.T) {
 	assert.Equal(t, stargazersCount, star.Stargazers)
 }
 
-func TestNewStarFromGitlabShouldHandleEmpty(t *testing.T) {
-	clearDB()
-
-	star, err := NewStarFromGitlab(gitlab.Project{})
-	assert.NotNil(t, err)
-	assert.Equal(t, "ID from GitLab is required", err.Error())
-	assert.Nil(t, star)
-}
-
 func TestNewStarFromGitlabShouldHandleOnlyID(t *testing.T) {
 	clearDB()
 
 	id := 33
 	star, err := NewStarFromGitlab(gitlab.Project{
-		ID: &id,
+		ID: id,
 	})
 	assert.Nil(t, err)
 	assert.NotNil(t, star)

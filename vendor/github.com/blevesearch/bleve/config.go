@@ -17,7 +17,7 @@ import (
 
 	"github.com/blevesearch/bleve/analysis/datetime_parsers/datetime_optional"
 	"github.com/blevesearch/bleve/index"
-	"github.com/blevesearch/bleve/index/store/boltdb"
+	"github.com/blevesearch/bleve/index/store/gtreap"
 	"github.com/blevesearch/bleve/index/upside_down"
 	"github.com/blevesearch/bleve/registry"
 	"github.com/blevesearch/bleve/search/highlight/highlighters/html"
@@ -29,6 +29,7 @@ type configuration struct {
 	Cache                  *registry.Cache
 	DefaultHighlighter     string
 	DefaultKVStore         string
+	DefaultMemKVStore      string
 	DefaultIndexType       string
 	QueryDateTimeParser    string
 	SlowSearchLogThreshold time.Duration
@@ -59,7 +60,10 @@ func init() {
 	Config.DefaultHighlighter = html.Name
 
 	// default kv store
-	Config.DefaultKVStore = boltdb.Name
+	Config.DefaultKVStore = ""
+
+	// default mem only kv store
+	Config.DefaultMemKVStore = gtreap.Name
 
 	// default index
 	Config.DefaultIndexType = upside_down.Name
@@ -71,6 +75,8 @@ func init() {
 	bleveExpVar.Add("bootDuration", int64(bootDuration))
 	indexStats = NewIndexStats()
 	bleveExpVar.Set("indexes", indexStats)
+
+	initDisk()
 }
 
 var logger = log.New(ioutil.Discard, "bleve", log.LstdFlags)

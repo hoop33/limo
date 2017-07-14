@@ -285,12 +285,6 @@ func (udc *UpsideDownCouch) batchRows(writer store.KVWriter, addRowsAll [][]Upsi
 	return writer.ExecuteBatch(wb)
 }
 
-func (udc *UpsideDownCouch) DocCount() (uint64, error) {
-	udc.m.RLock()
-	defer udc.m.RUnlock()
-	return udc.docCount, nil
-}
-
 func (udc *UpsideDownCouch) Open() (err error) {
 	//acquire the write mutex for the duratin of Open()
 	udc.writeMutex.Lock()
@@ -439,7 +433,7 @@ func (udc *UpsideDownCouch) Update(doc *document.Document) (err error) {
 	// first we lookup the backindex row for the doc id if it exists
 	// lookup the back index row
 	var backIndexRow *BackIndexRow
-	backIndexRow, err = udc.backIndexRowForDoc(kvreader, doc.ID)
+	backIndexRow, err = backIndexRowForDoc(kvreader, index.IndexInternalID(doc.ID))
 	if err != nil {
 		_ = kvreader.Close()
 		atomic.AddUint64(&udc.stats.errors, 1)
@@ -627,7 +621,7 @@ func (udc *UpsideDownCouch) Delete(id string) (err error) {
 	// first we lookup the backindex row for the doc id if it exists
 	// lookup the back index row
 	var backIndexRow *BackIndexRow
-	backIndexRow, err = udc.backIndexRowForDoc(kvreader, id)
+	backIndexRow, err = backIndexRowForDoc(kvreader, index.IndexInternalID(id))
 	if err != nil {
 		_ = kvreader.Close()
 		atomic.AddUint64(&udc.stats.errors, 1)
@@ -695,36 +689,6 @@ func (udc *UpsideDownCouch) deleteSingle(id string, backIndexRow *BackIndexRow, 
 	return deleteRows
 }
 
-func (udc *UpsideDownCouch) backIndexRowForDoc(kvreader store.KVReader, docID string) (*BackIndexRow, error) {
-	// use a temporary row structure to build key
-	tempRow := &BackIndexRow{
-		doc: []byte(docID),
-	}
-
-	keyBuf := GetRowBuffer()
-	if tempRow.KeySize() > len(keyBuf) {
-		keyBuf = make([]byte, 2*tempRow.KeySize())
-	}
-	defer PutRowBuffer(keyBuf)
-	keySize, err := tempRow.KeyTo(keyBuf)
-	if err != nil {
-		return nil, err
-	}
-
-	value, err := kvreader.Get(keyBuf[:keySize])
-	if err != nil {
-		return nil, err
-	}
-	if value == nil {
-		return nil, nil
-	}
-	backIndexRow, err := NewBackIndexRowKV(keyBuf[:keySize], value)
-	if err != nil {
-		return nil, err
-	}
-	return backIndexRow, nil
-}
-
 func decodeFieldType(typ byte, name string, pos []uint64, value []byte) document.Field {
 	switch typ {
 	case 't':
@@ -770,6 +734,10 @@ func (udc *UpsideDownCouch) termVectorsFromTokenFreq(field uint16, tf *analysis.
 }
 
 func (udc *UpsideDownCouch) termFieldVectorsFromTermVectors(in []*TermVector) []*index.TermFieldVector {
+	if len(in) <= 0 {
+		return nil
+	}
+
 	rv := make([]*index.TermFieldVector, len(in))
 
 	for i, tv := range in {
@@ -829,7 +797,7 @@ func (udc *UpsideDownCouch) Batch(batch *index.Batch) (err error) {
 		}
 
 		for docID, doc := range batch.IndexOps {
-			backIndexRow, err := udc.backIndexRowForDoc(kvreader, docID)
+			backIndexRow, err := backIndexRowForDoc(kvreader, index.IndexInternalID(docID))
 			if err != nil {
 				docBackIndexRowErr = err
 				return
@@ -1029,4 +997,34 @@ func (udc *UpsideDownCouch) fieldIndexOrNewRow(name string) (uint16, *FieldRow) 
 
 func init() {
 	registry.RegisterIndexType(Name, NewUpsideDownCouch)
+}
+
+func backIndexRowForDoc(kvreader store.KVReader, docID index.IndexInternalID) (*BackIndexRow, error) {
+	// use a temporary row structure to build key
+	tempRow := &BackIndexRow{
+		doc: docID,
+	}
+
+	keyBuf := GetRowBuffer()
+	if tempRow.KeySize() > len(keyBuf) {
+		keyBuf = make([]byte, 2*tempRow.KeySize())
+	}
+	defer PutRowBuffer(keyBuf)
+	keySize, err := tempRow.KeyTo(keyBuf)
+	if err != nil {
+		return nil, err
+	}
+
+	value, err := kvreader.Get(keyBuf[:keySize])
+	if err != nil {
+		return nil, err
+	}
+	if value == nil {
+		return nil, nil
+	}
+	backIndexRow, err := NewBackIndexRowKV(keyBuf[:keySize], value)
+	if err != nil {
+		return nil, err
+	}
+	return backIndexRow, nil
 }

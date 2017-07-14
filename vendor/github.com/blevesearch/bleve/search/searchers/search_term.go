@@ -19,17 +19,22 @@ type TermSearcher struct {
 	indexReader index.IndexReader
 	term        string
 	field       string
-	explain     bool
 	reader      index.TermFieldReader
 	scorer      *scorers.TermQueryScorer
+	tfd         index.TermFieldDoc
+	explain     bool
 }
 
 func NewTermSearcher(indexReader index.IndexReader, term string, field string, boost float64, explain bool) (*TermSearcher, error) {
-	reader, err := indexReader.TermFieldReader([]byte(term), field)
+	reader, err := indexReader.TermFieldReader([]byte(term), field, true, true, true)
 	if err != nil {
 		return nil, err
 	}
-	scorer := scorers.NewTermQueryScorer(term, field, boost, indexReader.DocCount(), reader.Count(), explain)
+	count, err := indexReader.DocCount()
+	if err != nil {
+		return nil, err
+	}
+	scorer := scorers.NewTermQueryScorer(term, field, boost, count, reader.Count(), explain)
 	return &TermSearcher{
 		indexReader: indexReader,
 		term:        term,
@@ -52,8 +57,8 @@ func (s *TermSearcher) SetQueryNorm(qnorm float64) {
 	s.scorer.SetQueryNorm(qnorm)
 }
 
-func (s *TermSearcher) Next() (*search.DocumentMatch, error) {
-	termMatch, err := s.reader.Next()
+func (s *TermSearcher) Next(ctx *search.SearchContext) (*search.DocumentMatch, error) {
+	termMatch, err := s.reader.Next(s.tfd.Reset())
 	if err != nil {
 		return nil, err
 	}
@@ -63,14 +68,14 @@ func (s *TermSearcher) Next() (*search.DocumentMatch, error) {
 	}
 
 	// score match
-	docMatch := s.scorer.Score(termMatch)
+	docMatch := s.scorer.Score(ctx, termMatch)
 	// return doc match
 	return docMatch, nil
 
 }
 
-func (s *TermSearcher) Advance(ID string) (*search.DocumentMatch, error) {
-	termMatch, err := s.reader.Advance(ID)
+func (s *TermSearcher) Advance(ctx *search.SearchContext, ID index.IndexInternalID) (*search.DocumentMatch, error) {
+	termMatch, err := s.reader.Advance(ID, s.tfd.Reset())
 	if err != nil {
 		return nil, err
 	}
@@ -80,7 +85,7 @@ func (s *TermSearcher) Advance(ID string) (*search.DocumentMatch, error) {
 	}
 
 	// score match
-	docMatch := s.scorer.Score(termMatch)
+	docMatch := s.scorer.Score(ctx, termMatch)
 
 	// return doc match
 	return docMatch, nil
@@ -92,4 +97,8 @@ func (s *TermSearcher) Close() error {
 
 func (s *TermSearcher) Min() int {
 	return 0
+}
+
+func (s *TermSearcher) DocumentMatchPoolSize() int {
+	return 1
 }

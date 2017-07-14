@@ -350,11 +350,11 @@ func (tv *TermVector) String() string {
 
 type TermFrequencyRow struct {
 	term    []byte
-	field   uint16
 	doc     []byte
 	freq    uint64
-	norm    float32
 	vectors []*TermVector
+	norm    float32
+	field   uint16
 }
 
 func (tfr *TermFrequencyRow) Term() []byte {
@@ -406,6 +406,15 @@ func (tfr *TermFrequencyRow) KeyTo(buf []byte) (int, error) {
 	buf[3+termLen] = ByteSeparator
 	docLen := copy(buf[3+termLen+1:], tfr.doc)
 	return 3 + termLen + 1 + docLen, nil
+}
+
+func (tfr *TermFrequencyRow) KeyAppendTo(buf []byte) ([]byte, error) {
+	keySize := tfr.KeySize()
+	if cap(buf) < keySize {
+		buf = make([]byte, keySize)
+	}
+	actualSize, err := tfr.KeyTo(buf[0:keySize])
+	return buf[0:actualSize], err
 }
 
 func (tfr *TermFrequencyRow) DictionaryRowKey() []byte {
@@ -461,6 +470,15 @@ func (tfr *TermFrequencyRow) String() string {
 	return fmt.Sprintf("Term: `%s` Field: %d DocId: `%s` Frequency: %d Norm: %f Vectors: %v", string(tfr.term), tfr.field, string(tfr.doc), tfr.freq, tfr.norm, tfr.vectors)
 }
 
+func InitTermFrequencyRow(tfr *TermFrequencyRow, term []byte, field uint16, docID []byte, freq uint64, norm float32) *TermFrequencyRow {
+	tfr.term = term
+	tfr.field = field
+	tfr.doc = docID
+	tfr.freq = freq
+	tfr.norm = norm
+	return tfr
+}
+
 func NewTermFrequencyRow(term []byte, field uint16, docID []byte, freq uint64, norm float32) *TermFrequencyRow {
 	return &TermFrequencyRow{
 		term:  term,
@@ -483,36 +501,52 @@ func NewTermFrequencyRowWithTermVectors(term []byte, field uint16, docID []byte,
 }
 
 func NewTermFrequencyRowK(key []byte) (*TermFrequencyRow, error) {
-	rv := TermFrequencyRow{}
+	rv := &TermFrequencyRow{}
+	err := rv.parseK(key)
+	if err != nil {
+		return nil, err
+	}
+	return rv, nil
+}
+
+func (tfr *TermFrequencyRow) parseK(key []byte) error {
 	keyLen := len(key)
 	if keyLen < 3 {
-		return nil, fmt.Errorf("invalid term frequency key, no valid field")
+		return fmt.Errorf("invalid term frequency key, no valid field")
 	}
-	rv.field = binary.LittleEndian.Uint16(key[1:3])
+	tfr.field = binary.LittleEndian.Uint16(key[1:3])
 
 	termEndPos := bytes.IndexByte(key[3:], ByteSeparator)
 	if termEndPos < 0 {
-		return nil, fmt.Errorf("invalid term frequency key, no byte separator terminating term")
+		return fmt.Errorf("invalid term frequency key, no byte separator terminating term")
 	}
-	rv.term = key[3 : 3+termEndPos]
+	tfr.term = key[3 : 3+termEndPos]
 
-	docLen := len(key) - (3 + termEndPos + 1)
+	docLen := keyLen - (3 + termEndPos + 1)
 	if docLen < 1 {
-		return nil, fmt.Errorf("invalid term frequency key, empty docid")
+		return fmt.Errorf("invalid term frequency key, empty docid")
 	}
-	rv.doc = key[3+termEndPos+1:]
+	tfr.doc = key[3+termEndPos+1:]
 
-	return &rv, nil
+	return nil
+}
+
+func (tfr *TermFrequencyRow) parseKDoc(key []byte, term []byte) error {
+	tfr.doc = key[3+len(term)+1:]
+	if len(tfr.doc) <= 0 {
+		return fmt.Errorf("invalid term frequency key, empty docid")
+	}
+
+	return nil
 }
 
 func (tfr *TermFrequencyRow) parseV(value []byte) error {
-	currOffset := 0
-	bytesRead := 0
-	tfr.freq, bytesRead = binary.Uvarint(value[currOffset:])
+	var bytesRead int
+	tfr.freq, bytesRead = binary.Uvarint(value)
 	if bytesRead <= 0 {
 		return fmt.Errorf("invalid term frequency value, invalid frequency")
 	}
-	currOffset += bytesRead
+	currOffset := bytesRead
 
 	var norm uint64
 	norm, bytesRead = binary.Uvarint(value[currOffset:])
@@ -523,6 +557,7 @@ func (tfr *TermFrequencyRow) parseV(value []byte) error {
 
 	tfr.norm = math.Float32frombits(uint32(norm))
 
+	tfr.vectors = nil
 	var field uint64
 	field, bytesRead = binary.Uvarint(value[currOffset:])
 	for bytesRead > 0 {

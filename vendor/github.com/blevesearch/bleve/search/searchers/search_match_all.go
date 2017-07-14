@@ -19,10 +19,15 @@ type MatchAllSearcher struct {
 	indexReader index.IndexReader
 	reader      index.DocIDReader
 	scorer      *scorers.ConstantScorer
+	count       uint64
 }
 
 func NewMatchAllSearcher(indexReader index.IndexReader, boost float64, explain bool) (*MatchAllSearcher, error) {
-	reader, err := indexReader.DocIDReader("", "")
+	reader, err := indexReader.DocIDReaderAll()
+	if err != nil {
+		return nil, err
+	}
+	count, err := indexReader.DocCount()
 	if err != nil {
 		return nil, err
 	}
@@ -31,11 +36,12 @@ func NewMatchAllSearcher(indexReader index.IndexReader, boost float64, explain b
 		indexReader: indexReader,
 		reader:      reader,
 		scorer:      scorer,
+		count:       count,
 	}, nil
 }
 
 func (s *MatchAllSearcher) Count() uint64 {
-	return s.indexReader.DocCount()
+	return s.count
 }
 
 func (s *MatchAllSearcher) Weight() float64 {
@@ -46,35 +52,35 @@ func (s *MatchAllSearcher) SetQueryNorm(qnorm float64) {
 	s.scorer.SetQueryNorm(qnorm)
 }
 
-func (s *MatchAllSearcher) Next() (*search.DocumentMatch, error) {
+func (s *MatchAllSearcher) Next(ctx *search.SearchContext) (*search.DocumentMatch, error) {
 	id, err := s.reader.Next()
 	if err != nil {
 		return nil, err
 	}
 
-	if id == "" {
+	if id == nil {
 		return nil, nil
 	}
 
 	// score match
-	docMatch := s.scorer.Score(id)
+	docMatch := s.scorer.Score(ctx, id)
 	// return doc match
 	return docMatch, nil
 
 }
 
-func (s *MatchAllSearcher) Advance(ID string) (*search.DocumentMatch, error) {
+func (s *MatchAllSearcher) Advance(ctx *search.SearchContext, ID index.IndexInternalID) (*search.DocumentMatch, error) {
 	id, err := s.reader.Advance(ID)
 	if err != nil {
 		return nil, err
 	}
 
-	if id == "" {
+	if id == nil {
 		return nil, nil
 	}
 
 	// score match
-	docMatch := s.scorer.Score(id)
+	docMatch := s.scorer.Score(ctx, id)
 
 	// return doc match
 	return docMatch, nil
@@ -86,4 +92,8 @@ func (s *MatchAllSearcher) Close() error {
 
 func (s *MatchAllSearcher) Min() int {
 	return 0
+}
+
+func (s *MatchAllSearcher) DocumentMatchPoolSize() int {
+	return 1
 }
