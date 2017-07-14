@@ -69,7 +69,7 @@ func (c *Color) Event(event *model.Event) {
 		c.Error(err.Error())
 	}
 
-	_, err = buffer.WriteString(color.RedString(fmt.Sprintf(" (%s)", event.URL)))
+	_, err = buffer.WriteString(color.RedString(fmt.Sprintf(" %s", event.URL)))
 	if err != nil {
 		c.Error(err.Error())
 	}
