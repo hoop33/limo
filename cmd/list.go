@@ -13,6 +13,7 @@ import (
 )
 
 var any = false
+var browse = false
 var notTagged = false
 var page = 1
 var count = 1
@@ -80,6 +81,12 @@ func listEvents(ctx context.Context, args []string) {
 			output.Error(eventResult.Error.Error())
 		} else {
 			output.Event(eventResult.Event)
+			if browse {
+				err := eventResult.Event.OpenInBrowser()
+				if err != nil {
+					output.Error(err.Error())
+				}
+			}
 		}
 	}
 }
@@ -139,6 +146,12 @@ func listStars(ctx context.Context, args []string) {
 	if stars != nil {
 		for _, star := range stars {
 			output.StarLine(&star)
+			if browse {
+				err := star.OpenInBrowser(false)
+				if err != nil {
+					output.Error(err.Error())
+				}
+			}
 		}
 	}
 }
@@ -183,6 +196,12 @@ func listTrending(ctx context.Context, args []string) {
 			output.Error(starResult.Error.Error())
 		} else {
 			output.StarLine(starResult.Star)
+			if browse {
+				err := starResult.Star.OpenInBrowser(false)
+				if err != nil {
+					output.Error(err.Error())
+				}
+			}
 		}
 	}
 }
@@ -213,6 +232,7 @@ func getUser() (string, error) {
 
 func init() {
 	ListCmd.Flags().BoolVarP(&any, "any", "a", false, "Show stars matching any arguments")
+	ListCmd.Flags().BoolVarP(&browse, "browse", "b", false, "Open listed items in your default browser")
 	ListCmd.Flags().BoolVarP(&notTagged, "notTagged", "n", false, "Show stars without any tags")
 	ListCmd.Flags().IntVarP(&page, "page", "p", 1, "First event page to list")
 	ListCmd.Flags().IntVarP(&count, "count", "c", 1, "Count of event pages to list")

@@ -4,6 +4,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 ### Added
+- Add `-b/--browse` flag to `list` command to open items in browser
 - Switch to `go dep` for dependency management
 - Add customizable "update" spinner
 - Add List Events

@@ -10,6 +10,7 @@ import (
 	"github.com/blevesearch/bleve"
 	"github.com/google/go-github/github"
 	"github.com/jinzhu/gorm"
+	"github.com/skratchdot/open-golang/open"
 	"github.com/xanzy/go-gitlab"
 )
 
@@ -280,4 +281,20 @@ func (star *Star) Index(index bleve.Index, db *gorm.DB) error {
 		return err
 	}
 	return index.Index(fmt.Sprintf("%d", star.ID), star)
+}
+
+// OpenInBrowser opens the star in the browser
+func (star *Star) OpenInBrowser(preferHomepage bool) error {
+	var URL string
+	if preferHomepage && star.Homepage != nil && *star.Homepage != "" {
+		URL = *star.Homepage
+	} else if star.URL != nil && *star.URL != "" {
+		URL = *star.URL
+	} else {
+		if star.Name != nil {
+			return fmt.Errorf("No URL for star '%s'", *star.Name)
+		}
+		return errors.New("No URL for star")
+	}
+	return open.Start(URL)
 }
