@@ -1,10 +1,12 @@
 package model
 
 import (
+	"errors"
 	"fmt"
 	"time"
 
 	"github.com/google/go-github/github"
+	"github.com/skratchdot/open-golang/open"
 )
 
 const defaultWho = "somebody"
@@ -75,4 +77,12 @@ func NewEventFromGithub(event *github.Event) *Event {
 		URL:   url,
 		When:  when,
 	}
+}
+
+// OpenInBrowser opens the event in the browser
+func (event *Event) OpenInBrowser() error {
+	if event.URL == "" {
+		return errors.New("No URL for event")
+	}
+	return open.Start(event.URL)
 }

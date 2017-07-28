@@ -5,7 +5,6 @@ import (
 
 	"github.com/hoop33/limo/config"
 	"github.com/hoop33/limo/model"
-	"github.com/skratchdot/open-golang/open"
 	"github.com/spf13/cobra"
 )
 
@@ -32,19 +31,8 @@ var OpenCmd = &cobra.Command{
 
 		checkOneStar(args[0], stars)
 
-		// The page to open
-		var page string
-
-		if homepage && stars[0].Homepage != nil && *stars[0].Homepage != "" {
-			page = *stars[0].Homepage
-		} else if stars[0].URL != nil && *stars[0].URL != "" {
-			page = *stars[0].URL
-		} else {
-			output.Fatal("No URL for star")
-		}
-
-		output.Info(fmt.Sprintf("Opening %s...", page))
-		fatalOnError(open.Start(page))
+		err = stars[0].OpenInBrowser(homepage)
+		fatalOnError(err)
 	},
 }
 
