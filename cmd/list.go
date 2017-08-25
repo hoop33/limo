@@ -143,14 +143,12 @@ func listStars(ctx context.Context, args []string) {
 
 	fatalOnError(err)
 
-	if stars != nil {
-		for _, star := range stars {
-			output.StarLine(&star)
-			if browse {
-				err := star.OpenInBrowser(false)
-				if err != nil {
-					output.Error(err.Error())
-				}
+	for _, star := range stars {
+		output.StarLine(&star)
+		if browse {
+			err := star.OpenInBrowser(false)
+			if err != nil {
+				output.Error(err.Error())
 			}
 		}
 	}
