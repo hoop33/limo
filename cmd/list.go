@@ -52,7 +52,7 @@ var ListCmd = &cobra.Command{
 	},
 }
 
-func listEvents(ctx context.Context, args []string) {
+func listEvents(ctx context.Context, _ []string) {
 	cfg, err := getConfiguration()
 	fatalOnError(err)
 
@@ -91,7 +91,7 @@ func listEvents(ctx context.Context, args []string) {
 	}
 }
 
-func listLanguages(ctx context.Context, args []string) {
+func listLanguages(_ context.Context, _ []string) {
 	output := getOutput()
 
 	db, err := getDatabase()
@@ -107,7 +107,7 @@ func listLanguages(ctx context.Context, args []string) {
 	}
 }
 
-func listStars(ctx context.Context, args []string) {
+func listStars(_ context.Context, args []string) {
 	output := getOutput()
 
 	db, err := getDatabase()
@@ -154,7 +154,7 @@ func listStars(ctx context.Context, args []string) {
 	}
 }
 
-func listTags(ctx context.Context, args []string) {
+func listTags(_ context.Context, _ []string) {
 	output := getOutput()
 
 	db, err := getDatabase()
@@ -172,7 +172,7 @@ func listTags(ctx context.Context, args []string) {
 	}
 }
 
-func listTrending(ctx context.Context, args []string) {
+func listTrending(ctx context.Context, _ []string) {
 	// Get configuration
 	cfg, err := getConfiguration()
 	fatalOnError(err)

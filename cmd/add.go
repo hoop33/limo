@@ -32,7 +32,7 @@ var AddCmd = &cobra.Command{
 	},
 }
 
-func addStar(values []string) {
+func addStar(_ []string) {
 	getOutput().Fatal("Not yet implemented")
 }
 
