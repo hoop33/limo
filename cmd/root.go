@@ -89,12 +89,12 @@ func getIndex() (bleve.Index, error) {
 }
 
 func getOutput() output.Output {
-	output := output.ForName(options.output)
+	o := output.ForName(options.output)
 	oc, err := getConfiguration()
 	if err == nil {
-		output.Configure(oc.GetOutput(options.output))
+		o.Configure(oc.GetOutput(options.output))
 	}
-	return output
+	return o
 }
 
 func getService() (service.Service, error) {
@@ -102,18 +102,18 @@ func getService() (service.Service, error) {
 }
 
 func checkOneStar(name string, stars []model.Star) {
-	output := getOutput()
+	o := getOutput()
 
 	if len(stars) == 0 {
-		output.Fatal(fmt.Sprintf("No stars match '%s'", name))
+		o.Fatal(fmt.Sprintf("No stars match '%s'", name))
 	}
 
 	if len(stars) > 1 {
-		output.Error(fmt.Sprintf("Star '%s' ambiguous:\n", name))
+		o.Error(fmt.Sprintf("Star '%s' ambiguous:\n", name))
 		for _, star := range stars {
-			output.StarLine(&star)
+			o.StarLine(&star)
 		}
-		output.Fatal("Narrow your search")
+		o.Fatal("Narrow your search")
 	}
 }
 

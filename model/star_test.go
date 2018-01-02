@@ -25,7 +25,7 @@ func TestNewStarFromGithubShouldCopyFields(t *testing.T) {
 		Time: time.Now(),
 	}
 
-	github := github.Repository{
+	gh := github.Repository{
 		ID:              &id,
 		Name:            &name,
 		FullName:        &fullName,
@@ -36,7 +36,7 @@ func TestNewStarFromGithubShouldCopyFields(t *testing.T) {
 		StargazersCount: &stargazersCount,
 	}
 
-	star, err := NewStarFromGithub(&timestamp, github)
+	star, err := NewStarFromGithub(&timestamp, gh)
 	assert.Nil(t, err)
 	assert.Equal(t, "33", star.RemoteID)
 	assert.Equal(t, name, *star.Name)
@@ -80,7 +80,7 @@ func TestNewStarFromGitlabShouldCopyFields(t *testing.T) {
 	url := "http://www.nba.com/pacers/"
 	stargazersCount := 10000
 
-	gitlab := gitlab.Project{
+	gl := gitlab.Project{
 		ID:                id,
 		Name:              name,
 		NameWithNamespace: fullName,
@@ -90,7 +90,7 @@ func TestNewStarFromGitlabShouldCopyFields(t *testing.T) {
 		StarCount:         stargazersCount,
 	}
 
-	star, err := NewStarFromGitlab(gitlab)
+	star, err := NewStarFromGitlab(gl)
 	assert.Nil(t, err)
 	assert.Equal(t, "33", star.RemoteID)
 	assert.Equal(t, name, *star.Name)
