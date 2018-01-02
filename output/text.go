@@ -6,7 +6,7 @@ import (
 	"os"
 	"time"
 
-	humanize "github.com/dustin/go-humanize"
+	"github.com/dustin/go-humanize"
 	"github.com/hoop33/limo/config"
 	"github.com/hoop33/limo/model"
 )
