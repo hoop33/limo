@@ -21,7 +21,7 @@ linux:
 windows:
 	GOOS=windows go build -o $(DIST_DIR)/windows/$(PROG_NAME).exe
 
-check: vet lint errcheck interfacer aligncheck structcheck varcheck unconvert gosimple staticcheck unused vendorcheck test
+check: vet lint errcheck interfacer aligncheck structcheck varcheck unconvert gosimple staticcheck unused vendorcheck prealloc test
 
 vet:
 	go vet $(PACKAGES)
@@ -60,6 +60,9 @@ vendorcheck:
 	vendorcheck $(PACKAGES)
 	vendorcheck -u $(PACKAGES)
 
+prealloc:
+	prealloc $(PACKAGES)
+
 test:
 	go test -cover $(PACKAGES)
 
@@ -75,11 +78,10 @@ clean:
 
 deps:
 	go get -u github.com/FiloSottile/vendorcheck
-	go get -u github.com/golang/lint/golint
 	go get -u github.com/golang/dep/cmd/dep
+	go get -u github.com/golang/lint/golint
 	go get -u github.com/kisielk/errcheck
 	go get -u github.com/mdempsky/unconvert
-	go get -u github.com/mvdan/interfacer/cmd/interfacer
 	go get -u github.com/opennota/check/...
-	go get -u github.com/yosssi/goat/...
 	go get -u honnef.co/go/tools/...
+	go get -u mvdan.cc/interfacer
