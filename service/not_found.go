@@ -13,7 +13,7 @@ type NotFound struct {
 
 // Login is not implemented
 func (nf *NotFound) Login(ctx context.Context) (string, error) {
-	return "", errors.New("Service not found")
+	return "", errors.New("service not found")
 }
 
 // GetStars is not implemented

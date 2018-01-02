@@ -259,7 +259,7 @@ func TestLoadStarsShouldReturnErrorWhenTagNotInDatabase(t *testing.T) {
 
 	err := tag.LoadStars(db, "")
 	assert.NotNil(t, err)
-	assert.Equal(t, "Tag '0' not found", err.Error())
+	assert.Equal(t, "tag '0' not found", err.Error())
 }
 
 func TestLoadStarsShouldLoadNoStarsWhenTagHasNoStars(t *testing.T) {

@@ -82,7 +82,7 @@ func NewEventFromGithub(event *github.Event) *Event {
 // OpenInBrowser opens the event in the browser
 func (event *Event) OpenInBrowser() error {
 	if event.URL == "" {
-		return errors.New("No URL for event")
+		return errors.New("no URL for event")
 	}
 	return open.Start(event.URL)
 }

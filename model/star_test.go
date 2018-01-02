@@ -364,7 +364,7 @@ func TestLoadTagsShouldReturnErrorWhenStarNotInDatabase(t *testing.T) {
 
 	err := star.LoadTags(db)
 	assert.NotNil(t, err)
-	assert.Equal(t, "Star '0' not found", err.Error())
+	assert.Equal(t, "star '0' not found", err.Error())
 }
 
 func TestFindStarByIDShouldReturnErrorWhenDoesNotExist(t *testing.T) {
@@ -372,7 +372,7 @@ func TestFindStarByIDShouldReturnErrorWhenDoesNotExist(t *testing.T) {
 
 	star, err := FindStarByID(db, 1)
 	assert.NotNil(t, err)
-	assert.Equal(t, "Star '1' not found", err.Error())
+	assert.Equal(t, "star '1' not found", err.Error())
 	assert.Nil(t, star)
 }
 

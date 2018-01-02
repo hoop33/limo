@@ -36,7 +36,7 @@ func ForName(name string) (Service, error) {
 	if service, ok := services[strings.ToLower(name)]; ok {
 		return service, nil
 	}
-	return &NotFound{}, fmt.Errorf("Service '%s' not found", name)
+	return &NotFound{}, fmt.Errorf("service '%s' not found", name)
 }
 
 func createInterview() *entrevista.Interview {

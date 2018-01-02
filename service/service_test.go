@@ -16,7 +16,7 @@ func TestServiceNameShouldDropPackage(t *testing.T) {
 func TestForNameShouldReturnErrorWhenNoService(t *testing.T) {
 	svc, err := ForName("foo")
 	assert.NotNil(t, err)
-	assert.Equal(t, "Service 'foo' not found", err.Error())
+	assert.Equal(t, "service 'foo' not found", err.Error())
 	assert.Equal(t, "*service.NotFound", reflect.TypeOf(svc).String())
 }
 

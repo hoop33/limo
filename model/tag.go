@@ -81,7 +81,7 @@ func (tag *Tag) LoadStars(db *gorm.DB, match string) error {
 	// Make sure tag exists in database, or we will panic
 	var existing Tag
 	if db.Where("id = ?", tag.ID).First(&existing).RecordNotFound() {
-		return fmt.Errorf("Tag '%d' not found", tag.ID)
+		return fmt.Errorf("tag '%d' not found", tag.ID)
 	}
 
 	if match != "" {
@@ -106,7 +106,7 @@ func (tag *Tag) LoadStars(db *gorm.DB, match string) error {
 func (tag *Tag) Rename(db *gorm.DB, name string) error {
 	// Can't rename to the same name
 	if name == tag.Name {
-		return errors.New("You can't rename to the same name")
+		return errors.New("you can't rename to the same name")
 	}
 
 	// If they're just changing case, allow. Otherwise, block the change
@@ -116,7 +116,7 @@ func (tag *Tag) Rename(db *gorm.DB, name string) error {
 			return err
 		}
 		if existing != nil {
-			return fmt.Errorf("Tag '%s' already exists", existing.Name)
+			return fmt.Errorf("tag '%s' already exists", existing.Name)
 		}
 	}
 

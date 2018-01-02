@@ -11,6 +11,6 @@ func TestNotFoundLoginShouldReturnError(t *testing.T) {
 	nf := &NotFound{}
 	token, err := nf.Login(context.Background())
 	assert.NotNil(t, err)
-	assert.Equal(t, "Service not found", err.Error())
+	assert.Equal(t, "service not found", err.Error())
 	assert.Equal(t, "", token)
 }

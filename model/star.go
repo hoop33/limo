@@ -101,7 +101,7 @@ func CreateOrUpdateStar(db *gorm.DB, star *Star, service *Service) (bool, error)
 func FindStarByID(db *gorm.DB, ID uint) (*Star, error) {
 	var star Star
 	if db.First(&star, ID).RecordNotFound() {
-		return nil, fmt.Errorf("Star '%d' not found", ID)
+		return nil, fmt.Errorf("star '%d' not found", ID)
 	}
 	return &star, db.Error
 }
@@ -248,7 +248,7 @@ func (star *Star) LoadTags(db *gorm.DB) error {
 	// Make sure star exists in database, or we will panic
 	var existing Star
 	if db.Where("id = ?", star.ID).First(&existing).RecordNotFound() {
-		return fmt.Errorf("Star '%d' not found", star.ID)
+		return fmt.Errorf("star '%d' not found", star.ID)
 	}
 	return db.Model(star).Association("Tags").Find(&star.Tags).Error
 }
@@ -292,9 +292,9 @@ func (star *Star) OpenInBrowser(preferHomepage bool) error {
 		URL = *star.URL
 	} else {
 		if star.Name != nil {
-			return fmt.Errorf("No URL for star '%s'", *star.Name)
+			return fmt.Errorf("no URL for star '%s'", *star.Name)
 		}
-		return errors.New("No URL for star")
+		return errors.New("no URL for star")
 	}
 	return open.Start(URL)
 }
