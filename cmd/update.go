@@ -3,6 +3,7 @@ package cmd
 import (
 	"context"
 	"fmt"
+	"time"
 
 	"github.com/hoop33/limo/config"
 	"github.com/hoop33/limo/model"
@@ -10,7 +11,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-// UpdateCmd lets you log in
+// UpdateCmd updates your stars from a remote service
 var UpdateCmd = &cobra.Command{
 	Use:     "update",
 	Short:   "Update stars from a service",
@@ -39,6 +40,8 @@ var UpdateCmd = &cobra.Command{
 		serviceName := service.Name(svc)
 		dbSvc, _, err := model.FindOrCreateServiceByName(db, serviceName)
 		fatalOnError(err)
+
+		startTime := time.Now()
 
 		// Create a channel to receive stars, since service can page
 		starChan := make(chan *model.StarResult, 20)
@@ -74,6 +77,12 @@ var UpdateCmd = &cobra.Command{
 				}
 			}
 		}
+
+		if totalCreated > 0 || totalUpdated > 0 {
+			dbSvc.LastSuccess = startTime
+			fatalOnError(db.Save(dbSvc).Error)
+		}
+
 		output.Info(fmt.Sprintf("\nCreated: %d; Updated: %d; Errors: %d", totalCreated, totalUpdated, totalErrors))
 	},
 }

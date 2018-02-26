@@ -230,6 +230,13 @@ func FuzzyFindStarsByName(db *gorm.DB, name string) ([]Star, error) {
 	return stars, db.Error
 }
 
+// FindPrunableStars finds all stars that weren't updated during the last successful update
+func FindPrunableStars(db *gorm.DB, service *Service) ([]Star, error) {
+	var stars []Star
+	db.Where("service_id = ? AND updated_at < ?", service.ID, service.LastSuccess).Order("full_name").Find(&stars)
+	return stars, db.Error
+}
+
 // FindLanguages finds all languages
 func FindLanguages(db *gorm.DB) ([]string, error) {
 	var languages []string
@@ -297,4 +304,9 @@ func (star *Star) OpenInBrowser(preferHomepage bool) error {
 		return errors.New("no URL for star")
 	}
 	return open.Start(URL)
+}
+
+// Delete soft-deletes a star
+func (star *Star) Delete(db *gorm.DB) error {
+	return db.Delete(&star).Error
 }

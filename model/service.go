@@ -1,12 +1,17 @@
 package model
 
-import "github.com/jinzhu/gorm"
+import (
+	"time"
+
+	"github.com/jinzhu/gorm"
+)
 
 // Service represents a hosting service like Github
 type Service struct {
 	gorm.Model
-	Name  string
-	Stars []Star
+	Name        string
+	LastSuccess time.Time
+	Stars       []Star
 }
 
 // FindOrCreateServiceByName returns a service with the specified name, creating if necessary
