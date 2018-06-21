@@ -27,6 +27,11 @@ Both [GitHub](https://github.com) and [GitLab](https://gitlab.com) allow you to 
 Limo lets you manage your starred repositories from the command line. You can do things like tag them, search them, or list them by language. Think of Limo as the CLI version of [Astral](https://app.astralapp.com/) (also worth looking into).
 
 ## Installation
+If you do not have a working Go installation: 
+
+[Macintosh_go_installation](https://stackoverflow.com/a/27709931/5283424)
+<br/>[Alternative_go_installation](https://grpc.io/docs/quickstart/go.html)
+
 
 If you have a working Go installation, type:
 
