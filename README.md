@@ -9,6 +9,7 @@
 [![codebeat badge](https://codebeat.co/badges/9ab79648-de9b-4585-918c-85c043bf7971)](https://codebeat.co/projects/github-com-hoop33-limo)
 [![Go Report Card](https://goreportcard.com/badge/hoop33/limo)](https://goreportcard.com/report/hoop33/limo)
 [![Join the chat at https://gitter.im/hoop33/limo](https://badges.gitter.im/hoop33/limo.svg)](https://gitter.im/hoop33/limo?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Fhoop33%2Flimo.svg?type=shield)](https://app.fossa.io/projects/git%2Bgithub.com%2Fhoop33%2Flimo?ref=badge_shield)
 
 ## Table of Contents
 
@@ -245,3 +246,6 @@ Apologies if I've inadvertently omitted any library or any contributor.
 Copyright &copy; 2016 Rob Warner
 
 Licensed under the [MIT License](https://hoop33.mit-license.org/)
+
+
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Fhoop33%2Flimo.svg?type=large)](https://app.fossa.io/projects/git%2Bgithub.com%2Fhoop33%2Flimo?ref=badge_large)
