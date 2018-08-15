@@ -106,6 +106,44 @@ func FindStarByID(db *gorm.DB, ID uint) (*Star, error) {
 	return &star, db.Error
 }
 
+// CountStarsByLanguageAndTag counts all stars
+func CountStarsByLanguageAndTag(db *gorm.DB, args ...string) (int, error) {
+	var count int
+
+	language := args[0]
+	tag := args[1]
+
+	if language == "" && tag == "" {
+		db.Table("stars").Count(&count)
+	} else if language != "" && tag == "" {
+		db.Table("stars").Where("LOWER(language) = ?", strings.ToLower(language)).Count(&count)
+	} else if language == "" && tag != "" {
+		db.Raw(`
+			SELECT COUNT(DISTINCT S.ID)
+			FROM STARS S, TAGS T
+			INNER JOIN STAR_TAGS ST ON S.ID = ST.STAR_ID 
+			INNER JOIN TAGS ON ST.TAG_ID = T.ID 
+			WHERE S.DELETED_AT IS NULL
+			AND T.DELETED_AT IS NULL
+			AND LOWER(T.NAME) = ?`,
+			strings.ToLower(tag)).Count(&count)
+	} else {
+		db.Raw(`
+			SELECT COUNT(DISTINCT S.ID)
+			FROM STARS S, TAGS T
+			INNER JOIN STAR_TAGS ST ON S.ID = ST.STAR_ID 
+			INNER JOIN TAGS ON ST.TAG_ID = T.ID 
+			WHERE S.DELETED_AT IS NULL
+			AND T.DELETED_AT IS NULL
+			AND LOWER(S.LANGUAGE) = ?
+			AND LOWER(T.NAME) = ?`,
+			strings.ToLower(language),
+			strings.ToLower(tag)).Count(&count)
+	}
+
+	return count, db.Error
+}
+
 // FindStars finds all stars
 func FindStars(db *gorm.DB, match string) ([]Star, error) {
 	var stars []Star
@@ -237,10 +275,19 @@ func FindPrunableStars(db *gorm.DB, service *Service) ([]Star, error) {
 	return stars, db.Error
 }
 
+// CountLanguages counts all languages
+func CountLanguages(db *gorm.DB, _ ...string) (int, error) {
+	languages, err := FindLanguages(db)
+	if err != nil {
+		return 0, err
+	}
+	return len(languages), nil
+}
+
 // FindLanguages finds all languages
 func FindLanguages(db *gorm.DB) ([]string, error) {
 	var languages []string
-	db.Table("stars").Order("language").Pluck("distinct(language)", &languages)
+	db.Table("stars").Where("language != ?", "").Order("language").Pluck("distinct(language)", &languages)
 	return languages, db.Error
 }
 

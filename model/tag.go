@@ -17,6 +17,13 @@ type Tag struct {
 	Stars     []Star `gorm:"many2many:star_tags;"`
 }
 
+// CountTags counts the tags
+func CountTags(db *gorm.DB, _ ...string) (int, error) {
+	var count int
+	db.Table("tags").Count(&count)
+	return count, db.Error
+}
+
 // FindTags finds all tags
 func FindTags(db *gorm.DB) ([]Tag, error) {
 	var tags []Tag

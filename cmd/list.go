@@ -101,9 +101,7 @@ func listLanguages(_ context.Context, _ []string) {
 	fatalOnError(err)
 
 	for _, language := range languages {
-		if language != "" {
-			output.Info(language)
-		}
+		output.Info(language)
 	}
 }
 
