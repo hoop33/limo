@@ -9,7 +9,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var delete = false
+var del = false
 
 // PruneCmd prunes local stars that are no longer starred on a remote service
 var PruneCmd = &cobra.Command{
@@ -35,7 +35,7 @@ var PruneCmd = &cobra.Command{
 
 		for _, star := range prunable {
 			output.StarLine(&star)
-			if delete {
+			if del {
 				fatalOnError(star.Delete(db))
 			}
 		}
@@ -43,6 +43,6 @@ var PruneCmd = &cobra.Command{
 }
 
 func init() {
-	PruneCmd.Flags().BoolVarP(&delete, "delete", "d", false, "Actually delete from your local database (default: display what would be deleted)")
+	PruneCmd.Flags().BoolVarP(&del, "delete", "d", false, "Actually delete from your local database (default: display what would be deleted)")
 	RootCmd.AddCommand(PruneCmd)
 }
