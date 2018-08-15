@@ -6,7 +6,7 @@ import (
 	"log"
 	"os"
 
-	sqlite3 "github.com/gimpldo/go-sqlite3"
+	sqlite3 "github.com/mattn/go-sqlite3"
 )
 
 func traceCallback(info sqlite3.TraceInfo) int {
@@ -95,7 +95,7 @@ func main() {
 			ConnectHook: func(conn *sqlite3.SQLiteConn) error {
 				err := conn.SetTrace(&sqlite3.TraceConfig{
 					Callback:        traceCallback,
-					EventMask:       uint(eventMask),
+					EventMask:       eventMask,
 					WantExpandedSQL: true,
 				})
 				return err

@@ -15,7 +15,7 @@ import (
 )
 
 func TestRepositoriesService_ListDeployments(t *testing.T) {
-	setup()
+	client, mux, _, teardown := setup()
 	defer teardown()
 
 	mux.HandleFunc("/repos/o/r/deployments", func(w http.ResponseWriter, r *http.Request) {
@@ -30,14 +30,14 @@ func TestRepositoriesService_ListDeployments(t *testing.T) {
 		t.Errorf("Repositories.ListDeployments returned error: %v", err)
 	}
 
-	want := []*Deployment{{ID: Int(1)}, {ID: Int(2)}}
+	want := []*Deployment{{ID: Int64(1)}, {ID: Int64(2)}}
 	if !reflect.DeepEqual(deployments, want) {
 		t.Errorf("Repositories.ListDeployments returned %+v, want %+v", deployments, want)
 	}
 }
 
 func TestRepositoriesService_GetDeployment(t *testing.T) {
-	setup()
+	client, mux, _, teardown := setup()
 	defer teardown()
 
 	mux.HandleFunc("/repos/o/r/deployments/3", func(w http.ResponseWriter, r *http.Request) {
@@ -50,7 +50,7 @@ func TestRepositoriesService_GetDeployment(t *testing.T) {
 		t.Errorf("Repositories.GetDeployment returned error: %v", err)
 	}
 
-	want := &Deployment{ID: Int(3)}
+	want := &Deployment{ID: Int64(3)}
 
 	if !reflect.DeepEqual(deployment, want) {
 		t.Errorf("Repositories.GetDeployment returned %+v, want %+v", deployment, want)
@@ -58,7 +58,7 @@ func TestRepositoriesService_GetDeployment(t *testing.T) {
 }
 
 func TestRepositoriesService_CreateDeployment(t *testing.T) {
-	setup()
+	client, mux, _, teardown := setup()
 	defer teardown()
 
 	input := &DeploymentRequest{Ref: String("1111"), Task: String("deploy"), TransientEnvironment: Bool(true)}
@@ -88,7 +88,7 @@ func TestRepositoriesService_CreateDeployment(t *testing.T) {
 }
 
 func TestRepositoriesService_ListDeploymentStatuses(t *testing.T) {
-	setup()
+	client, mux, _, teardown := setup()
 	defer teardown()
 
 	mux.HandleFunc("/repos/o/r/deployments/1/statuses", func(w http.ResponseWriter, r *http.Request) {
@@ -103,14 +103,14 @@ func TestRepositoriesService_ListDeploymentStatuses(t *testing.T) {
 		t.Errorf("Repositories.ListDeploymentStatuses returned error: %v", err)
 	}
 
-	want := []*DeploymentStatus{{ID: Int(1)}, {ID: Int(2)}}
+	want := []*DeploymentStatus{{ID: Int64(1)}, {ID: Int64(2)}}
 	if !reflect.DeepEqual(statutses, want) {
 		t.Errorf("Repositories.ListDeploymentStatuses returned %+v, want %+v", statutses, want)
 	}
 }
 
 func TestRepositoriesService_GetDeploymentStatus(t *testing.T) {
-	setup()
+	client, mux, _, teardown := setup()
 	defer teardown()
 
 	mux.HandleFunc("/repos/o/r/deployments/3/statuses/4", func(w http.ResponseWriter, r *http.Request) {
@@ -124,14 +124,14 @@ func TestRepositoriesService_GetDeploymentStatus(t *testing.T) {
 		t.Errorf("Repositories.GetDeploymentStatus returned error: %v", err)
 	}
 
-	want := &DeploymentStatus{ID: Int(4)}
+	want := &DeploymentStatus{ID: Int64(4)}
 	if !reflect.DeepEqual(deploymentStatus, want) {
 		t.Errorf("Repositories.GetDeploymentStatus returned %+v, want %+v", deploymentStatus, want)
 	}
 }
 
 func TestRepositoriesService_CreateDeploymentStatus(t *testing.T) {
-	setup()
+	client, mux, _, teardown := setup()
 	defer teardown()
 
 	input := &DeploymentStatusRequest{State: String("inactive"), Description: String("deploy"), AutoInactive: Bool(false)}

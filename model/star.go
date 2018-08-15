@@ -55,7 +55,7 @@ func NewStarFromGithub(timestamp *github.Timestamp, star github.Repository) (*St
 	}
 
 	return &Star{
-		RemoteID:    strconv.Itoa(*star.ID),
+		RemoteID:    strconv.Itoa(int(*star.ID)),
 		Name:        star.Name,
 		FullName:    star.FullName,
 		Description: star.Description,

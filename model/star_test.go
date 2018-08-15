@@ -12,7 +12,7 @@ import (
 func TestNewStarFromGithubShouldCopyFields(t *testing.T) {
 	clearDB()
 
-	id := 33
+	id := int64(33)
 	name := "larry-bird"
 	fullName := "celtics/larry-bird"
 	description := "larry legend"
@@ -60,7 +60,7 @@ func TestNewStarFromGithubShouldHandleEmpty(t *testing.T) {
 func TestNewStarFromGithubShouldHandleOnlyID(t *testing.T) {
 	clearDB()
 
-	id := 33
+	id := int64(33)
 	star, err := NewStarFromGithub(&github.Timestamp{}, github.Repository{
 		ID: &id,
 	})
