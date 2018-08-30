@@ -14,14 +14,14 @@ func TestServiceNameShouldDropPackage(t *testing.T) {
 }
 
 func TestForNameShouldReturnErrorWhenNoService(t *testing.T) {
-	svc, err := ForName("foo")
+	svc, err := ForName("foo", false)
 	assert.NotNil(t, err)
 	assert.Equal(t, "service 'foo' not found", err.Error())
 	assert.Equal(t, "*service.NotFound", reflect.TypeOf(svc).String())
 }
 
 func TestForNameShouldReturnService(t *testing.T) {
-	svc, err := ForName("github")
+	svc, err := ForName("github", false)
 	assert.Nil(t, err)
 	assert.Equal(t, "*service.Github", reflect.TypeOf(svc).String())
 }
