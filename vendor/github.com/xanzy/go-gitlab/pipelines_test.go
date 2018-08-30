@@ -11,17 +11,18 @@ func TestListProjectPipelines(t *testing.T) {
 	mux, server, client := setup()
 	defer teardown(server)
 
-	mux.HandleFunc("/projects/1/pipelines", func(w http.ResponseWriter, r *http.Request) {
+	mux.HandleFunc("/api/v4/projects/1/pipelines", func(w http.ResponseWriter, r *http.Request) {
 		testMethod(t, r, "GET")
 		fmt.Fprint(w, `[{"id":1},{"id":2}]`)
 	})
 
-	piplines, _, err := client.Pipelines.ListProjectPipelines(1)
+	opt := &ListProjectPipelinesOptions{Ref: String("master")}
+	piplines, _, err := client.Pipelines.ListProjectPipelines(1, opt)
 	if err != nil {
 		t.Errorf("Pipelines.ListProjectPipelines returned error: %v", err)
 	}
 
-	want := []*Pipeline{{ID: 1}, {ID: 2}}
+	want := PipelineList{{ID: 1}, {ID: 2}}
 	if !reflect.DeepEqual(want, piplines) {
 		t.Errorf("Pipelines.ListProjectPipelines returned %+v, want %+v", piplines, want)
 	}
@@ -31,7 +32,7 @@ func TestGetPipeline(t *testing.T) {
 	mux, server, client := setup()
 	defer teardown(server)
 
-	mux.HandleFunc("/projects/1/pipelines/5949167", func(w http.ResponseWriter, r *http.Request) {
+	mux.HandleFunc("/api/v4/projects/1/pipelines/5949167", func(w http.ResponseWriter, r *http.Request) {
 		testMethod(t, r, "GET")
 		fmt.Fprint(w, `{"id":1,"status":"success"}`)
 	})
@@ -51,9 +52,8 @@ func TestCreatePipeline(t *testing.T) {
 	mux, server, client := setup()
 	defer teardown(server)
 
-	mux.HandleFunc("/projects/1/pipeline", func(w http.ResponseWriter, r *http.Request) {
+	mux.HandleFunc("/api/v4/projects/1/pipeline", func(w http.ResponseWriter, r *http.Request) {
 		testMethod(t, r, "POST")
-		testJSONBody(t, r, values{"ref": "master"})
 		fmt.Fprint(w, `{"id":1, "status":"pending"}`)
 	})
 
@@ -74,7 +74,7 @@ func TestRetryPipelineBuild(t *testing.T) {
 	mux, server, client := setup()
 	defer teardown(server)
 
-	mux.HandleFunc("/projects/1/pipelines/5949167/retry", func(w http.ResponseWriter, r *http.Request) {
+	mux.HandleFunc("/api/v4/projects/1/pipelines/5949167/retry", func(w http.ResponseWriter, r *http.Request) {
 		testMethod(t, r, "POST")
 		fmt.Fprintln(w, `{"id":1, "status":"pending"}`)
 	})
@@ -94,7 +94,7 @@ func TestCancelPipelineBuild(t *testing.T) {
 	mux, server, client := setup()
 	defer teardown(server)
 
-	mux.HandleFunc("/projects/1/pipelines/5949167/cancel", func(w http.ResponseWriter, r *http.Request) {
+	mux.HandleFunc("/api/v4/projects/1/pipelines/5949167/cancel", func(w http.ResponseWriter, r *http.Request) {
 		testMethod(t, r, "POST")
 		fmt.Fprintln(w, `{"id":1, "status":"canceled"}`)
 	})

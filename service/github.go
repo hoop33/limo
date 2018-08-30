@@ -35,6 +35,44 @@ func (g *Github) Login(ctx context.Context) (string, error) {
 	return answers["token"].(string), nil
 }
 
+// AddStar stars a repo
+func (g *Github) AddStar(ctx context.Context, token, owner, repo string) (*model.Star, error) {
+	client := g.getClient(token)
+
+	// Add the star
+	_, err := client.Activity.Star(ctx, owner, repo)
+	if err != nil {
+		return nil, err
+	}
+
+	// Get the repo details
+	r, _, err := client.Repositories.Get(ctx, owner, repo)
+	if err != nil {
+		return nil, err
+	}
+
+	return model.NewStarFromGithub(&github.Timestamp{Time: time.Now()}, *r)
+}
+
+// DeleteStar unstars a repo
+func (g *Github) DeleteStar(ctx context.Context, token, owner, repo string) (*model.Star, error) {
+	client := g.getClient(token)
+
+	// Remove the star
+	_, err := client.Activity.Unstar(ctx, owner, repo)
+	if err != nil {
+		return nil, err
+	}
+
+	// Get the repo details
+	r, _, err := client.Repositories.Get(ctx, owner, repo)
+	if err != nil {
+		return nil, err
+	}
+
+	return model.NewStarFromGithub(&github.Timestamp{Time: time.Now()}, *r)
+}
+
 // GetStars returns the stars for the specified user (empty string for authenticated user)
 func (g *Github) GetStars(ctx context.Context, starChan chan<- *model.StarResult, token string, user string) {
 	client := g.getClient(token)
@@ -148,6 +186,10 @@ func (g *Github) GetTrending(ctx context.Context, trendingChan chan<- *model.Sta
 	}
 
 	close(trendingChan)
+}
+
+// SetInsecure sets whether to skip cert verification
+func (g *Github) SetInsecure(insecure bool) {
 }
 
 func (g *Github) getDateSearchString() string {

@@ -5,6 +5,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ## [Unreleased]
 ### Added
 - Add `count` command for stars, languages, and tags
+- Add `add` and `delete` for stars to star and unstar repositories
 
 ## [0.5.0]
 ### Added

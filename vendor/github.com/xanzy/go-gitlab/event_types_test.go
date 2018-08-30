@@ -25,7 +25,7 @@ func TestPushEventUnmarshal(t *testing.T) {
     "git_ssh_url":"git@example.com:mike/diaspora.git",
     "git_http_url":"http://example.com/mike/diaspora.git",
     "namespace":"Mike",
-    "visibility_level":0,
+    "visibility":"public",
     "path_with_namespace":"mike/diaspora",
     "default_branch":"master",
     "homepage":"http://example.com/mike/diaspora",
@@ -40,7 +40,7 @@ func TestPushEventUnmarshal(t *testing.T) {
     "homepage": "http://example.com/mike/diaspora",
     "git_http_url":"http://example.com/mike/diaspora.git",
     "git_ssh_url":"git@example.com:mike/diaspora.git",
-    "visibility_level":0
+    "visibility":"public"
   },
   "commits": [
     {
@@ -87,6 +87,17 @@ func TestPushEventUnmarshal(t *testing.T) {
 		t.Errorf("ProjectID is %v, want %v", event.ProjectID, 15)
 	}
 
+	if event.UserName != "John Smith" {
+		t.Errorf("Username is %s, want %s", event.UserName, "John Smith")
+	}
+
+	if event.Commits[0] == nil || event.Commits[0].Timestamp == nil {
+		t.Errorf("Commit Timestamp isn't nil")
+	}
+
+	if event.Commits[0] == nil || event.Commits[0].Author.Name != "Jordi Mallach" {
+		t.Errorf("Commit Username is %s, want %s", event.UserName, "Jordi Mallach")
+	}
 }
 
 func TestMergeEventUnmarshal(t *testing.T) {
@@ -124,7 +135,7 @@ func TestMergeEventUnmarshal(t *testing.T) {
       "git_ssh_url":"git@example.com:awesome_space/awesome_project.git",
       "git_http_url":"http://example.com/awesome_space/awesome_project.git",
       "namespace":"Awesome Space",
-      "visibility_level":20,
+      "visibility":"private",
       "path_with_namespace":"awesome_space/awesome_project",
       "default_branch":"master",
       "homepage":"http://example.com/awesome_space/awesome_project",
@@ -140,7 +151,7 @@ func TestMergeEventUnmarshal(t *testing.T) {
       "git_ssh_url":"git@example.com:awesome_space/awesome_project.git",
       "git_http_url":"http://example.com/awesome_space/awesome_project.git",
       "namespace":"Awesome Space",
-      "visibility_level":20,
+      "visibility":"private",
       "path_with_namespace":"awesome_space/awesome_project",
       "default_branch":"master",
       "homepage":"http://example.com/awesome_space/awesome_project",
@@ -199,6 +210,17 @@ func TestMergeEventUnmarshal(t *testing.T) {
 		t.Errorf("ObjectAttributes is %v, want %v", event.ObjectAttributes.Assignee.Username, "user1")
 	}
 
+	if event.User.Name == "" {
+		t.Errorf("Username is %s, want %s", event.User.Name, "Administrator")
+	}
+
+	if event.ObjectAttributes.LastCommit.Timestamp == nil {
+		t.Errorf("Timestamp isn't nil")
+	}
+
+	if name := event.ObjectAttributes.LastCommit.Author.Name; name != "GitLab dev user" {
+		t.Errorf("Commit Username is %s, want %s", name, "GitLab dev user")
+	}
 }
 
 func TestPipelineEventUnmarshal(t *testing.T) {
@@ -233,7 +255,7 @@ func TestPipelineEventUnmarshal(t *testing.T) {
       "git_ssh_url": "git@192.168.64.1:gitlab-org/gitlab-test.git",
       "git_http_url": "http://192.168.64.1:3005/gitlab-org/gitlab-test.git",
       "namespace": "Gitlab Org",
-      "visibility_level": 20,
+      "visibility": "private",
       "path_with_namespace": "gitlab-org/gitlab-test",
       "default_branch": "master"
    },
@@ -284,10 +306,15 @@ func TestPipelineEventUnmarshal(t *testing.T) {
             "username": "root",
             "avatar_url": "http://www.gravatar.com/avatar/e32bd13e2add097461cb96824b7a829c?s=80\u0026d=identicon"
          },
-         "runner": null,
+         "runner": {
+            "id": 6,
+            "description": "Kubernetes Runner",
+            "active": true,
+            "is_shared": true
+         },
          "artifacts_file":{
-            "filename": null,
-            "size": null
+            "filename": "artifacts.zip",
+            "size": 1319148
          }
       },
       {
@@ -371,6 +398,17 @@ func TestPipelineEventUnmarshal(t *testing.T) {
 		t.Errorf("ObjectAttributes is %v, want %v", event.ObjectAttributes.ID, 1977)
 	}
 
+	if event.User.Name == "" {
+		t.Errorf("Username is %s, want %s", event.User.Name, "Administrator")
+	}
+
+	if event.Commit.Timestamp == nil {
+		t.Errorf("Timestamp isn't nil")
+	}
+
+	if name := event.Commit.Author.Name; name != "User" {
+		t.Errorf("Commit Username is %s, want %s", name, "User")
+	}
 }
 
 func TestBuildEventUnmarshal(t *testing.T) {
@@ -386,7 +424,7 @@ func TestBuildEventUnmarshal(t *testing.T) {
   "build_status": "created",
   "build_started_at": null,
   "build_finished_at": null,
-  "build_duration": null,
+  "build_duration": 23.265997,
   "build_allow_failure": false,
   "project_id": 380,
   "project_name": "gitlab-org/gitlab-test",
@@ -402,7 +440,7 @@ func TestBuildEventUnmarshal(t *testing.T) {
     "author_name": "User",
     "author_email": "user@gitlab.com",
     "status": "created",
-    "duration": null,
+    "duration": 199,
     "started_at": null,
     "finished_at": null
   },
@@ -413,7 +451,7 @@ func TestBuildEventUnmarshal(t *testing.T) {
     "homepage": "http://192.168.64.1:3005/gitlab-org/gitlab-test",
     "git_ssh_url": "git@192.168.64.1:gitlab-org/gitlab-test.git",
     "git_http_url": "http://192.168.64.1:3005/gitlab-org/gitlab-test.git",
-    "visibility_level": 20
+    "visibility": "private"
   }
 }`
 	var event *BuildEvent
@@ -449,7 +487,7 @@ func TestMergeEventUnmarshalFromGroup(t *testing.T) {
 		"git_ssh_url": "git@example.com:exm-namespace/example-project.git",
 		"git_http_url": "http://example.com/exm-namespace/example-project.git",
 		"namespace": "exm-namespace",
-		"visibility_level": 0,
+		"visibility": "public",
 		"path_with_namespace": "exm-namespace/example-project",
 		"default_branch": "master",
 		"homepage": "http://example.com/exm-namespace/example-project",
@@ -497,7 +535,7 @@ func TestMergeEventUnmarshalFromGroup(t *testing.T) {
 			"git_ssh_url": "git@example.com:exm-namespace/example-project.git",
 			"git_http_url": "http://example.com/exm-namespace/example-project.git",
 			"namespace": "exm-namespace",
-			"visibility_level": 0,
+			"visibility": "public",
 			"path_with_namespace": "exm-namespace/example-project",
 			"default_branch": "master",
 			"homepage": "http://example.com/exm-namespace/example-project",
@@ -513,7 +551,7 @@ func TestMergeEventUnmarshalFromGroup(t *testing.T) {
 			"git_ssh_url": "git@example.com:exm-namespace/example-project.git",
 			"git_http_url": "http://example.com/exm-namespace/example-project.git",
 			"namespace": "exm-namespace",
-			"visibility_level": 0,
+			"visibility": "public",
 			"path_with_namespace": "exm-namespace/example-project",
 			"default_branch": "master",
 			"homepage": "http://example.com/exm-namespace/example-project",
@@ -589,5 +627,17 @@ func TestMergeEventUnmarshalFromGroup(t *testing.T) {
 
 	if event.Assignee.Username != "root" {
 		t.Errorf("Assignee.Username is %v, want %v", event.Assignee, "root")
+	}
+
+	if event.User.Name == "" {
+		t.Errorf("Username is %s, want %s", event.User.Name, "Administrator")
+	}
+
+	if event.ObjectAttributes.LastCommit.Timestamp == nil {
+		t.Errorf("Timestamp isn't nil")
+	}
+
+	if name := event.ObjectAttributes.LastCommit.Author.Name; name != "Test User" {
+		t.Errorf("Commit Username is %s, want %s", name, "Test User")
 	}
 }

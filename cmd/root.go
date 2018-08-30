@@ -3,6 +3,7 @@ package cmd
 import (
 	"fmt"
 	"os"
+	"strings"
 
 	"github.com/blevesearch/bleve"
 	"github.com/hoop33/limo/config"
@@ -18,6 +19,7 @@ var db *gorm.DB
 var index bleve.Index
 
 var options struct {
+	insecure bool
 	language string
 	output   string
 	service  string
@@ -43,6 +45,7 @@ func Execute() {
 
 func init() {
 	flags := RootCmd.PersistentFlags()
+	flags.BoolVarP(&options.insecure, "insecure", "i", false, "skip certificate verification")
 	flags.StringVarP(&options.language, "language", "l", "", "language")
 	flags.StringVarP(&options.output, "output", "o", "color", "output type")
 	flags.StringVarP(&options.service, "service", "s", "github", "service")
@@ -98,7 +101,7 @@ func getOutput() output.Output {
 }
 
 func getService() (service.Service, error) {
-	return service.ForName(options.service)
+	return service.ForName(options.service, options.insecure)
 }
 
 func checkOneStar(name string, stars []model.Star) {
@@ -121,4 +124,28 @@ func fatalOnError(err error) {
 	if err != nil {
 		getOutput().Fatal(err.Error())
 	}
+}
+
+func parseServiceOwnerRepo(values []string) (string, string, string) {
+	// `values` can be:
+	// * Full URL (e.g., https://github.com/hoop33/limo)
+	// * Owner/Repo (e.g., hoop33/limo)
+	// * Owner Repo (e.g., hoop33 limo)
+	var serviceName, owner, repo string
+
+	if len(values) == 1 {
+		values = strings.Split(strings.TrimPrefix(values[0], "https://"), "/")
+	}
+	if len(values) == 3 {
+		serviceName, values = values[0], values[1:]
+	}
+	if len(values) == 2 {
+		owner, repo = values[0], values[1]
+	}
+
+	// Drop the TLD from the service name
+	if n := strings.LastIndex(serviceName, "."); n != -1 {
+		serviceName = serviceName[:n]
+	}
+	return serviceName, owner, repo
 }

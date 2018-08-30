@@ -2,7 +2,11 @@ package service
 
 import (
 	"context"
+	"crypto/tls"
 	"errors"
+	"fmt"
+	"net/http"
+	"time"
 
 	"github.com/hoop33/entrevista"
 	"github.com/hoop33/limo/model"
@@ -11,6 +15,7 @@ import (
 
 // Gitlab represents the Gitlab service
 type Gitlab struct {
+	insecure bool
 }
 
 // Login logs in to Gitlab
@@ -32,6 +37,32 @@ func (g *Gitlab) Login(ctx context.Context) (string, error) {
 	return answers["token"].(string), nil
 }
 
+// AddStar stars a repo
+func (g *Gitlab) AddStar(ctx context.Context, token, owner, repo string) (*model.Star, error) {
+	client := g.getClient(token)
+
+	// Add the star
+	project, _, err := client.Projects.StarProject(fmt.Sprintf("%s/%s", owner, repo), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return model.NewStarFromGitlab(*project)
+}
+
+// DeleteStar unstars a repo
+func (g *Gitlab) DeleteStar(ctx context.Context, token, owner, repo string) (*model.Star, error) {
+	client := g.getClient(token)
+
+	// Add the star
+	project, _, err := client.Projects.UnstarProject(fmt.Sprintf("%s/%s", owner, repo), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return model.NewStarFromGitlab(*project)
+}
+
 // GetStars returns the stars for the specified user (empty string for authenticated user)
 func (g *Gitlab) GetStars(ctx context.Context, starChan chan<- *model.StarResult, token string, user string) {
 	client := g.getClient(token)
@@ -39,8 +70,10 @@ func (g *Gitlab) GetStars(ctx context.Context, starChan chan<- *model.StarResult
 	currentPage := 1
 	lastPage := 1
 
+	starred := true
 	for currentPage <= lastPage {
-		projects, response, err := client.Projects.ListStarredProjects(&gitlab.ListProjectsOptions{
+		projects, response, err := client.Projects.ListProjects(&gitlab.ListProjectsOptions{
+			Starred: &starred,
 			ListOptions: gitlab.ListOptions{
 				Page: currentPage,
 			},
@@ -53,7 +86,7 @@ func (g *Gitlab) GetStars(ctx context.Context, starChan chan<- *model.StarResult
 			}
 		} else {
 			// Set last page only if we didn't get an error
-			lastPage = response.LastPage
+			lastPage = response.TotalPages
 
 			// Create a Star for each repository and put it on the channel
 			for _, project := range projects {
@@ -85,8 +118,22 @@ func (g *Gitlab) GetTrending(ctx context.Context, trendingChan chan<- *model.Sta
 	close(trendingChan)
 }
 
+// SetInsecure sets whether to skip cert verification
+func (g *Gitlab) SetInsecure(insecure bool) {
+	g.insecure = insecure
+}
+
 func (g *Gitlab) getClient(token string) *gitlab.Client {
-	return gitlab.NewClient(nil, token)
+	client := &http.Client{
+		// TODO make configurable
+		Timeout: time.Second * 30,
+		Transport: &http.Transport{
+			TLSClientConfig: &tls.Config{
+				InsecureSkipVerify: g.insecure,
+			},
+		},
+	}
+	return gitlab.NewClient(client, token)
 }
 
 func init() {

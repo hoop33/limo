@@ -14,9 +14,12 @@ import (
 // Service represents a service
 type Service interface {
 	Login(ctx context.Context) (string, error)
+	AddStar(ctx context.Context, token, owner, repo string) (*model.Star, error)
+	DeleteStar(ctx context.Context, token, owner, repo string) (*model.Star, error)
 	GetStars(ctx context.Context, starChan chan<- *model.StarResult, token, user string)
 	GetTrending(ctx context.Context, trendingChan chan<- *model.StarResult, token, language string, verbose bool)
 	GetEvents(ctx context.Context, eventChan chan<- *model.EventResult, token, user string, page, count int)
+	SetInsecure(insecure bool)
 }
 
 var services = make(map[string]Service)
@@ -32,8 +35,9 @@ func Name(service Service) string {
 }
 
 // ForName returns the service for a given name, or an error if it doesn't exist
-func ForName(name string) (Service, error) {
+func ForName(name string, insecure bool) (Service, error) {
 	if service, ok := services[strings.ToLower(name)]; ok {
+		service.SetInsecure(insecure)
 		return service, nil
 	}
 	return &NotFound{}, fmt.Errorf("service '%s' not found", name)

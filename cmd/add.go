@@ -1,10 +1,12 @@
 package cmd
 
 import (
+	"context"
 	"fmt"
 
 	"github.com/hoop33/limo/config"
 	"github.com/hoop33/limo/model"
+	"github.com/hoop33/limo/service"
 	"github.com/spf13/cobra"
 )
 
@@ -15,7 +17,7 @@ var adders = map[string]func([]string){
 
 // AddCmd adds stars and tags
 var AddCmd = &cobra.Command{
-	Use:     "add <star|tag> <name>...",
+	Use:     "add <star|tag> <tag name|URL|owner/repo|owner repo>...",
 	Short:   "Add stars or tags",
 	Long:    "Add stars or tags. Adding a tag adds it to your local database. Adding a star stars the repository on the specified service.",
 	Example: fmt.Sprintf("  %s add tag vim database\n  %s add star hoop33/limo --service github", config.ProgramName, config.ProgramName),
@@ -32,8 +34,39 @@ var AddCmd = &cobra.Command{
 	},
 }
 
-func addStar(_ []string) {
-	getOutput().Fatal("Not yet implemented")
+func addStar(values []string) {
+	// Get configuration
+	cfg, err := getConfiguration()
+	fatalOnError(err)
+
+	sn, owner, repo := parseServiceOwnerRepo(values)
+	if owner == "" || repo == "" {
+		getOutput().Fatal("You must specify a valid git URL, owner/repo, or owner repo")
+	}
+
+	var svc service.Service
+	if sn != "" {
+		svc, err = service.ForName(sn, options.insecure)
+	} else {
+		svc, err = getService()
+	}
+	fatalOnError(err)
+	serviceName := service.Name(svc)
+
+	star, err := svc.AddStar(context.Background(), cfg.GetService(serviceName).Token, owner, repo)
+	fatalOnError(err)
+
+	// Get the database
+	db, err := getDatabase()
+	fatalOnError(err)
+
+	dbSvc, _, err := model.FindOrCreateServiceByName(db, serviceName)
+	fatalOnError(err)
+
+	_, err = model.CreateOrUpdateStar(db, star, dbSvc)
+	fatalOnError(err)
+
+	getOutput().Star(star)
 }
 
 func addTag(values []string) {

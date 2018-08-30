@@ -97,6 +97,16 @@ func CreateOrUpdateStar(db *gorm.DB, star *Star, service *Service) (bool, error)
 	return false, db.Save(star).Error
 }
 
+// FindStarByRemoteIDAndService finds a star by remote ID and service
+func FindStarByRemoteIDAndService(db *gorm.DB, remoteID string, service *Service) (*Star, error) {
+	// Get existing by remote ID and service ID
+	var star Star
+	if db.Where("remote_id = ? AND service_id = ?", remoteID, service.ID).First(&star).RecordNotFound() {
+		return nil, errors.New("not found")
+	}
+	return &star, nil
+}
+
 // FindStarByID finds a star by ID
 func FindStarByID(db *gorm.DB, ID uint) (*Star, error) {
 	var star Star

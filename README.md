@@ -50,7 +50,7 @@ Here's how to get started:
 
 ### Log In to GitHub and GitLab
 
-First, create API keys for your GitHub and GitLab accounts on their respective sites, and then type:
+First, create API keys for your GitHub and GitLab accounts (with repo access) on their respective sites, and then type:
 
 ```sh
 $ limo login
@@ -216,6 +216,17 @@ To run the code checks and tests. To build and install, run:
 ```sh
 $ make install
 ```
+
+## Troubleshooting
+
+*Problem:* Adding a star results in output like this:
+
+```sh
+PUT https://api.github.com/user/starred/hoop33/limo: 404 Not Found []
+```
+
+*Solution:* 
+Change your token for the service to have repo access.
 
 ## Credits
 
