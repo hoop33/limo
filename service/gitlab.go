@@ -63,8 +63,19 @@ func (g *Gitlab) DeleteStar(ctx context.Context, token, owner, repo string) (*mo
 	return model.NewStarFromGitlab(*project)
 }
 
-// GetStars returns the stars for the specified user (empty string for authenticated user)
-func (g *Gitlab) GetStars(ctx context.Context, starChan chan<- *model.StarResult, token string, user string) {
+// GetStars returns the stars for the authenticated user
+func (g *Gitlab) GetStars(ctx context.Context, starChan chan<- *model.StarResult, token, _ string) {
+	defer close(starChan)
+
+	// GitLab seems to return all public projects if token is empty
+	if token == "" {
+		starChan <- &model.StarResult{
+			Error: errNotLoggedIn,
+			Star:  nil,
+		}
+		return
+	}
+
 	client := g.getClient(token)
 
 	currentPage := 1
@@ -100,8 +111,6 @@ func (g *Gitlab) GetStars(ctx context.Context, starChan chan<- *model.StarResult
 		// Go to the next page
 		currentPage++
 	}
-
-	close(starChan)
 }
 
 // GetEvents returns the events for the authenticated user

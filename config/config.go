@@ -22,8 +22,8 @@ type ServiceConfig struct {
 
 // OutputConfig sontains configuration information for an output
 type OutputConfig struct {
-	SpinnerIndex    int `yaml:"spinnerIndex"`
-	SpinnerInterval int `yaml:"spinnerInterval"`
+	SpinnerIndex    int    `yaml:"spinnerIndex"`
+	SpinnerInterval int    `yaml:"spinnerInterval"`
 	SpinnerColor    string `yaml:"spinnerColor"`
 }
 
@@ -36,29 +36,29 @@ type Config struct {
 }
 
 // GetService returns the configuration information for a service
-func (config *Config) GetService(name string) *ServiceConfig {
-	if config.Services == nil {
-		config.Services = make(map[string]*ServiceConfig)
+func (cfg *Config) GetService(name string) *ServiceConfig {
+	if cfg.Services == nil {
+		cfg.Services = make(map[string]*ServiceConfig)
 	}
 
-	service := config.Services[name]
+	service := cfg.Services[name]
 	if service == nil {
 		service = &ServiceConfig{}
-		config.Services[name] = service
+		cfg.Services[name] = service
 	}
 	return service
 }
 
 // GetOutput returns the configuration information for an output
-func (config *Config) GetOutput(name string) *OutputConfig {
-	if config.Outputs == nil {
-		config.Outputs = make(map[string]*OutputConfig)
+func (cfg *Config) GetOutput(name string) *OutputConfig {
+	if cfg.Outputs == nil {
+		cfg.Outputs = make(map[string]*OutputConfig)
 	}
 
-	output := config.Outputs[name]
+	output := cfg.Outputs[name]
 	if output == nil {
 		output = &OutputConfig{}
-		config.Outputs[name] = output
+		cfg.Outputs[name] = output
 	}
 	return output
 }
@@ -67,7 +67,7 @@ func (config *Config) GetOutput(name string) *OutputConfig {
 func ReadConfig() (*Config, error) {
 	file := configFilePath()
 
-	var config Config
+	var cfg Config
 	if _, err := os.Stat(file); err == nil {
 		// Read and unmarshal file only if it exists
 		f, err := ioutil.ReadFile(file)
@@ -75,32 +75,32 @@ func ReadConfig() (*Config, error) {
 			return nil, err
 		}
 
-		err = yaml.Unmarshal(f, &config)
+		err = yaml.Unmarshal(f, &cfg)
 		if err != nil {
 			return nil, err
 		}
 	}
 
 	// Set default database path
-	if config.DatabasePath == "" {
-		config.DatabasePath = path.Join(configDirectoryPath, fmt.Sprintf("%s.db", ProgramName))
+	if cfg.DatabasePath == "" {
+		cfg.DatabasePath = path.Join(configDirectoryPath, fmt.Sprintf("%s.db", ProgramName))
 	}
 
 	// Set default search index path
-	if config.IndexPath == "" {
-		config.IndexPath = path.Join(configDirectoryPath, fmt.Sprintf("%s.idx", ProgramName))
+	if cfg.IndexPath == "" {
+		cfg.IndexPath = path.Join(configDirectoryPath, fmt.Sprintf("%s.idx", ProgramName))
 	}
-	return &config, nil
+	return &cfg, nil
 }
 
 // WriteConfig writes the configuration information
-func (config *Config) WriteConfig() error {
+func (cfg *Config) WriteConfig() error {
 	err := os.MkdirAll(configDirectoryPath, 0700)
 	if err != nil {
 		return err
 	}
 
-	data, err := yaml.Marshal(config)
+	data, err := yaml.Marshal(cfg)
 	if err != nil {
 		return err
 	}

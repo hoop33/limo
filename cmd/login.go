@@ -19,7 +19,7 @@ var LoginCmd = &cobra.Command{
 		ctx := context.Background()
 
 		// Get the specified service and log in
-		svc, err := getService()
+		svc, err := getService("")
 		fatalOnError(err)
 
 		token, err := svc.Login(ctx)

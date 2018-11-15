@@ -100,8 +100,12 @@ func getOutput() output.Output {
 	return o
 }
 
-func getService() (service.Service, error) {
-	return service.ForName(options.service, options.insecure)
+func getService(name string) (service.Service, error) {
+	sn := name
+	if sn == "" {
+		sn = options.service
+	}
+	return service.ForName(sn, options.insecure)
 }
 
 func checkOneStar(name string, stars []model.Star) {

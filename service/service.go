@@ -2,6 +2,7 @@ package service
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"reflect"
 	"strings"
@@ -10,6 +11,8 @@ import (
 	"github.com/hoop33/entrevista"
 	"github.com/hoop33/limo/model"
 )
+
+var errNotLoggedIn = errors.New("not logged in")
 
 // Service represents a service
 type Service interface {

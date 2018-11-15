@@ -33,7 +33,7 @@ var UpdateCmd = &cobra.Command{
 		fatalOnError(err)
 
 		// Get the specified service
-		svc, err := getService()
+		svc, err := getService("")
 		fatalOnError(err)
 
 		// Get the database record for the specified service

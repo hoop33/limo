@@ -23,7 +23,7 @@ var PruneCmd = &cobra.Command{
 		db, err := getDatabase()
 		fatalOnError(err)
 
-		svc, err := getService()
+		svc, err := getService("")
 		fatalOnError(err)
 
 		serviceName := service.Name(svc)

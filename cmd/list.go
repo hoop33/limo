@@ -56,7 +56,7 @@ func listEvents(ctx context.Context, _ []string) {
 	cfg, err := getConfiguration()
 	fatalOnError(err)
 
-	svc, err := getService()
+	svc, err := getService("")
 	fatalOnError(err)
 
 	if user == "" {
@@ -176,7 +176,7 @@ func listTrending(ctx context.Context, _ []string) {
 	fatalOnError(err)
 
 	// Get the specified service
-	svc, err := getService()
+	svc, err := getService("")
 	fatalOnError(err)
 
 	// Create a channel to receive trending, since service can page

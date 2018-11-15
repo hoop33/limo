@@ -44,12 +44,7 @@ func addStar(values []string) {
 		getOutput().Fatal("You must specify a valid git URL, owner/repo, or owner repo")
 	}
 
-	var svc service.Service
-	if sn != "" {
-		svc, err = service.ForName(sn, options.insecure)
-	} else {
-		svc, err = getService()
-	}
+	svc, err := getService(sn)
 	fatalOnError(err)
 	serviceName := service.Name(svc)
 

@@ -74,7 +74,9 @@ func (g *Github) DeleteStar(ctx context.Context, token, owner, repo string) (*mo
 }
 
 // GetStars returns the stars for the specified user (empty string for authenticated user)
-func (g *Github) GetStars(ctx context.Context, starChan chan<- *model.StarResult, token string, user string) {
+func (g *Github) GetStars(ctx context.Context, starChan chan<- *model.StarResult, token, user string) {
+	defer close(starChan)
+
 	client := g.getClient(token)
 
 	// The first response will give us the correct value for the last page
@@ -109,7 +111,6 @@ func (g *Github) GetStars(ctx context.Context, starChan chan<- *model.StarResult
 		// Go to the next page
 		currentPage++
 	}
-	close(starChan)
 }
 
 // GetEvents returns the events for the authenticated user
