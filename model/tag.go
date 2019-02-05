@@ -117,7 +117,7 @@ func (tag *Tag) Rename(db *gorm.DB, name string) error {
 	}
 
 	// If they're just changing case, allow. Otherwise, block the change
-	if strings.ToLower(name) != strings.ToLower(tag.Name) {
+	if !strings.EqualFold(name, tag.Name) {
 		existing, err := FindTagByName(db, name)
 		if err != nil {
 			return err
