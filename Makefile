@@ -1,6 +1,6 @@
 DIST_DIR ?= ./dist
 PROG_NAME ?= limo
-PACKAGES = $(shell go list ./... | grep -v /vendor/)
+PACKAGES = $(shell go list ./...)
 
 default: build
 
@@ -21,7 +21,7 @@ linux:
 windows:
 	GOOS=windows go build -o $(DIST_DIR)/windows/$(PROG_NAME).exe
 
-check: vet lint errcheck interfacer aligncheck structcheck varcheck unconvert gosimple staticcheck unused vendorcheck prealloc test
+check: vet lint errcheck interfacer aligncheck structcheck varcheck unconvert staticcheck vendorcheck prealloc test
 
 vet:
 	go vet $(PACKAGES)
@@ -47,14 +47,8 @@ varcheck:
 unconvert:
 	unconvert -v $(PACKAGES)
 
-gosimple:
-	gosimple $(PACKAGES)
-
 staticcheck:
 	staticcheck $(PACKAGES)
-
-unused:
-	unused $(PACKAGES)
 
 vendorcheck:
 	vendorcheck $(PACKAGES)
