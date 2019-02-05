@@ -33,6 +33,7 @@ var RootCmd = &cobra.Command{
 	Short: "A CLI for managing starred repositories",
 	Long: `limo allows you to manage your starred repositories on GitHub, GitLab, and Bitbucket.
 You can tag, display, and search your starred repositories.`,
+	Version: config.Version,
 }
 
 // Execute adds all child commands to the root command and sets flags appropriately.

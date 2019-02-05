@@ -6,6 +6,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ### Added
 - Add `count` command for stars, languages, and tags
 - Add `add` and `delete` for stars to star and unstar repositories
+- Add `--version` flag (in addition to `version` command)
 - Fix: If not logged in to GitLab, `update` would pull tens of thousands of projects
 
 ## [0.5.0]
