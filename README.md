@@ -22,7 +22,7 @@
 
 ## Introduction
 
-Both [GitHub](https://github.com) and [GitLab](https://gitlab.com) allow you to "star" repositories, and [Bitbucket](https://bitbucket.org) lets you "watch" them. "Starring" or "watching" lets you keep track of repositories you find interesting, but none of the services provide ways to search or tag your repositories so you can easily find them.
+Both [GitHub](https://github.com) and [GitLab](https://gitlab.com) allow you to "star" repositories. "Starring" lets you keep track of repositories you find interesting, but none of the services provide ways to search or tag your repositories so you can easily find them.
 
 Limo lets you manage your starred repositories from the command line. You can do things like tag them, search them, or list them by language. Think of Limo as the CLI version of [Astral](https://app.astralapp.com/) (also worth looking into).
 
@@ -42,7 +42,7 @@ You can also download a pre-built binary for your platform and copy it to a loca
 
 ## Usage
 
-Limo supports both GitHub and GitLab, and Bitbucket support is coming.
+Limo supports both GitHub and GitLab.
 
 You can read the full usage documentation at <https://www.gitbook.com/book/hoop33/limo/details>.
 
