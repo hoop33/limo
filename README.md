@@ -27,6 +27,12 @@ Both [GitHub](https://github.com) and [GitLab](https://gitlab.com) allow you to 
 Limo lets you manage your starred repositories from the command line. You can do things like tag them, search them, or list them by language. Think of Limo as the CLI version of [Astral](https://app.astralapp.com/) (also worth looking into).
 
 ## Installation
+If you do not have a working Go installation: 
+
+Official_go_install_instructions](https://golang.org/doc/install) or, for Mac, you can just use homebrew:
+<br/>[Macintosh_go_installation](https://gist.github.com/MichaelDimmitt/6b7d8801ec4d624fefc3e54a8a318c33) adapted from [here](https://gist.github.com/vsouza/77e6b20520d07652ed7d)
+
+Note: Older installation guides indicate setting more environment variables than necessary. The page at https://github.com/golang/go/wiki/SettingGOPATH contains current information on Go's environment variables.
 
 If you have a working Go installation, type:
 
