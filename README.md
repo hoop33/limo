@@ -4,7 +4,7 @@
 
 [![Build Status](https://travis-ci.org/hoop33/limo.svg?branch=master)](https://travis-ci.org/hoop33/limo)
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](http://opensource.org/licenses/MIT)
-[![Issues](https://img.shields.io/github/issues/hoop33/limo.svg)](https://github.com/hoop33/limo/issues)
+[![Issues](https://img.shields.io/github/issues/hoop33/limo.svg)](https://github.com/lucmski/limo/issues)
 [![Coverage Status](https://coveralls.io/repos/github/hoop33/limo/badge.svg?branch=master)](https://coveralls.io/github/hoop33/limo?branch=master)
 [![codebeat badge](https://codebeat.co/badges/9ab79648-de9b-4585-918c-85c043bf7971)](https://codebeat.co/projects/github-com-hoop33-limo)
 [![Go Report Card](https://goreportcard.com/badge/hoop33/limo)](https://goreportcard.com/report/hoop33/limo)
@@ -31,14 +31,14 @@ Limo lets you manage your starred repositories from the command line. You can do
 If you have a working Go installation, type:
 
 ```sh
-$ go get -u github.com/hoop33/limo
+$ go get -u github.com/lucmski/limo
 ```
 
 You can also download a pre-built binary for your platform and copy it to a location on your path.
 
-* [macOS](https://github.com/hoop33/limo/raw/master/dist/macos/limo)
-* [Linux](https://github.com/hoop33/limo/raw/master/dist/linux/limo)
-* [Windows](https://github.com/hoop33/limo/raw/master/dist/windows/limo.exe)
+* [macOS](https://github.com/lucmski/limo/raw/master/dist/macos/limo)
+* [Linux](https://github.com/lucmski/limo/raw/master/dist/linux/limo)
+* [Windows](https://github.com/lucmski/limo/raw/master/dist/windows/limo.exe)
 
 ## Usage
 

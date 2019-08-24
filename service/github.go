@@ -9,7 +9,7 @@ import (
 
 	"github.com/google/go-github/github"
 	"github.com/hoop33/entrevista"
-	"github.com/hoop33/limo/model"
+	"github.com/lucmski/limo/model"
 )
 
 // Github represents the Github service

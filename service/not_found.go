@@ -4,7 +4,7 @@ import (
 	"context"
 	"errors"
 
-	"github.com/hoop33/limo/model"
+	"github.com/lucmski/limo/model"
 )
 
 var errNotFound = errors.New("service not found")

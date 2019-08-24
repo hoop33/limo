@@ -7,8 +7,8 @@ import (
 	"time"
 
 	"github.com/dustin/go-humanize"
-	"github.com/hoop33/limo/config"
-	"github.com/hoop33/limo/model"
+	"github.com/lucmski/limo/config"
+	"github.com/lucmski/limo/model"
 )
 
 // Text is a monochrome text output

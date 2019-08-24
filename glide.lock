@@ -1,0 +1,188 @@
+hash: db18264d4ff4699e3eddf164566901cbef85348bb13031181d591b48e5bbb781
+updated: 2019-08-24T12:53:59.382566+02:00
+imports:
+- name: github.com/blevesearch/bleve
+  version: c997533a776fe2f236621c653512f0678e88db1f
+  subpackages:
+  - analysis
+  - analysis/analyzer/keyword
+  - analysis/analyzer/simple
+  - analysis/analyzer/standard
+  - analysis/datetime/flexible
+  - analysis/datetime/optional
+  - analysis/lang/en
+  - analysis/token/lowercase
+  - analysis/token/porter
+  - analysis/token/stop
+  - analysis/tokenizer/character
+  - analysis/tokenizer/letter
+  - analysis/tokenizer/single
+  - analysis/tokenizer/unicode
+  - document
+  - geo
+  - index
+  - index/scorch
+  - index/scorch/mergeplan
+  - index/scorch/segment
+  - index/scorch/segment/zap
+  - index/store
+  - index/store/boltdb
+  - index/store/gtreap
+  - index/upsidedown
+  - mapping
+  - numeric
+  - registry
+  - search
+  - search/collector
+  - search/facet
+  - search/highlight
+  - search/highlight/format/html
+  - search/highlight/fragmenter/simple
+  - search/highlight/highlighter/html
+  - search/highlight/highlighter/simple
+  - search/query
+  - search/scorer
+  - search/searcher
+  - size
+- name: github.com/blevesearch/go-porterstemmer
+  version: 23a2c8e5cf1f380f27722c6d2ae8896431dc7d0e
+  repo: https://github.com/blevesearch/go-porterstemmer
+- name: github.com/blevesearch/segment
+  version: db70c57796cc8c310613541dfade3dce627d09c7
+  repo: https://github.com/blevesearch/segment
+- name: github.com/briandowns/spinner
+  version: 357f3c084615c634899d53796fba8b71f7e34b24
+- name: github.com/cep21/xdgbasedir
+  version: 21470bfc93b9903bce0beaebb037b1d04d0be523
+- name: github.com/couchbase/vellum
+  version: 41f2deade2cfab59facd263e918d7c05f656c2e9
+  repo: https://github.com/couchbase/vellum
+  subpackages:
+  - levenshtein2
+  - regexp
+  - utf8
+- name: github.com/dustin/go-humanize
+  version: 9f541cc9db5d55bce703bd99987c9d5cb8eea45e
+- name: github.com/edsrzf/mmap-go
+  version: 904c4ced31cdffe19e971afa0b3d319ff06d9c72
+- name: github.com/etcd-io/bbolt
+  version: 7ee3ded59d4835e10f3e7d0f7603c42aa5e83820
+  repo: https://github.com/etcd-io/bbolt
+- name: github.com/fatih/color
+  version: 3f9d52f7176a6927daacff70a3e8d1dc2025c53e
+- name: github.com/glycerine/go-unsnap-stream
+  version: 98d31706395aaac22e29676617f2ee37bee55b5a
+- name: github.com/golang/protobuf
+  version: 655cdfa588ea190e901bc5590e65d5621688847c
+  repo: https://github.com/golang/protobuf
+  subpackages:
+  - proto
+- name: github.com/golang/snappy
+  version: cef980a12b316c5b7e5bb3a8e168eb43ae999a88
+  repo: https://github.com/golang/snappy
+- name: github.com/google/go-github
+  version: cc20b8df44a10cf7439649ec5a2192f06e97fe43
+  subpackages:
+  - github
+- name: github.com/google/go-querystring
+  version: c8c88dbee036db4e4808d1f2ec8c2e15e11c3f80
+  subpackages:
+  - query
+- name: github.com/hoop33/entrevista
+  version: 419a1a2be5540cc6d77b54236bea2fdff096c993
+- name: github.com/howeyc/gopass
+  version: bf9dde6d0d2c004a008c27aaee91170c786f6db8
+  repo: https://github.com/howeyc/gopass
+- name: github.com/inconshreveable/mousetrap
+  version: 76626ae9c91c4f2a10f34cad8ce83ea42c93bb75
+- name: github.com/jinzhu/gorm
+  version: 836fb2c19d84dac7b0272958dfb9af7cf0d0ade4
+  subpackages:
+  - dialects/sqlite
+- name: github.com/jinzhu/inflection
+  version: f5c5f50e6090ae76a29240b61ae2a90dd810112e
+- name: github.com/mattn/go-colorable
+  version: 388941e3ea99c461d2bc2747eaf27741b6dda096
+- name: github.com/mattn/go-isatty
+  version: bf9a1dea1961e1d831824fb135332bfb8c10e8b8
+- name: github.com/mattn/go-sqlite3
+  version: d3c690956bde8789300d0dd7e868189cb88cf6ad
+- name: github.com/mschoch/smat
+  version: 90eadee771aeab36e8bf796039b8c261bebebe4f
+- name: github.com/philhofer/fwd
+  version: bb6d471dc95d4fe11e432687f8b70ff496cf3136
+- name: github.com/RoaringBitmap/roaring
+  version: d0ce1763c3526f65703c395da50da7a7fb2138d5
+  repo: https://github.com/RoaringBitmap/roaring
+- name: github.com/skratchdot/open-golang
+  version: 79abb63cd66e41cb1473e26d11ebdcd68b04c8e5
+  subpackages:
+  - open
+- name: github.com/spf13/cobra
+  version: b80588d523ec50c7fee20218426cf2ff70920f06
+- name: github.com/spf13/pflag
+  version: 972238283c0625cf3e881de7699ba8f2524c340a
+- name: github.com/steveyen/gtreap
+  version: 0abe01ef9be25c4aedc174758ec2d917314d6d70
+  repo: https://github.com/steveyen/gtreap
+- name: github.com/tinylib/msgp
+  version: efe20429c9b7b2a358aba9ba2d40ad56d966ce00
+  subpackages:
+  - msgp
+- name: github.com/willf/bitset
+  version: 2e6e8094ef4745224150c88c16191c7dceaad16f
+  repo: https://github.com/willf/bitset
+- name: github.com/xanzy/go-gitlab
+  version: b1d195859ad07645a0c3eb3609a1545b5d9e40be
+- name: golang.org/x/crypto
+  version: dd96d35c1b251a7ef77f057fc5c4f92ea2b285b4
+  repo: https://go.googlesource.com/crypto
+  subpackages:
+  - cast5
+  - openpgp
+  - openpgp/armor
+  - openpgp/elgamal
+  - openpgp/errors
+  - openpgp/packet
+  - openpgp/s2k
+  - ssh/terminal
+- name: golang.org/x/net
+  version: 74dc4d7220e7acc4e100824340f3e66577424772
+  subpackages:
+  - context
+  - context/ctxhttp
+- name: golang.org/x/oauth2
+  version: 0f29369cfe4552d0e4bcddc57cc75f4d7e672a33
+  subpackages:
+  - internal
+- name: golang.org/x/sys
+  version: 7a6e5648d140666db5d920909e082ca00a87ba2c
+  repo: https://go.googlesource.com/sys
+  subpackages:
+  - unix
+  - windows
+- name: google.golang.org/appengine
+  version: fb139bde60fa77cede04f226b4d5a3cf68dcce27
+  subpackages:
+  - internal
+  - internal/base
+  - internal/datastore
+  - internal/log
+  - internal/remote_api
+  - internal/urlfetch
+  - urlfetch
+- name: gopkg.in/yaml.v2
+  version: 51d6538a90f86fe93ac480b35f37b2be17fef232
+testImports:
+- name: github.com/davecgh/go-spew
+  version: d8f796af33cc11cb798c1aaeb27a4ebc5099927d
+  subpackages:
+  - spew
+- name: github.com/pmezard/go-difflib
+  version: 5d4384ee4fb2527b0a1256a821ebfc92f91efefc
+  subpackages:
+  - difflib
+- name: github.com/stretchr/testify
+  version: 221dbe5ed46703ee255b1da0dec05086f5035f62
+  subpackages:
+  - assert

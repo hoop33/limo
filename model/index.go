@@ -2,9 +2,9 @@ package model
 
 import (
 	"github.com/blevesearch/bleve"
-	"github.com/blevesearch/bleve/analysis/analyzers/keyword_analyzer"
-	"github.com/blevesearch/bleve/analysis/analyzers/simple_analyzer"
-	"github.com/blevesearch/bleve/analysis/language/en"
+	"github.com/blevesearch/bleve/analysis/analyzer/keyword"
+	"github.com/blevesearch/bleve/analysis/analyzer/simple"
+	"github.com/blevesearch/bleve/analysis/lang/en"
 )
 
 // InitIndex initializes the search index at the specified path

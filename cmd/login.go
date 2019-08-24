@@ -4,8 +4,8 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/hoop33/limo/config"
-	"github.com/hoop33/limo/service"
+	"github.com/lucmski/limo/config"
+	"github.com/lucmski/limo/service"
 	"github.com/spf13/cobra"
 )
 

@@ -6,11 +6,11 @@ import (
 	"strings"
 
 	"github.com/blevesearch/bleve"
-	"github.com/hoop33/limo/config"
-	"github.com/hoop33/limo/model"
-	"github.com/hoop33/limo/output"
-	"github.com/hoop33/limo/service"
 	"github.com/jinzhu/gorm"
+	"github.com/lucmski/limo/config"
+	"github.com/lucmski/limo/model"
+	"github.com/lucmski/limo/output"
+	"github.com/lucmski/limo/service"
 	"github.com/spf13/cobra"
 )
 
@@ -133,7 +133,7 @@ func fatalOnError(err error) {
 
 func parseServiceOwnerRepo(values []string) (string, string, string) {
 	// `values` can be:
-	// * Full URL (e.g., https://github.com/hoop33/limo)
+	// * Full URL (e.g., https://github.com/lucmski/limo)
 	// * Owner/Repo (e.g., hoop33/limo)
 	// * Owner Repo (e.g., hoop33 limo)
 	var serviceName, owner, repo string

@@ -9,8 +9,8 @@ import (
 	"github.com/briandowns/spinner"
 	"github.com/dustin/go-humanize"
 	"github.com/fatih/color"
-	"github.com/hoop33/limo/config"
-	"github.com/hoop33/limo/model"
+	"github.com/lucmski/limo/config"
+	"github.com/lucmski/limo/model"
 )
 
 const defaultInterval = 300

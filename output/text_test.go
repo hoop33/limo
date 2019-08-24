@@ -5,7 +5,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/hoop33/limo/model"
+	"github.com/lucmski/limo/model"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -46,8 +46,8 @@ func ExampleText_Star() {
 	fullName := "hoop33/limo"
 	language := "Go"
 	description := "A CLI for managing starred Git repositories"
-	homepage := "https://github.com/hoop33/limo"
-	url := "https://github.com/hoop33/limo.git"
+	homepage := "https://github.com/lucmski/limo"
+	url := "https://github.com/lucmski/limo.git"
 	star := &model.Star{
 		FullName:    &fullName,
 		Stargazers:  1000000,
@@ -67,9 +67,9 @@ func ExampleText_Star() {
 	}
 	text.Star(star)
 	// Output:
-	// hoop33/limo *:1000000 Go https://github.com/hoop33/limo.git
+	// hoop33/limo *:1000000 Go https://github.com/lucmski/limo.git
 	// cli, git
 	// A CLI for managing starred Git repositories
-	// Home page: https://github.com/hoop33/limo
+	// Home page: https://github.com/lucmski/limo
 	// Starred on Tue Jun 21 14:56:05 UTC 2016
 }

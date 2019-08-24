@@ -4,9 +4,9 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/hoop33/limo/config"
-	"github.com/hoop33/limo/model"
-	"github.com/hoop33/limo/service"
+	"github.com/lucmski/limo/config"
+	"github.com/lucmski/limo/model"
+	"github.com/lucmski/limo/service"
 	"github.com/spf13/cobra"
 )
 
@@ -21,7 +21,7 @@ var DeleteCmd = &cobra.Command{
 	Aliases: []string{"rm"},
 	Short:   "Delete stars or tags",
 	Long:    "Delete stars or tags. Deleting a tag removes it from your local database. Deleting a star unstars the repository on the specified service.",
-	Example: fmt.Sprintf("  %s delete tag frameworks\n  %s delete star https://github.com/hoop33/limo", config.ProgramName, config.ProgramName),
+	Example: fmt.Sprintf("  %s delete tag frameworks\n  %s delete star https://github.com/lucmski/limo", config.ProgramName, config.ProgramName),
 	Run: func(cmd *cobra.Command, args []string) {
 		if len(args) < 2 {
 			getOutput().Fatal("You must specify star or tag and values")
