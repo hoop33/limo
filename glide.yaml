@@ -5,6 +5,7 @@ import:
   - analysis/analyzer/keyword
   - analysis/analyzer/simple
   - analysis/lang/en
+  - mapping
 - package: github.com/briandowns/spinner
 - package: github.com/cep21/xdgbasedir
 - package: github.com/dustin/go-humanize
@@ -16,6 +17,7 @@ import:
 - package: github.com/jinzhu/gorm
   subpackages:
   - dialects/sqlite
+- package: github.com/qor/admin
 - package: github.com/skratchdot/open-golang
   subpackages:
   - open

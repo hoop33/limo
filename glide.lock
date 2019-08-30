@@ -1,6 +1,8 @@
-hash: 54498e468038ca961f9839a2cb1bba0e8c3d065d3aa9ee0e821e396d8baaf40f
-updated: 2019-08-30T13:37:39.145348+02:00
+hash: 2243d70c7e855abe4aa70137201fdbf9d0595f5061965a2d7972eff27eecc8d7
+updated: 2019-08-30T21:32:00.908471+02:00
 imports:
+- name: github.com/asaskevich/govalidator
+  version: f61b66f89f4a311bef65f13e575bcf1a2ffadda6
 - name: github.com/blevesearch/bleve
   version: 1626176d5505d55567a92cb6b3f9e627686c5530
   subpackages:
@@ -54,6 +56,11 @@ imports:
   version: 357f3c084615c634899d53796fba8b71f7e34b24
 - name: github.com/cep21/xdgbasedir
   version: 21470bfc93b9903bce0beaebb037b1d04d0be523
+- name: github.com/chris-ramon/douceur
+  version: f3463056cd52886eda904655e1940157bf323bd7
+  subpackages:
+  - css
+  - parser
 - name: github.com/couchbase/vellum
   version: dc222902e86f298bfae0b3dec6ba8b9d874ad5f8
   repo: https://github.com/couchbase/vellum
@@ -88,6 +95,18 @@ imports:
   version: c8c88dbee036db4e4808d1f2ec8c2e15e11c3f80
   subpackages:
   - query
+- name: github.com/gorilla/context
+  version: 8559d4a6b87e4f517ec1846eb90a192b8748cc89
+- name: github.com/gorilla/css
+  version: 4940b8d7810384b58c15dbf1103a148fdf0761f2
+  subpackages:
+  - scanner
+- name: github.com/gorilla/securecookie
+  version: 86450627d8e6b88e00ea41f228489b89d08a40de
+- name: github.com/gorilla/sessions
+  version: 9c6b24ee2dee928836dbf71f18bb0c7d0da4bf85
+- name: github.com/gosimple/slug
+  version: 984b6d1a0ae5d1ecf6d718f4e990883d281ba3b8
 - name: github.com/hoop33/entrevista
   version: 419a1a2be5540cc6d77b54236bea2fdff096c993
 - name: github.com/howeyc/gopass
@@ -101,16 +120,44 @@ imports:
   - dialects/sqlite
 - name: github.com/jinzhu/inflection
   version: f5c5f50e6090ae76a29240b61ae2a90dd810112e
+- name: github.com/jinzhu/now
+  version: 1a6fdd4591d336a897120c50c69ed3c0e8033468
 - name: github.com/mattn/go-colorable
   version: 388941e3ea99c461d2bc2747eaf27741b6dda096
 - name: github.com/mattn/go-isatty
   version: bf9a1dea1961e1d831824fb135332bfb8c10e8b8
 - name: github.com/mattn/go-sqlite3
   version: d3c690956bde8789300d0dd7e868189cb88cf6ad
+- name: github.com/microcosm-cc/bluemonday
+  version: d9ddfeccb93d4506ae8257aa13026c695552686c
 - name: github.com/mschoch/smat
   version: 90eadee771aeab36e8bf796039b8c261bebebe4f
 - name: github.com/philhofer/fwd
   version: bb6d471dc95d4fe11e432687f8b70ff496cf3136
+- name: github.com/qor/admin
+  version: 8ecf009adc826c606b048e5c0750eb3523dd7c5d
+- name: github.com/qor/assetfs
+  version: ff57fdc13a148d39c3e930cb27c7eaf82e376891
+- name: github.com/qor/middlewares
+  version: 781378b69454a545d08058d8154aca40d079e7ab
+- name: github.com/qor/qor
+  version: 186b0237364b23ebbe564d0764c5b8523c953575
+  subpackages:
+  - resource
+  - utils
+- name: github.com/qor/responder
+  version: b6def473574f621fee316696ad120d4fbf470826
+- name: github.com/qor/roles
+  version: d6375609fe3e5da46ad3a574fae244fb633e79c1
+- name: github.com/qor/session
+  version: 8206b0adab706a6ef3ee6fabba2584d34429a26a
+  subpackages:
+  - gorilla
+  - manager
+- name: github.com/qor/validations
+  version: f364bca61b46bd48a5e32552a37758864fdf005d
+- name: github.com/rainycape/unidecode
+  version: cb7f23ec59bec0d61b19c56cd88cee3d0cc1870c
 - name: github.com/RoaringBitmap/roaring
   version: d0ce1763c3526f65703c395da50da7a7fb2138d5
   repo: https://github.com/RoaringBitmap/roaring
@@ -125,6 +172,8 @@ imports:
 - name: github.com/steveyen/gtreap
   version: 0abe01ef9be25c4aedc174758ec2d917314d6d70
   repo: https://github.com/steveyen/gtreap
+- name: github.com/theplant/cldr
+  version: 9f76f7ce4ee8058b01f92739cf0d0cceaeda3cb2
 - name: github.com/tinylib/msgp
   version: efe20429c9b7b2a358aba9ba2d40ad56d966ce00
   subpackages:
@@ -151,12 +200,14 @@ imports:
   subpackages:
   - context
   - context/ctxhttp
+  - html
+  - html/atom
 - name: golang.org/x/oauth2
   version: 0f29369cfe4552d0e4bcddc57cc75f4d7e672a33
   subpackages:
   - internal
 - name: golang.org/x/sys
-  version: 08d80c9d36de4cf3f0843a021c300dd67a5e47dc
+  version: 1e83adbbebd0f5dc971915fd7e5db032c3d2b731
   subpackages:
   - unix
   - windows
