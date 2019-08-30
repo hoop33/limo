@@ -1,8 +1,8 @@
-hash: db18264d4ff4699e3eddf164566901cbef85348bb13031181d591b48e5bbb781
-updated: 2019-08-24T12:53:59.382566+02:00
+hash: 54498e468038ca961f9839a2cb1bba0e8c3d065d3aa9ee0e821e396d8baaf40f
+updated: 2019-08-30T13:37:39.145348+02:00
 imports:
 - name: github.com/blevesearch/bleve
-  version: c997533a776fe2f236621c653512f0678e88db1f
+  version: 1626176d5505d55567a92cb6b3f9e627686c5530
   subpackages:
   - analysis
   - analysis/analyzer/keyword
@@ -55,10 +55,10 @@ imports:
 - name: github.com/cep21/xdgbasedir
   version: 21470bfc93b9903bce0beaebb037b1d04d0be523
 - name: github.com/couchbase/vellum
-  version: 41f2deade2cfab59facd263e918d7c05f656c2e9
+  version: dc222902e86f298bfae0b3dec6ba8b9d874ad5f8
   repo: https://github.com/couchbase/vellum
   subpackages:
-  - levenshtein2
+  - levenshtein
   - regexp
   - utf8
 - name: github.com/dustin/go-humanize
@@ -156,13 +156,12 @@ imports:
   subpackages:
   - internal
 - name: golang.org/x/sys
-  version: 7a6e5648d140666db5d920909e082ca00a87ba2c
-  repo: https://go.googlesource.com/sys
+  version: 08d80c9d36de4cf3f0843a021c300dd67a5e47dc
   subpackages:
   - unix
   - windows
 - name: google.golang.org/appengine
-  version: fb139bde60fa77cede04f226b4d5a3cf68dcce27
+  version: 5f2a59506353b8d5ba8cbbcd9f3c1f41f1eaf079
   subpackages:
   - internal
   - internal/base
