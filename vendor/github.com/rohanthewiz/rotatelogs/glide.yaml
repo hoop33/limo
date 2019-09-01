@@ -1,0 +1,12 @@
+package: github.com/rohanthewiz/rotatelogs
+import:
+- package: github.com/lestrrat/go-strftime
+- package: github.com/pkg/errors
+  version: ~0.8.0
+testImport:
+- package: github.com/jonboulle/clockwork
+  version: ~0.1.0
+- package: github.com/stretchr/testify
+  version: ~1.2.2
+  subpackages:
+  - assert

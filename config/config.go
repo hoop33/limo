@@ -12,7 +12,7 @@ import (
 	"gopkg.in/yaml.v2"
 )
 
-var configDirectoryPath string
+var ConfigDirectoryPath string
 
 // ServiceConfig contains configuration information for a service
 type ServiceConfig struct {
@@ -83,19 +83,19 @@ func ReadConfig() (*Config, error) {
 
 	// Set default database path
 	if cfg.DatabasePath == "" {
-		cfg.DatabasePath = path.Join(configDirectoryPath, fmt.Sprintf("%s.db", ProgramName))
+		cfg.DatabasePath = path.Join(ConfigDirectoryPath, fmt.Sprintf("%s.db", ProgramName))
 	}
 
 	// Set default search index path
 	if cfg.IndexPath == "" {
-		cfg.IndexPath = path.Join(configDirectoryPath, fmt.Sprintf("%s.idx", ProgramName))
+		cfg.IndexPath = path.Join(ConfigDirectoryPath, fmt.Sprintf("%s.idx", ProgramName))
 	}
 	return &cfg, nil
 }
 
 // WriteConfig writes the configuration information
 func (cfg *Config) WriteConfig() error {
-	err := os.MkdirAll(configDirectoryPath, 0700)
+	err := os.MkdirAll(ConfigDirectoryPath, 0700)
 	if err != nil {
 		return err
 	}
@@ -108,7 +108,7 @@ func (cfg *Config) WriteConfig() error {
 }
 
 func configFilePath() string {
-	return path.Join(configDirectoryPath, fmt.Sprintf("%s.yaml", ProgramName))
+	return path.Join(ConfigDirectoryPath, fmt.Sprintf("%s.yaml", ProgramName))
 }
 
 func init() {
@@ -116,6 +116,14 @@ func init() {
 	if err != nil {
 		log.Fatal("Can't find XDG BaseDirectory")
 	} else {
-		configDirectoryPath = path.Join(baseDir, ProgramName)
+		ConfigDirectoryPath = path.Join(baseDir, ProgramName)
 	}
+}
+
+func EnsureDir(path string) {
+	d, err := os.Open(path)
+	if err != nil {
+		os.MkdirAll(path, os.FileMode(0755))
+	}
+	d.Close()
 }

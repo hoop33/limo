@@ -3,17 +3,22 @@ package service
 import (
 	"context"
 	"fmt"
+	"net/http"
 	"time"
 
-	"golang.org/x/oauth2"
-
 	"github.com/google/go-github/github"
+	"github.com/gregjones/httpcache"
+	"github.com/gregjones/httpcache/diskcache"
 	"github.com/hoop33/entrevista"
+	"github.com/lucmski/limo/config"
 	"github.com/lucmski/limo/model"
+	"github.com/segmentio/stats/httpstats"
+	"golang.org/x/oauth2"
 )
 
 // Github represents the Github service
 type Github struct {
+	c httpcache.Cache
 }
 
 // Login logs in to Github
@@ -86,7 +91,8 @@ func (g *Github) GetStars(ctx context.Context, starChan chan<- *model.StarResult
 	for currentPage <= lastPage {
 		repos, response, err := client.Activity.ListStarred(ctx, user, &github.ActivityListStarredOptions{
 			ListOptions: github.ListOptions{
-				Page: currentPage,
+				Page:    currentPage,
+				PerPage: 100,
 			},
 		})
 		// If we got an error, put it on the channel
@@ -122,7 +128,8 @@ func (g *Github) GetEvents(ctx context.Context, eventChan chan<- *model.EventRes
 
 	for currentPage <= lastPage {
 		events, _, err := client.Activity.ListEventsReceivedByUser(ctx, user, false, &github.ListOptions{
-			Page: currentPage,
+			Page:    currentPage,
+			PerPage: 100,
 		})
 
 		if err != nil {
@@ -203,6 +210,34 @@ func (g *Github) getDateSearchString() string {
 }
 
 func (g *Github) getClient(token string) *github.Client {
+
+	// var err error
+	if g.c == nil {
+		g.c = diskcache.New(config.ConfigDirectoryPath + "/cache/http")
+	}
+
+	ts := oauth2.StaticTokenSource(
+		&oauth2.Token{AccessToken: token},
+	)
+
+	var hc http.Client
+
+	t := httpcache.NewTransport(g.c)
+	t.MarkCachedResponses = true
+
+	hc.Transport = httpstats.NewTransport(t)
+	timeout := time.Duration(10 * time.Second)
+
+	return github.NewClient(&http.Client{
+		Transport: &oauth2.Transport{
+			Base:   hc.Transport,
+			Source: ts,
+		},
+		Timeout: timeout,
+	})
+}
+
+func (g *Github) getClientOld(token string) *github.Client {
 	ts := oauth2.StaticTokenSource(
 		&oauth2.Token{AccessToken: token},
 	)

@@ -1,4 +1,6 @@
 package: github.com/lucmski/limo
+ignore:
+- gob
 import:
 - package: github.com/blevesearch/bleve
   subpackages:
