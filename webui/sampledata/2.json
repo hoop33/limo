@@ -1,0 +1,19 @@
+{
+ "name": "messageformat.js",
+ "owner": "messageformat",
+ "fullname": "messageformat~messageformat.js",
+ "description": "ICU MessageFormat for Javascript - i18n Plural and Gender Capable Messages",
+ "avatar": "https://avatars2.githubusercontent.com/u/16973788?v=4",
+ "url": "https://github.com/messageformat/messageformat.js",
+ "pushed": "2018-03-31T15:41:43Z",
+ "created": "2012-01-25T12:56:20Z",
+ "size": 2511,
+ "stars": 1196,
+ "forks": 109,
+ "topics": [
+  "language",
+  "messageformat"
+ ],
+ "language": "JavaScript",
+ "watchers": 45
+}
