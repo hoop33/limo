@@ -1,0 +1,16 @@
+{
+ "name": "vim-snippets",
+ "owner": "honza",
+ "fullname": "honza~vim-snippets",
+ "description": "vim-snipmate default snippets (Previously snipmate-snippets)",
+ "avatar": "https://avatars3.githubusercontent.com/u/206357?v=4",
+ "url": "https://github.com/honza/vim-snippets",
+ "pushed": "2018-03-29T12:44:28Z",
+ "created": "2011-06-20T17:42:05Z",
+ "size": 1534,
+ "stars": 2548,
+ "forks": 1401,
+ "topics": [],
+ "language": "Python",
+ "watchers": 95
+}

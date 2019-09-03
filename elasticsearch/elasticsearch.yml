@@ -1,0 +1,17 @@
+cluster.name: "docker-cluster"
+network.host: 0.0.0.0
+
+# minimum_master_nodes need to be explicitly set when bound on a public IP
+# set to 1 to allow single node clusters
+# Details: https://github.com/elastic/elasticsearch/pull/17288
+discovery.zen.minimum_master_nodes: 1
+xpack.license.self_generated.type: basic
+
+# ---------------------------------- Network -----------------------------------
+
+# CORS Settings
+
+http.cors.enabled: true
+http.cors.allow-origin: "*"
+http.cors.allow-methods: OPTIONS, HEAD, GET, POST, PUT, DELETE
+http.cors.allow-headers: "X-Requested-With, Content-Type, Content-Length, X-User"
