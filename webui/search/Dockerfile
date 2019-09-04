@@ -1,4 +1,4 @@
-FROM node:latest
+FROM mhart/alpine-node:latest
 
 RUN mkdir /usr/src/app
 WORKDIR /usr/src/app

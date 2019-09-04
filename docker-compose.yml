@@ -1,0 +1,29 @@
+version: '3'
+services:
+
+  # limo:
+
+  elasticsearch:
+    build:
+      context: ./elasticsearch
+      dockerfile: Dockerfile
+      args:
+        - CEREBRO_VERSION=0.7.2
+    container_name: elasticsearch
+    entrypoint: /usr/share/elasticsearch/start
+    ports:
+      - "9200:9200" # Elasticsearch
+      - "9000:9000" # Cerebro
+
+  searchapp:
+    build:
+      context: ./searchapp
+      dockerfile: Dockerfile
+    container_name: searchapp
+    ports:
+      - 3000:3000
+    volumes:
+      - './searchapp:/usr/src/app'
+      - '/usr/src/app/node_modules'
+    environment:
+      - NODE_ENV=development
