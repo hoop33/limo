@@ -14,7 +14,7 @@ const onData = (data, currentTopics, toggleTopic) => (
 	<div className="result-item" key={data.fullname}>
 		<div className="flex justify-center align-center result-card-header">
 			<img className="avatar" src={data.avatar} alt="User avatar" />
-			<a className="link" href={data.url} target="_blank" rel="noopener noreferrer">
+			<a className="link" href={data.URL} target="_blank" rel="noopener noreferrer">
 				<div className="flex wrap">
 					<div>{data.owner}/</div>
 					<div>{data.name}</div>

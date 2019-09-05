@@ -20,7 +20,7 @@ class Header extends Component {
 	render() {
 		return (
 			<nav className={`navbar ${this.state.visible ? 'active' : ''}`}>
-				<div className="title">Search App</div>
+				<div className="title">Limo Search</div>
 				<div className="btn toggle-btn" onClick={this.toggleVisibility}>Toggle Filters</div>
 				<SearchFilters {...this.props} visible={this.state.visible} />
 			</nav>

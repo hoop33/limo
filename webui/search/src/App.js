@@ -35,7 +35,7 @@ class App extends Component {
 		return (
 			<section className="container">
 				<ReactiveBase
-					app="searchapp"
+					app="limo"
 					url="http://localhost:9200"
 					theme={theme}
 				>
