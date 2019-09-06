@@ -9,9 +9,9 @@ import (
 // Service represents a hosting service like Github
 type Service struct {
 	gorm.Model
-	Name        string
-	LastSuccess time.Time
-	Stars       []Star
+	Name        string    `json:"name"`
+	LastSuccess time.Time `json:"last_success"`
+	Stars       []Star    `json:"stars"`
 }
 
 // FindOrCreateServiceByName returns a service with the specified name, creating if necessary

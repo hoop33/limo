@@ -3,6 +3,7 @@ package model
 import (
 	"errors"
 	"fmt"
+	"os"
 	"strconv"
 	"strings"
 	"time"
@@ -10,27 +11,33 @@ import (
 	"github.com/blevesearch/bleve"
 	"github.com/google/go-github/github"
 	"github.com/jinzhu/gorm"
-
-	// "github.com/k0kubun/pp"
+	"github.com/k0kubun/pp"
 	"github.com/skratchdot/open-golang/open"
 	"github.com/xanzy/go-gitlab"
 )
 
 // Star represents a starred repository
 type Star struct {
-	gorm.Model
-	RemoteID    string
-	Name        *string
-	FullName    *string
-	Description *string
-	Homepage    *string
-	URL         *string
-	Language    *string
-	Stargazers  int
-	StarredAt   time.Time
-	ServiceID   uint
-	Topics      []string `gorm:"-"`
-	Tags        []Tag    `gorm:"many2many:star_tags;"`
+	gorm.Model  `json:"-" yaml:"-"`
+	RemoteID    string    `json:"remote_id"`
+	Avatar      *string   `json:"avatar"`
+	Owner       *string   `json:"owner"`
+	Name        *string   `json:"name"`
+	FullName    *string   `json:"fullname"`
+	Description *string   `json:"description"`
+	Homepage    *string   `json:"homepage"`
+	URL         *string   `json:"url"`
+	Language    *string   `json:"language"`
+	Watchers    *int      `json:"watchers"`
+	Stargazers  int       `json:"stars"`
+	Forks       *int      `json:"forks"`
+	Size        *int      `json:"size"`
+	Pushed      time.Time `json:"pushed"`
+	Created     time.Time `json:"created"`
+	StarredAt   time.Time `json:"starred"`
+	ServiceID   uint      `json:"service_id"`
+	Topics      []string  `gorm:"-" json:"topics"`
+	Tags        []Tag     `gorm:"many2many:star_tags;" json:"-"`
 }
 
 // StarResult wraps a star and an error
@@ -46,7 +53,7 @@ func NewStarFromGithub(timestamp *github.Timestamp, star github.Repository) (*St
 		return nil, errors.New("ID from GitHub is required")
 	}
 
-	// pp.Println("star.Topics:", star.Topics)
+	// pp.Println("star:", star)
 
 	// Set stargazers count to 0 if nil
 	stargazersCount := 0
@@ -59,15 +66,20 @@ func NewStarFromGithub(timestamp *github.Timestamp, star github.Repository) (*St
 		starredAt = timestamp.Time
 	}
 
+	// pushedAt :=
+
 	// var starTopics []Tag
 	// for _, topic := range star.Topics {
 	//	starTopics = append(starTopics, Tag{Name: topic})
 	// }
 	// Topics
 
+	// os.Exit(1)
+
 	return &Star{
 		RemoteID:    strconv.Itoa(int(*star.ID)),
 		Name:        star.Name,
+		Owner:       star.Owner.Login,
 		FullName:    star.FullName,
 		Description: star.Description,
 		Homepage:    star.Homepage,
@@ -76,11 +88,21 @@ func NewStarFromGithub(timestamp *github.Timestamp, star github.Repository) (*St
 		Stargazers:  stargazersCount,
 		StarredAt:   starredAt,
 		Topics:      star.Topics,
+		Size:        star.Size,
+		Watchers:    star.WatchersCount,
+		Forks:       star.ForksCount,
+		Avatar:      star.Owner.AvatarURL,
+		Pushed:      star.PushedAt.Time,
+		Created:     star.CreatedAt.Time,
 	}, nil
 }
 
 // NewStarFromGitlab creates a Star from a Gitlab star
 func NewStarFromGitlab(star gitlab.Project) (*Star, error) {
+
+	pp.Println(star)
+	os.Exit(1)
+
 	return &Star{
 		RemoteID:    strconv.Itoa(star.ID),
 		Name:        &star.Name,

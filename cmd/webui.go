@@ -105,7 +105,7 @@ var WebuiCmd = &cobra.Command{
 						Refresh("wait_for").
 						Do(context.Background())
 					fatalOnError(err)
-					output.Tick("", "Updating")
+					output.Tick("", "Updating"+*starResult.Star.FullName)
 				}
 			}
 		}

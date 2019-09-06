@@ -73,7 +73,7 @@ var UpdateCmd = &cobra.Command{
 						totalErrors++
 						output.Error(fmt.Sprintf("Error %s: %s", *starResult.Star.FullName, err.Error()))
 					}
-					output.Tick()
+					output.Tick("", "Updating "+*starResult.Star.FullName)
 				}
 			}
 		}

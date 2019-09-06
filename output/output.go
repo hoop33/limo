@@ -19,7 +19,7 @@ type Output interface {
 	StarLine(*model.Star)
 	Star(*model.Star)
 	Tag(*model.Tag)
-	Tick()
+	Tick(string, string)
 }
 
 var outputs = make(map[string]Output)

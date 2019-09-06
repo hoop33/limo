@@ -1,5 +1,5 @@
 hash: 0ce37b8ae0394589ee9a4cd935a3401cacbdede7484ab667f558d4d322d476aa
-updated: 2019-09-04T23:09:16.868364+02:00
+updated: 2019-09-06T01:09:32.783771+02:00
 imports:
 - name: github.com/asaskevich/govalidator
   version: f61b66f89f4a311bef65f13e575bcf1a2ffadda6
@@ -239,7 +239,7 @@ imports:
   version: 2e6e8094ef4745224150c88c16191c7dceaad16f
   repo: https://github.com/willf/bitset
 - name: github.com/xanzy/go-gitlab
-  version: 50bdd5d307999282033de8f011a3916f8891151b
+  version: b358b17540487f12944ce96598c6ee87c03db6ee
 - name: golang.org/x/crypto
   version: dd96d35c1b251a7ef77f057fc5c4f92ea2b285b4
   repo: https://go.googlesource.com/crypto

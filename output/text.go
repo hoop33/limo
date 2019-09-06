@@ -109,7 +109,7 @@ func (t *Text) Tag(tag *model.Tag) {
 }
 
 // Tick displays evidence that the program is working
-func (t *Text) Tick() {
+func (t *Text) Tick(prefix, suffix string) {
 	fmt.Print(".")
 }
 
