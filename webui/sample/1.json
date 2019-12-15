@@ -1,0 +1,26 @@
+{
+ "name": "the-front-end-knowledge-you-may-dont-know",
+ "owner": "justjavac",
+ "fullname": "justjavac~the-front-end-knowledge-you-may-dont-know",
+ "description": ":innocent: 你可能不知道的前端知识点",
+ "avatar": "https://avatars1.githubusercontent.com/u/359395?v=4",
+ "url": "https://github.com/justjavac/the-front-end-knowledge-you-may-dont-know",
+ "pushed": "2018-03-19T04:35:49Z",
+ "created": "2017-07-04T02:27:39Z",
+ "size": 2691,
+ "stars": 978,
+ "forks": 55,
+ "topics": [
+  "chrome",
+  "css",
+  "css3",
+  "debug",
+  "frontend",
+  "html",
+  "html5",
+  "javascript",
+  "performance"
+ ],
+ "language": "",
+ "watchers": 180
+}

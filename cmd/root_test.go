@@ -7,7 +7,7 @@ import (
 )
 
 // `values` can be:
-// * Full URL (e.g., https://github.com/hoop33/limo)
+// * Full URL (e.g., https://github.com/lucmski/limo)
 // * Owner/Repo (e.g., hoop33/limo)
 // * Owner Repo (e.g., hoop33 limo)
 
@@ -40,7 +40,7 @@ func TestParseServiceOwnerRepoShouldParseEmptyWhenTooManyValues(t *testing.T) {
 }
 
 func TestParseServiceOwnerRepoShouldParseAllWhenOneValueFullURL(t *testing.T) {
-	s, o, r := parseServiceOwnerRepo([]string{"https://github.com/hoop33/limo"})
+	s, o, r := parseServiceOwnerRepo([]string{"https://github.com/lucmski/limo"})
 	assert.Equal(t, "github", s)
 	assert.Equal(t, "hoop33", o)
 	assert.Equal(t, "limo", r)

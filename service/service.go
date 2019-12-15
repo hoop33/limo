@@ -9,7 +9,7 @@ import (
 
 	"github.com/fatih/color"
 	"github.com/hoop33/entrevista"
-	"github.com/hoop33/limo/model"
+	"github.com/lucmski/limo/model"
 )
 
 var errNotLoggedIn = errors.New("not logged in")

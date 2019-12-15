@@ -1,0 +1,61 @@
+package: github.com/lucmski/limo
+import:
+- package: github.com/blevesearch/bleve
+  subpackages:
+  - analysis/analyzer/keyword
+  - analysis/analyzer/simple
+  - analysis/lang/en
+  - mapping
+- package: github.com/briandowns/spinner
+- package: github.com/cep21/xdgbasedir
+- package: github.com/dgraph-io/badger
+- package: github.com/dustin/go-humanize
+- package: github.com/fatih/color
+- package: github.com/golang/snappy
+- package: github.com/google/go-github
+  subpackages:
+  - github
+- package: github.com/gregjones/httpcache
+  subpackages:
+  - diskcache
+- package: github.com/hashicorp/go-msgpack
+  subpackages:
+  - codec
+- package: github.com/hoop33/entrevista
+- package: github.com/jinzhu/gorm
+  subpackages:
+  - dialects/sqlite
+- package: github.com/k0kubun/pp
+- package: github.com/json-iterator/go
+# - package: github.com/olivere/elastic
+- package: golang.org/x/sys
+  version: master
+  subpackages:
+  - unix 
+  - windows
+  - cpu
+- package: github.com/edsrzf/mmap-go
+  version: master
+- package: github.com/qor/admin
+- package: github.com/segmentio/stats
+  subpackages:
+  - httpstats
+- package: github.com/sirupsen/logrus
+- package: github.com/skratchdot/open-golang
+  subpackages:
+  - open
+- package: github.com/spf13/cobra
+- package: github.com/xanzy/go-gitlab
+- package: golang.org/x/oauth2
+- package: gopkg.in/kothar/brotli-go.v0
+  subpackages:
+  - enc
+- package: gopkg.in/olivere/elastic.v6
+- package: gopkg.in/yaml.v2
+testImport:
+- package: github.com/pierrec/lz4
+- package: github.com/rohanthewiz/logger
+- package: github.com/rohanthewiz/serr
+- package: github.com/stretchr/testify
+  subpackages:
+  - assert

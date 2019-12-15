@@ -3,6 +3,7 @@ package model
 import (
 	"errors"
 	"fmt"
+	"os"
 	"strconv"
 	"strings"
 	"time"
@@ -10,24 +11,33 @@ import (
 	"github.com/blevesearch/bleve"
 	"github.com/google/go-github/github"
 	"github.com/jinzhu/gorm"
+	"github.com/k0kubun/pp"
 	"github.com/skratchdot/open-golang/open"
 	"github.com/xanzy/go-gitlab"
 )
 
 // Star represents a starred repository
 type Star struct {
-	gorm.Model
-	RemoteID    string
-	Name        *string
-	FullName    *string
-	Description *string
-	Homepage    *string
-	URL         *string
-	Language    *string
-	Stargazers  int
-	StarredAt   time.Time
-	ServiceID   uint
-	Tags        []Tag `gorm:"many2many:star_tags;"`
+	gorm.Model  `json:"-" yaml:"-"`
+	RemoteID    string    `json:"remote_id"`
+	Avatar      *string   `json:"avatar"`
+	Owner       *string   `json:"owner"`
+	Name        *string   `json:"name"`
+	FullName    *string   `json:"fullname"`
+	Description *string   `json:"description"`
+	Homepage    *string   `json:"homepage"`
+	URL         *string   `json:"url"`
+	Language    *string   `json:"language"`
+	Watchers    *int      `json:"watchers"`
+	Stargazers  int       `json:"stars"`
+	Forks       *int      `json:"forks"`
+	Size        *int      `json:"size"`
+	Pushed      time.Time `json:"pushed"`
+	Created     time.Time `json:"created"`
+	StarredAt   time.Time `json:"starred"`
+	ServiceID   uint      `json:"service_id"`
+	Topics      []string  `gorm:"-" json:"topics"`
+	Tags        []Tag     `gorm:"many2many:star_tags;" json:"-"`
 }
 
 // StarResult wraps a star and an error
@@ -43,6 +53,8 @@ func NewStarFromGithub(timestamp *github.Timestamp, star github.Repository) (*St
 		return nil, errors.New("ID from GitHub is required")
 	}
 
+	// pp.Println("star:", star)
+
 	// Set stargazers count to 0 if nil
 	stargazersCount := 0
 	if star.StargazersCount != nil {
@@ -54,9 +66,20 @@ func NewStarFromGithub(timestamp *github.Timestamp, star github.Repository) (*St
 		starredAt = timestamp.Time
 	}
 
+	// pushedAt :=
+
+	// var starTopics []Tag
+	// for _, topic := range star.Topics {
+	//	starTopics = append(starTopics, Tag{Name: topic})
+	// }
+	// Topics
+
+	// os.Exit(1)
+
 	return &Star{
 		RemoteID:    strconv.Itoa(int(*star.ID)),
 		Name:        star.Name,
+		Owner:       star.Owner.Login,
 		FullName:    star.FullName,
 		Description: star.Description,
 		Homepage:    star.Homepage,
@@ -64,11 +87,22 @@ func NewStarFromGithub(timestamp *github.Timestamp, star github.Repository) (*St
 		Language:    star.Language,
 		Stargazers:  stargazersCount,
 		StarredAt:   starredAt,
+		Topics:      star.Topics,
+		Size:        star.Size,
+		Watchers:    star.WatchersCount,
+		Forks:       star.ForksCount,
+		Avatar:      star.Owner.AvatarURL,
+		Pushed:      star.PushedAt.Time,
+		Created:     star.CreatedAt.Time,
 	}, nil
 }
 
 // NewStarFromGitlab creates a Star from a Gitlab star
 func NewStarFromGitlab(star gitlab.Project) (*Star, error) {
+
+	pp.Println(star)
+	os.Exit(1)
+
 	return &Star{
 		RemoteID:    strconv.Itoa(star.ID),
 		Name:        &star.Name,
@@ -84,17 +118,29 @@ func NewStarFromGitlab(star gitlab.Project) (*Star, error) {
 
 // CreateOrUpdateStar creates or updates a star and returns true if the star was created (vs updated)
 func CreateOrUpdateStar(db *gorm.DB, star *Star, service *Service) (bool, error) {
+	// Check if topics exists
+
 	// Get existing by remote ID and service ID
 	var existing Star
 	if db.Where("remote_id = ? AND service_id = ?", star.RemoteID, service.ID).First(&existing).RecordNotFound() {
 		star.ServiceID = service.ID
+		for _, topic := range star.Topics {
+			tag, _, _ := FindOrCreateTagByName(db, topic)
+			star.Tags = append(star.Tags, *tag)
+		}
 		err := db.Create(star).Error
 		return err == nil, err
 	}
 	star.ID = existing.ID
 	star.ServiceID = service.ID
 	star.CreatedAt = existing.CreatedAt
-	return false, db.Save(star).Error
+	for _, topic := range star.Topics {
+		tag, _, _ := FindOrCreateTagByName(db, topic)
+		star.Tags = append(star.Tags, *tag)
+	}
+	err := db.Save(star).Error
+
+	return false, err
 }
 
 // FindStarByRemoteIDAndService finds a star by remote ID and service

@@ -9,7 +9,7 @@ import (
 	"time"
 
 	"github.com/hoop33/entrevista"
-	"github.com/hoop33/limo/model"
+	"github.com/lucmski/limo/model"
 	"github.com/xanzy/go-gitlab"
 )
 

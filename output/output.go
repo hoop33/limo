@@ -4,8 +4,8 @@ import (
 	"reflect"
 	"strings"
 
-	"github.com/hoop33/limo/config"
-	"github.com/hoop33/limo/model"
+	"github.com/lucmski/limo/config"
+	"github.com/lucmski/limo/model"
 )
 
 // Output represents an output option
@@ -19,7 +19,7 @@ type Output interface {
 	StarLine(*model.Star)
 	Star(*model.Star)
 	Tag(*model.Tag)
-	Tick()
+	Tick(string, string)
 }
 
 var outputs = make(map[string]Output)

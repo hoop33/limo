@@ -12,7 +12,7 @@ import (
 )
 
 func init() {
-	configDirectoryPath = "./tmp"
+	ConfigDirectoryPath = "./tmp"
 }
 
 func TestDefaultDatabasePathIsSetWhenConfigIsEmpty(t *testing.T) {
@@ -110,7 +110,7 @@ func TestReadConfigDoesNotPanicForMalformedConfigurationFile(t *testing.T) {
 	mkdirConfig()
 
 	contents := "{this is not a yaml file}"
-	err := ioutil.WriteFile(fmt.Sprintf("%s/limo.yaml", configDirectoryPath), []byte(contents), 0700)
+	err := ioutil.WriteFile(fmt.Sprintf("%s/limo.yaml", ConfigDirectoryPath), []byte(contents), 0700)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -126,13 +126,13 @@ func TestReadConfigDoesNotPanicForMalformedConfigurationFile(t *testing.T) {
 }
 
 func mkdirConfig() {
-	if err := os.MkdirAll(configDirectoryPath, 0700); err != nil {
+	if err := os.MkdirAll(ConfigDirectoryPath, 0700); err != nil {
 		panic(err)
 	}
 }
 
 func rmdirConfig() {
-	if err := os.RemoveAll(configDirectoryPath); err != nil {
+	if err := os.RemoveAll(ConfigDirectoryPath); err != nil {
 		panic(err)
 	}
 }

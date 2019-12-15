@@ -2,9 +2,10 @@ package model
 
 import (
 	"github.com/blevesearch/bleve"
-	"github.com/blevesearch/bleve/analysis/analyzers/keyword_analyzer"
-	"github.com/blevesearch/bleve/analysis/analyzers/simple_analyzer"
-	"github.com/blevesearch/bleve/analysis/language/en"
+	"github.com/blevesearch/bleve/analysis/analyzer/keyword"
+	"github.com/blevesearch/bleve/analysis/analyzer/simple"
+	"github.com/blevesearch/bleve/analysis/lang/en"
+	"github.com/blevesearch/bleve/mapping"
 )
 
 // InitIndex initializes the search index at the specified path
@@ -21,15 +22,15 @@ func InitIndex(filepath string) (bleve.Index, error) {
 	return index, nil
 }
 
-func buildIndexMapping() *bleve.IndexMapping {
+func buildIndexMapping() *mapping.IndexMappingImpl {
 	simpleTextFieldMapping := bleve.NewTextFieldMapping()
-	simpleTextFieldMapping.Analyzer = simple_analyzer.Name
+	simpleTextFieldMapping.Analyzer = simple.Name
 
 	englishTextFieldMapping := bleve.NewTextFieldMapping()
 	englishTextFieldMapping.Analyzer = en.AnalyzerName
 
 	keywordFieldMapping := bleve.NewTextFieldMapping()
-	keywordFieldMapping.Analyzer = keyword_analyzer.Name
+	keywordFieldMapping.Analyzer = keyword.Name
 
 	starMapping := bleve.NewDocumentMapping()
 	starMapping.AddFieldMappingsAt("Name", simpleTextFieldMapping)

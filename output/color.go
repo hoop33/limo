@@ -9,8 +9,8 @@ import (
 	"github.com/briandowns/spinner"
 	"github.com/dustin/go-humanize"
 	"github.com/fatih/color"
-	"github.com/hoop33/limo/config"
-	"github.com/hoop33/limo/model"
+	"github.com/lucmski/limo/config"
+	"github.com/lucmski/limo/model"
 )
 
 const defaultInterval = 300
@@ -159,7 +159,7 @@ func (c *Color) Tag(tag *model.Tag) {
 }
 
 // Tick displays evidence that the program is working
-func (c *Color) Tick() {
+func (c *Color) Tick(suffix, prefix string) {
 	if spin == nil {
 		index := 0
 		interval := defaultInterval
@@ -179,10 +179,14 @@ func (c *Color) Tick() {
 			}
 		}
 		spin = spinner.New(spinner.CharSets[index], time.Duration(interval)*time.Millisecond)
-		spin.Suffix = color.CyanString(" Updating")
+		spin.Suffix = color.CyanString(suffix)
+		spin.Prefix = color.CyanString(prefix)
 		if err := spin.Color(clr); err != nil {
 			c.Error(err.Error())
 		}
+
+		// add as input arg
+		// spin.Prefix = ""
 	}
 }
 

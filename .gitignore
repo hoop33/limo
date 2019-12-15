@@ -1,4 +1,4 @@
-
+.DS_Store
 # Created by https://www.gitignore.io/api/go
 
 ### Go ###
@@ -30,3 +30,7 @@ limo
 
 # Test coverage
 *.out
+node_mosules
+/node_modules/
+vendor
+

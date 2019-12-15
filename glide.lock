@@ -1,0 +1,319 @@
+hash: 0ce37b8ae0394589ee9a4cd935a3401cacbdede7484ab667f558d4d322d476aa
+updated: 2019-09-06T01:09:32.783771+02:00
+imports:
+- name: github.com/asaskevich/govalidator
+  version: f61b66f89f4a311bef65f13e575bcf1a2ffadda6
+- name: github.com/blevesearch/bleve
+  version: 1626176d5505d55567a92cb6b3f9e627686c5530
+  subpackages:
+  - analysis
+  - analysis/analyzer/keyword
+  - analysis/analyzer/simple
+  - analysis/analyzer/standard
+  - analysis/datetime/flexible
+  - analysis/datetime/optional
+  - analysis/lang/en
+  - analysis/token/lowercase
+  - analysis/token/porter
+  - analysis/token/stop
+  - analysis/tokenizer/character
+  - analysis/tokenizer/letter
+  - analysis/tokenizer/single
+  - analysis/tokenizer/unicode
+  - document
+  - geo
+  - index
+  - index/scorch
+  - index/scorch/mergeplan
+  - index/scorch/segment
+  - index/scorch/segment/zap
+  - index/store
+  - index/store/boltdb
+  - index/store/gtreap
+  - index/upsidedown
+  - mapping
+  - numeric
+  - registry
+  - search
+  - search/collector
+  - search/facet
+  - search/highlight
+  - search/highlight/format/html
+  - search/highlight/fragmenter/simple
+  - search/highlight/highlighter/html
+  - search/highlight/highlighter/simple
+  - search/query
+  - search/scorer
+  - search/searcher
+  - size
+- name: github.com/blevesearch/go-porterstemmer
+  version: 23a2c8e5cf1f380f27722c6d2ae8896431dc7d0e
+  repo: https://github.com/blevesearch/go-porterstemmer
+- name: github.com/blevesearch/segment
+  version: db70c57796cc8c310613541dfade3dce627d09c7
+  repo: https://github.com/blevesearch/segment
+- name: github.com/briandowns/spinner
+  version: 357f3c084615c634899d53796fba8b71f7e34b24
+- name: github.com/cep21/xdgbasedir
+  version: 21470bfc93b9903bce0beaebb037b1d04d0be523
+- name: github.com/cespare/xxhash
+  version: de209a9ffae3256185a6bb135d1a0ada7b2b5f09
+- name: github.com/chris-ramon/douceur
+  version: f3463056cd52886eda904655e1940157bf323bd7
+  subpackages:
+  - css
+  - parser
+- name: github.com/couchbase/vellum
+  version: dc222902e86f298bfae0b3dec6ba8b9d874ad5f8
+  repo: https://github.com/couchbase/vellum
+  subpackages:
+  - levenshtein
+  - regexp
+  - utf8
+- name: github.com/dgraph-io/badger
+  version: fbcd608981982d2d8c1612d310ac491d01dbde96
+  subpackages:
+  - options
+  - pb
+  - skl
+  - table
+  - trie
+  - "y"
+- name: github.com/dgraph-io/ristretto
+  version: eb48d2f7ca30f7560340ff99eccf24c756d42c2b
+  subpackages:
+  - z
+- name: github.com/dgryski/go-farm
+  version: 6a90982ecee230ff6cba02d5bd386acc030be9d3
+- name: github.com/dustin/go-humanize
+  version: 9f541cc9db5d55bce703bd99987c9d5cb8eea45e
+- name: github.com/edsrzf/mmap-go
+  version: 904c4ced31cdffe19e971afa0b3d319ff06d9c72
+- name: github.com/etcd-io/bbolt
+  version: 7ee3ded59d4835e10f3e7d0f7603c42aa5e83820
+  repo: https://github.com/etcd-io/bbolt
+- name: github.com/fatih/color
+  version: 3f9d52f7176a6927daacff70a3e8d1dc2025c53e
+- name: github.com/glycerine/go-unsnap-stream
+  version: 81cf024a9e0a906651886e23cb984a852a30b622
+- name: github.com/golang/protobuf
+  version: 655cdfa588ea190e901bc5590e65d5621688847c
+  repo: https://github.com/golang/protobuf
+  subpackages:
+  - proto
+- name: github.com/golang/snappy
+  version: ff6b7dc882cf4cfba7ee0b9f7dcc1ac096c554aa
+- name: github.com/google/btree
+  version: 20236160a414454a9c64b6c8829381c6f4bddcaa
+- name: github.com/google/go-github
+  version: 2e90302801c870f17b6152327d9b9a03c8eca0e2
+  subpackages:
+  - github
+- name: github.com/google/go-querystring
+  version: c8c88dbee036db4e4808d1f2ec8c2e15e11c3f80
+  subpackages:
+  - query
+- name: github.com/gorilla/context
+  version: 8559d4a6b87e4f517ec1846eb90a192b8748cc89
+- name: github.com/gorilla/css
+  version: 4940b8d7810384b58c15dbf1103a148fdf0761f2
+  subpackages:
+  - scanner
+- name: github.com/gorilla/securecookie
+  version: 86450627d8e6b88e00ea41f228489b89d08a40de
+- name: github.com/gorilla/sessions
+  version: 9c6b24ee2dee928836dbf71f18bb0c7d0da4bf85
+- name: github.com/gosimple/slug
+  version: 984b6d1a0ae5d1ecf6d718f4e990883d281ba3b8
+- name: github.com/gregjones/httpcache
+  version: 901d90724c7919163f472a9812253fb26761123d
+  subpackages:
+  - diskcache
+- name: github.com/hashicorp/go-msgpack
+  version: ad60660ecf9c5a1eae0ca32182ed72bab5807961
+  subpackages:
+  - codec
+- name: github.com/hoop33/entrevista
+  version: 419a1a2be5540cc6d77b54236bea2fdff096c993
+- name: github.com/howeyc/gopass
+  version: bf9dde6d0d2c004a008c27aaee91170c786f6db8
+  repo: https://github.com/howeyc/gopass
+- name: github.com/inconshreveable/mousetrap
+  version: 76626ae9c91c4f2a10f34cad8ce83ea42c93bb75
+- name: github.com/jinzhu/gorm
+  version: 2a3ab99a081dc14b29dfd4df42d4c59ba1814d21
+  subpackages:
+  - dialects/sqlite
+- name: github.com/jinzhu/inflection
+  version: f5c5f50e6090ae76a29240b61ae2a90dd810112e
+- name: github.com/jinzhu/now
+  version: 1a6fdd4591d336a897120c50c69ed3c0e8033468
+- name: github.com/json-iterator/go
+  version: 27518f6661eba504be5a7a9a9f6d9460d892ade3
+- name: github.com/k0kubun/pp
+  version: b20d3da80efaecd224c0a49b0f5594444128f1a0
+- name: github.com/konsorten/go-windows-terminal-sequences
+  version: f55edac94c9bbba5d6182a4be46d86a2c9b5b50e
+- name: github.com/mailru/easyjson
+  version: b2ccc519800e761ac8000b95e5d57c80a897ff9e
+  subpackages:
+  - buffer
+  - jlexer
+  - jwriter
+- name: github.com/mattn/go-colorable
+  version: 388941e3ea99c461d2bc2747eaf27741b6dda096
+- name: github.com/mattn/go-isatty
+  version: bf9a1dea1961e1d831824fb135332bfb8c10e8b8
+- name: github.com/mattn/go-sqlite3
+  version: d3c690956bde8789300d0dd7e868189cb88cf6ad
+- name: github.com/microcosm-cc/bluemonday
+  version: 1c05eea2ea64564e88819982bde63288c3d516b4
+- name: github.com/modern-go/concurrent
+  version: bacd9c7ef1dd9b15be4a9909b8ac7a4e313eec94
+- name: github.com/modern-go/reflect2
+  version: 94122c33edd36123c84d5368cfb2b69df93a0ec8
+- name: github.com/mschoch/smat
+  version: 90eadee771aeab36e8bf796039b8c261bebebe4f
+- name: github.com/olivere/elastic
+  version: ff6418bc5a1d8b53f334e39ca004cc8d593fc42c
+  subpackages:
+  - config
+  - uritemplates
+- name: github.com/peterbourgon/diskv
+  version: 0be1b92a6df0e4f5cb0a5d15fb7f643d0ad93ce6
+- name: github.com/philhofer/fwd
+  version: bb6d471dc95d4fe11e432687f8b70ff496cf3136
+- name: github.com/pkg/errors
+  version: 27936f6d90f9c8e1145f11ed52ffffbfdb9e0af7
+- name: github.com/qor/admin
+  version: 5c8db81042def4d3b95cb5dabb36719dc63f1ce6
+- name: github.com/qor/assetfs
+  version: ff57fdc13a148d39c3e930cb27c7eaf82e376891
+- name: github.com/qor/middlewares
+  version: 781378b69454a545d08058d8154aca40d079e7ab
+- name: github.com/qor/qor
+  version: 186b0237364b23ebbe564d0764c5b8523c953575
+  subpackages:
+  - resource
+  - utils
+- name: github.com/qor/responder
+  version: b6def473574f621fee316696ad120d4fbf470826
+- name: github.com/qor/roles
+  version: d6375609fe3e5da46ad3a574fae244fb633e79c1
+- name: github.com/qor/session
+  version: 8206b0adab706a6ef3ee6fabba2584d34429a26a
+  subpackages:
+  - gorilla
+  - manager
+- name: github.com/qor/validations
+  version: f364bca61b46bd48a5e32552a37758864fdf005d
+- name: github.com/rainycape/unidecode
+  version: cb7f23ec59bec0d61b19c56cd88cee3d0cc1870c
+- name: github.com/RoaringBitmap/roaring
+  version: d0ce1763c3526f65703c395da50da7a7fb2138d5
+  repo: https://github.com/RoaringBitmap/roaring
+- name: github.com/segmentio/stats
+  version: d8a0ef5ffe993c4ebfd5e1cddb55a8290206be22
+  subpackages:
+  - httpstats
+- name: github.com/sirupsen/logrus
+  version: de736cf91b921d56253b4010270681d33fdf7cb5
+- name: github.com/skratchdot/open-golang
+  version: 79abb63cd66e41cb1473e26d11ebdcd68b04c8e5
+  subpackages:
+  - open
+- name: github.com/spf13/cobra
+  version: b80588d523ec50c7fee20218426cf2ff70920f06
+- name: github.com/spf13/pflag
+  version: 972238283c0625cf3e881de7699ba8f2524c340a
+- name: github.com/steveyen/gtreap
+  version: 0abe01ef9be25c4aedc174758ec2d917314d6d70
+  repo: https://github.com/steveyen/gtreap
+- name: github.com/theplant/cldr
+  version: 9f76f7ce4ee8058b01f92739cf0d0cceaeda3cb2
+- name: github.com/tinylib/msgp
+  version: efe20429c9b7b2a358aba9ba2d40ad56d966ce00
+  subpackages:
+  - msgp
+- name: github.com/willf/bitset
+  version: 2e6e8094ef4745224150c88c16191c7dceaad16f
+  repo: https://github.com/willf/bitset
+- name: github.com/xanzy/go-gitlab
+  version: b358b17540487f12944ce96598c6ee87c03db6ee
+- name: golang.org/x/crypto
+  version: dd96d35c1b251a7ef77f057fc5c4f92ea2b285b4
+  repo: https://go.googlesource.com/crypto
+  subpackages:
+  - cast5
+  - openpgp
+  - openpgp/armor
+  - openpgp/elgamal
+  - openpgp/errors
+  - openpgp/packet
+  - openpgp/s2k
+  - ssh/terminal
+- name: golang.org/x/net
+  version: ba9fcec4b297b415637633c5a6e8fa592e4a16c3
+  subpackages:
+  - context
+  - context/ctxhttp
+  - html
+  - html/atom
+  - internal/timeseries
+  - trace
+- name: golang.org/x/oauth2
+  version: 0f29369cfe4552d0e4bcddc57cc75f4d7e672a33
+  subpackages:
+  - internal
+- name: golang.org/x/sys
+  version: 749cb33beabd9aa6d3178e3de05bcc914f70b2bf
+  subpackages:
+  - cpu
+  - unix
+  - windows
+- name: google.golang.org/appengine
+  version: 5f2a59506353b8d5ba8cbbcd9f3c1f41f1eaf079
+  subpackages:
+  - internal
+  - internal/base
+  - internal/datastore
+  - internal/log
+  - internal/remote_api
+  - internal/urlfetch
+  - urlfetch
+- name: gopkg.in/kothar/brotli-go.v0
+  version: 771231d473d6c4896e97c2b6e3855f1afc0cdada
+  subpackages:
+  - enc
+  - shared
+- name: gopkg.in/olivere/elastic.v6
+  version: 91416a867f9a95cdf7332dd1e73264359d0d5c7e
+- name: gopkg.in/yaml.v2
+  version: 51d6538a90f86fe93ac480b35f37b2be17fef232
+testImports:
+- name: github.com/davecgh/go-spew
+  version: d8f796af33cc11cb798c1aaeb27a4ebc5099927d
+  subpackages:
+  - spew
+- name: github.com/lestrrat/go-strftime
+  version: ba3bf9c1d0421aa146564a632931730344f1f9f1
+- name: github.com/pierrec/lz4
+  version: 21241797f8cd81af1b8dde3323c6f805799d053e
+  subpackages:
+  - internal/xxh32
+- name: github.com/pmezard/go-difflib
+  version: 5d4384ee4fb2527b0a1256a821ebfc92f91efefc
+  subpackages:
+  - difflib
+- name: github.com/rifflock/lfshook
+  version: 6844c808343cb8fa357d7f141b1b990e05d24e41
+- name: github.com/rohanthewiz/logger
+  version: 086593ec0de88c9753a51eb1e51fb5014434a51a
+- name: github.com/rohanthewiz/rotatelogs
+  version: f040fb921e630cf810a740075da9b2a36c4ac44c
+- name: github.com/rohanthewiz/serr
+  version: c9b173b7bf1837308b1d08ed4014041441b5243b
+- name: github.com/stretchr/testify
+  version: 85f2b59c4459e5bf57488796be8c3667cb8246d6
+  subpackages:
+  - assert

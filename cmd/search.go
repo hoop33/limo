@@ -6,8 +6,8 @@ import (
 	"strings"
 
 	"github.com/blevesearch/bleve"
-	"github.com/hoop33/limo/config"
-	"github.com/hoop33/limo/model"
+	"github.com/lucmski/limo/config"
+	"github.com/lucmski/limo/model"
 	"github.com/spf13/cobra"
 )
 

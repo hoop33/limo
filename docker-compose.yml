@@ -1,0 +1,33 @@
+version: '3'
+services:
+
+  limo:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: limo
+
+  limo-search:
+    build:
+      context: ./webui/search
+      dockerfile: Dockerfile
+    container_name: limosearch
+    ports:
+      - 3000:3000
+    volumes:
+      - './webui/search:/usr/src/app'
+      - '/usr/src/app/node_modules'
+    environment:
+      - NODE_ENV=development
+
+  elasticsearch:
+    build:
+      context: ./webui/elastic
+      dockerfile: Dockerfile
+      args:
+        - CEREBRO_VERSION=0.7.2
+    container_name: elasticsearch
+    entrypoint: /usr/share/elasticsearch/start
+    ports:
+      - "9200:9200" # Elasticsearch
+      - "9000:9000" # Cerebro

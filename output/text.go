@@ -7,8 +7,8 @@ import (
 	"time"
 
 	"github.com/dustin/go-humanize"
-	"github.com/hoop33/limo/config"
-	"github.com/hoop33/limo/model"
+	"github.com/lucmski/limo/config"
+	"github.com/lucmski/limo/model"
 )
 
 // Text is a monochrome text output
@@ -109,7 +109,7 @@ func (t *Text) Tag(tag *model.Tag) {
 }
 
 // Tick displays evidence that the program is working
-func (t *Text) Tick() {
+func (t *Text) Tick(prefix, suffix string) {
 	fmt.Print(".")
 }
 
